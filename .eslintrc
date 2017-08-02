@@ -1,0 +1,14 @@
+{
+    "root": true,
+    "extends": [
+        "finn",
+        "finn/node",
+        "finn-prettier"
+    ],
+    "parserOptions": {
+        "ecmaVersion": "2017"
+    },
+    "rules": {
+      "new-cap": ["error", {"capIsNewExceptions": ["Router", "Mitm"]}]
+    }
+}

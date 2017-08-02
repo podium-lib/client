@@ -1,0 +1,29 @@
+{
+  "name": "@podium/client",
+  "version": "1.0.0-alpha.17",
+  "main": "lib/client.js",
+  "license": "",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "ava --verbose"
+  },
+  "publishConfig": {
+    "registry": "http://npm.finntech.no/"
+  },
+  "dependencies": {
+    "joi": "^10.6.0",
+    "lru-cache": "^4.1.1",
+    "readable-stream": "^2.3.3",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "ava": "^0.21.0",
+    "express": "^4.15.3",
+    "http-proxy": "^1.16.2",
+    "is-stream": "^1.1.0",
+    "lolex": "^2.1.2",
+    "nock": "^9.0.13"
+  }
+}

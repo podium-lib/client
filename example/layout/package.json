@@ -1,0 +1,16 @@
+{
+  "name": "layout-server",
+  "version": "1.0.0",
+  "author": {
+    "name": "Trygve Lie",
+    "email": "post@trygve-lie.com"
+  },
+  "description": "Layout server",
+  "main": "./server.js",
+  "scripts": {
+    "start": "node ./server.js 7000"
+  },
+  "dependencies": {
+    "express": "latest"
+  }
+}

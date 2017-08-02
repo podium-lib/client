@@ -1,0 +1,24 @@
+{
+  "name": "podlet-server",
+  "version": "1.0.0",
+  "author": {
+    "name": "Trygve Lie",
+    "email": "post@trygve-lie.com"
+  },
+  "description": "Podlet server",
+  "main": "./server.js",
+  "scripts": {
+    "start": "node ./server.js 7010",
+    "start-a": "node ./server.js 7011",
+    "start-b": "node ./server.js 7012",
+    "start-c": "node ./server.js 7013",
+    "start-proxy": "node ./proxy.js 7010",
+    "cluster": "node ./server.js 7011 & node ./server.js 7012 & node ./server.js 7013 & node ./proxy.js 7010"
+  },
+  "dependencies": {
+    "express": "latest"
+  },
+  "devDependencies": {
+    "http-proxy": "latest"
+  }
+}

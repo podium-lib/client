@@ -22,7 +22,9 @@ Connect to a podium component server and stream the html content:
 const PodiumClient = require('@podium/client');
 const client = new PodiumClient();
 
-const component = client.register({uri: 'http://foo.site.com/manifest.json'});
+const component = client.register({
+    uri: 'http://foo.site.com/manifest.json'
+});
 
 const stream = component.stream();
 stream.on('error', (error) => {
@@ -39,7 +41,9 @@ Connect to a podium component server and fetch the html content:
 const PodiumClient = require('@podium/client');
 const client = new PodiumClient();
 
-const component = client.register({uri: 'http://foo.site.com/manifest.json'});
+const component = client.register({
+    uri: 'http://foo.site.com/manifest.json'
+});
 
 component.fetch().then((content) => {
     console.log(content);

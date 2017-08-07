@@ -1,0 +1,23 @@
+{
+    "id": "example-a",
+    "version": "1.0.0-beta.1",
+    "hash": "5ffd0a2e63bfa4854ab40ede41430351",
+    "src": "/index.html",
+    "fallback": {
+        "html": "<p>haz fallback</p>"
+    },
+    "metadata": {
+        "maxAge": 100000,
+        "resources": [],
+        "fallbackVariations": {},
+        "fallbacks": {
+            "default": {
+                "html": "podlet manifest fallback"
+            }
+        }
+    },
+    "data": {
+        "html": "podlet manifest data",
+        "debug": null
+    }
+}

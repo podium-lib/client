@@ -4,7 +4,7 @@ const test = require('ava');
 const Cache = require('../lib/cache');
 const lolex = require('lolex');
 
-const clock = lolex.install();
+// const clock = lolex.install();
 
 
 
@@ -58,15 +58,25 @@ test('cache.set() - with key and value - should set value on key in storage', t 
 });
 
 test('cache.set() - without maxAge - should set default maxAge', t => {
+    const clock = lolex.install();
+    clock.tick(100000);
+
     const cache = new Cache();
     cache.set('foo', 'bar');
-    t.true(cache.store.get('foo').age === cache.maxAge);
+    t.true(cache.store.get('foo').age === 400000); // default maxAge + lolex tick time
+
+    clock.uninstall();
 });
 
 test('cache.set() - with maxAge - should set maxAge', t => {
+    const clock = lolex.install();
+    clock.tick(100000);
+
     const cache = new Cache();
     cache.set('foo', 'bar', (60 * 60 * 1000));
-    t.true(cache.store.get('foo').age !== cache.maxAge);
+    t.true(cache.store.get('foo').age === 3700000);
+
+    clock.uninstall();
 });
 
 test('cache.set() - call twice with different values - should cache value of first set', t => {
@@ -89,6 +99,7 @@ test('cache.get() - get set value - should return set value', t => {
 });
 
 test('cache.get() - get value until timeout - should return value until timeout', t => {
+    const clock = lolex.install();
     const cache = new Cache({ maxAge: 2 * 1000 });
 
     const key = 'foo';
@@ -102,9 +113,12 @@ test('cache.get() - get value until timeout - should return value until timeout'
 
     clock.tick(1000);
     t.true(cache.get(key) === undefined);
+    clock.uninstall();
 });
 
 test.cb('cache.get() - get value until timeout - should emit dispose event on timeout', t => {
+    const clock = lolex.install();
+
     const cache = new Cache({ maxAge: 2 * 1000 });
     cache.on('dispose', (key) => {
         t.true(key === 'foo');
@@ -115,6 +129,8 @@ test.cb('cache.get() - get value until timeout - should emit dispose event on ti
 
     clock.tick(2500);
     cache.get('foo');
+
+    clock.uninstall();
 });
 
 
@@ -131,7 +147,7 @@ test.cb('cache.get() - get value until timeout - should emit dispose event on ti
 });
 
 test.cb('cache.del() - remove set value - should emit dispose event on removal', t => {
-    const cache = new Cache({ maxAge: 2 * 1000 });
+    const cache = new Cache();
     cache.on('dispose', (key) => {
         t.true(key === 'foo');
         t.end();
@@ -148,6 +164,8 @@ test.cb('cache.del() - remove set value - should emit dispose event on removal',
  */
 
  test('cache.entries() - get all entries - should return all entries as an Array', t => {
+    const clock = lolex.install();
+
     const cache = new Cache();
     cache.set('a', 'bar');
     cache.set('b', 'foo', 2 * 1000);
@@ -157,18 +175,22 @@ test.cb('cache.del() - remove set value - should emit dispose event on removal',
 
     t.true(entries[0][0] === 'a');
     t.true(entries[0][1] === 'bar');
-    t.true(entries[0][2] === 305000);
+    t.true(entries[0][2] === 300000);
 
     t.true(entries[1][0] === 'b');
     t.true(entries[1][1] === 'foo');
-    t.true(entries[1][2] === 7000);
+    t.true(entries[1][2] === 2000);
 
     t.true(entries[2][0] === 'c');
     t.true(entries[2][1] === 'xyz');
-    t.true(entries[2][2] === 305000);
+    t.true(entries[2][2] === 300000);
+
+    clock.uninstall();
 });
 
 test('cache.entries() - get all entries until timeout - should not return purged entries', t => {
+    const clock = lolex.install();
+
     const cache = new Cache();
     cache.set('a', 'bar');
     cache.set('b', 'foo', 2 * 1000);
@@ -181,9 +203,13 @@ test('cache.entries() - get all entries until timeout - should not return purged
 
     const entries2 = cache.entries();
     t.true(entries2.length === 2);
+
+    clock.uninstall();
 });
 
 test.cb('cache.entries() - get all entries until timeout - should emit dispose event on timeout', t => {
+    const clock = lolex.install();
+
     const cache = new Cache();
     cache.on('dispose', (key) => {
         t.true(key === 'b');
@@ -197,9 +223,13 @@ test.cb('cache.entries() - get all entries until timeout - should emit dispose e
     clock.tick(3000);
 
     cache.entries();
+
+    clock.uninstall();
 });
 
 test('cache.entries() - call with mutator function - should mutate result', t => {
+    const clock = lolex.install();
+
     const cache = new Cache();
     cache.set('a', 'bar');
     cache.set('b', 'foo', 2 * 1000);
@@ -217,5 +247,7 @@ test('cache.entries() - call with mutator function - should mutate result', t =>
 
     t.true(entries[0].key === 'a');
     t.true(entries[0].value === 'bar');
-    t.true(entries[0].timeout === 311000);
+    t.true(entries[0].timeout === 300000);
+
+    clock.uninstall();
 });

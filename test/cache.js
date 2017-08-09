@@ -4,8 +4,6 @@ const test = require('ava');
 const Cache = require('../lib/cache');
 const lolex = require('lolex');
 
-// const clock = lolex.install();
-
 
 
 /**
@@ -63,7 +61,7 @@ test('cache.set() - without maxAge - should set default maxAge', t => {
 
     const cache = new Cache();
     cache.set('foo', 'bar');
-    t.true(cache.store.get('foo').age === 400000); // default maxAge + lolex tick time
+    t.true(cache.store.get('foo').expires === 400000); // default maxAge + lolex tick time
 
     clock.uninstall();
 });
@@ -74,7 +72,7 @@ test('cache.set() - with maxAge - should set maxAge', t => {
 
     const cache = new Cache();
     cache.set('foo', 'bar', (60 * 60 * 1000));
-    t.true(cache.store.get('foo').age === 3700000);
+    t.true(cache.store.get('foo').expires === 3700000);
 
     clock.uninstall();
 });

@@ -5,11 +5,6 @@ const Client = require('../');
 const test = require('ava');
 
 
-test('client - new Client() - default registry size - should be 20 items', t => {
-    const client = new Client();
-    t.is(client.registry.max, 20);
-});
-
 test('client - new Client() - instantiate new client object - should have register method', t => {
     const client = new Client();
     t.true(typeof client.register === 'function');

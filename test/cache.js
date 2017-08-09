@@ -140,3 +140,82 @@ test.cb('cache.del() - remove set value - should emit dispose event on removal',
     cache.set('foo', 'bar');
     cache.del('foo');
 });
+
+
+
+/**
+ * .entries()
+ */
+
+ test('cache.entries() - get all entries - should return all entries as an Array', t => {
+    const cache = new Cache();
+    cache.set('a', 'bar');
+    cache.set('b', 'foo', 2 * 1000);
+    cache.set('c', 'xyz');
+
+    const entries = cache.entries();
+
+    t.true(entries[0][0] === 'a');
+    t.true(entries[0][1] === 'bar');
+    t.true(entries[0][2] === 305000);
+
+    t.true(entries[1][0] === 'b');
+    t.true(entries[1][1] === 'foo');
+    t.true(entries[1][2] === 7000);
+
+    t.true(entries[2][0] === 'c');
+    t.true(entries[2][1] === 'xyz');
+    t.true(entries[2][2] === 305000);
+});
+
+test('cache.entries() - get all entries until timeout - should not return purged entries', t => {
+    const cache = new Cache();
+    cache.set('a', 'bar');
+    cache.set('b', 'foo', 2 * 1000);
+    cache.set('c', 'xyz');
+
+    const entries1 = cache.entries();
+    t.true(entries1.length === 3);
+
+    clock.tick(3000);
+
+    const entries2 = cache.entries();
+    t.true(entries2.length === 2);
+});
+
+test.cb('cache.entries() - get all entries until timeout - should emit dispose event on timeout', t => {
+    const cache = new Cache();
+    cache.on('dispose', (key) => {
+        t.true(key === 'b');
+        t.end();
+    });
+
+    cache.set('a', 'bar');
+    cache.set('b', 'foo', 2 * 1000);
+    cache.set('c', 'xyz');
+
+    clock.tick(3000);
+
+    cache.entries();
+});
+
+test('cache.entries() - call with mutator function - should mutate result', t => {
+    const cache = new Cache();
+    cache.set('a', 'bar');
+    cache.set('b', 'foo', 2 * 1000);
+    cache.set('c', 'xyz');
+
+    const entries = cache.entries((key, value, timeout) => {
+        return {
+            key,
+            value,
+            timeout
+        };
+    });
+
+    t.true(entries.length === 3);
+
+    t.true(entries[0].key === 'a');
+    t.true(entries[0].value === 'bar');
+    t.true(entries[0].timeout === 311000);
+});

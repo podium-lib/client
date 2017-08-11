@@ -41,9 +41,9 @@ test('State() - "this.manifest" should be undefined', t => {
     t.true(typeof state.manifest === 'undefined');
 });
 
-test('State() - "this.content" should be undefined', t => {
+test('State() - "this.content" should be empty String', t => {
     const state = new State(REGISTRY, URI, REQ_OPTIONS);
-    t.true(typeof state.content === 'undefined');
+    t.true(state.content === '');
 });
 
 test('State() - No value for streamThrough - "this.stream" should contain a PassThrough stream', t => {

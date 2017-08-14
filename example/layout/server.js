@@ -19,12 +19,22 @@ podlet.on('info', (info) => {
 
 const app = express();
 app.get('/', (req, res, next) => {
-    console.log(`################### ${Date.now()}`)
+    console.log(`FETCH ::  ${Date.now()}`)
     podlet.fetch().then((html) => {
         res.status(200).send(html);
     }).catch((error) => {
         res.status(500).send('Internal server error');
     });
+});
+
+app.get('/stream', (req, res, next) => {
+    console.log(`STREAM :: ${Date.now()}`)
+
+    const stream = podlet.stream();
+    stream.on('error', (error) => {
+        console.log(error)
+    })
+    stream.pipe(res);
 });
 
 app.listen(PORT, () => {

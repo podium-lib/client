@@ -1,7 +1,7 @@
 'use strict';
 
 const Resource = require('../lib/resource');
-const stream = require('readable-stream');
+const stream = require('stream');
 const Cache = require('../lib/cache');
 const test = require('ava');
 

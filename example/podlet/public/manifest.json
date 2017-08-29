@@ -1,6 +1,6 @@
 {
     "id": "example-a",
-    "version": "1.0.0-beta.2",
+    "version": "1.0.0-beta.1",
     "hash": "5ffd0a2e63bfa4854ab40ede41430351",
     "src": "/index.html",
     "fallback": {

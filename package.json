@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "joi": "^10.6.0",
+    "pump": "^1.0.2",
     "request": "^2.81.0"
   },
   "devDependencies": {

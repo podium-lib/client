@@ -31,7 +31,7 @@ test('resolver.fallback() - fallback has "src" field in manifest - should fetch 
         .get('/fallback.html')
         .reply(200, '<p>served fallback</p>');
 
-    const state = new State({}, 'http://example-a.org/manifest.json');
+    const state = new State({}, {uri: 'http://example-a.org/manifest.json'});
     state.manifest = JSON.parse(MANIFEST_HAS_SRC);
     const result = await fallback(state);
     t.is(result.fallback, '<p>served fallback</p>');
@@ -42,7 +42,7 @@ test('resolver.fallback() - fallback has "src" field in manifest - should fetch 
         .get('/fallback.html')
         .reply(200, '<p>served fallback</p>');
 
-    const state = new State({}, 'http://example-a.org/manifest.json');
+    const state = new State({}, {uri: 'http://example-a.org/manifest.json'});
     state.manifest = JSON.parse(MANIFEST_HAS_SRC);
     const result = await fallback(state);
     t.is(result.manifest.fallback.html, '<p>served fallback</p>');
@@ -60,7 +60,7 @@ test('resolver.fallback() - server responds with error when fetching fallback - 
         .get('/fallback.html')
         .reply(500, 'Internal server error');
 
-    const state = new State({}, 'http://example-a.org/manifest.json');
+    const state = new State({}, {uri: 'http://example-a.org/manifest.json'});
     state.manifest = JSON.parse(MANIFEST_HAS_SRC);
 
 	const error = await t.throws(fallback(state));

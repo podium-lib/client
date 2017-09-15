@@ -6,9 +6,6 @@
         "finn-prettier"
     ],
     "parserOptions": {
-        "ecmaVersion": "2017"
-    },
-    "rules": {
-      "new-cap": ["error", {"capIsNewExceptions": ["Router", "Mitm"]}]
+        "ecmaVersion": 2017
     }
 }

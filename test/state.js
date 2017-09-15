@@ -1,7 +1,6 @@
 'use strict';
 
 const isStream = require('is-stream');
-const stream = require('stream');
 const Cache = require('../lib/cache');
 const State = require('../lib/state');
 const test = require('ava');
@@ -9,13 +8,11 @@ const test = require('ava');
 const REGISTRY = new Cache();
 const REQ_OPTIONS = {
     pathname: 'a',
-    query: {b:'c'}
+    query: { b: 'c' },
 };
 const RESOURCE_OPTIONS = {
-    uri: 'http://example.org'
+    uri: 'http://example.org',
 };
-
-
 
 /**
  * Constructor
@@ -58,7 +55,6 @@ test('State() - "true" value for streamThrough - "this.stream" should contain a 
     // NOTE: PassThrough is just a transform stream pushing all chunks through. is-stream has no PassThrough check.
     t.true(isStream.transform(state.stream));
 });
-
 
 test('State() - "false" value for streamThrough - "this.stream" should contain a Writable stream', t => {
     const state = new State(REGISTRY, RESOURCE_OPTIONS, REQ_OPTIONS, false);

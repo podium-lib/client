@@ -14,6 +14,7 @@ app.use((req, res, next) => {
 
 app.use(express.static('public'));
 
+// eslint-disable-next-line no-unused-vars
 app.get('/foo.html', (req, res, next) => {
     res.status(200).send('<div>halla foo.html</div>');
 });

@@ -2,7 +2,7 @@
 
 const Resource = require('../lib/resource');
 const stream = require('stream');
-const Cache = require('../lib/cache');
+const Cache = require('ttl-mem-cache');
 const test = require('ava');
 
 const REGISTRY = new Cache();

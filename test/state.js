@@ -1,7 +1,7 @@
 'use strict';
 
 const isStream = require('is-stream');
-const Cache = require('../lib/cache');
+const Cache = require('ttl-mem-cache');
 const State = require('../lib/state');
 const test = require('ava');
 

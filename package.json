@@ -18,7 +18,8 @@
   "dependencies": {
     "joi": "^11.0.1",
     "pump": "^1.0.2",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "ttl-mem-cache": "^1.0.1"
   },
   "devDependencies": {
     "ava": "^0.22.0",

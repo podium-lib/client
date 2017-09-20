@@ -16,14 +16,14 @@
     "registry": "http://npm.finntech.no/"
   },
   "dependencies": {
-    "joi": "^11.0.1",
+    "joi": "^11.0.2",
     "pump": "^1.0.2",
-    "request": "^2.81.0",
-    "ttl-mem-cache": "^1.0.1"
+    "request": "^2.82.0",
+    "ttl-mem-cache": "^1.2.0"
   },
   "devDependencies": {
     "ava": "^0.22.0",
-    "eslint": "^4.6.1",
+    "eslint": "^4.7.1",
     "eslint-config-finn": "^2.0.0",
     "eslint-config-finn-prettier": "^3.0.0",
     "express": "^4.15.4",
@@ -31,7 +31,7 @@
     "http-proxy": "^1.16.2",
     "is-stream": "^1.1.0",
     "lolex": "^2.1.2",
-    "nock": "^9.0.14",
+    "nock": "^9.0.17",
     "nyc": "^11.2.1",
     "prettier": "^1.7.0"
   }

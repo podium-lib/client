@@ -65,7 +65,8 @@ const client = new PodiumClient(options);
 
 An options object containing configuration. The following values can be provided:
 
- * cacheSize - {Number} - Amount of podlet manifests the client should hold. Default: 20
+ * maxAge - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: 2 hours
+ * agent - {HTTPAgent} - Default HTTP Agent used for all requests.
 
 
 ## API

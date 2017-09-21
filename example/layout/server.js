@@ -1,11 +1,11 @@
 'use strict';
 
 const express = require('express');
-const PodiumClient = require('../../');
+const Client = require('../../');
 
 const PORT = parseInt(process.argv[2], 10);
 
-const client = new PodiumClient();
+const client = new Client();
 client.on('dispose', key => {
     console.log('event - disposing cache -', key);
 });

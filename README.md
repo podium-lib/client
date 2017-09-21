@@ -1,4 +1,4 @@
-# podium-client
+# podlet-client
 
 Client for fetching podium component fragments over http.
 
@@ -6,7 +6,7 @@ Client for fetching podium component fragments over http.
 ## Installation
 
 ```bash
-$ npm i @podium/client --save
+$ npm i @podium/podlet-client --save
 ```
 
 ## General overview
@@ -19,8 +19,8 @@ TODO!
 Connect to a podium component server and stream the html content:
 
 ```js
-const PodiumClient = require('@podium/client');
-const client = new PodiumClient();
+const Client = require('@podium/podlet-client');
+const client = new Client();
 
 const component = client.register({
     uri: 'http://foo.site.com/manifest.json'
@@ -38,8 +38,8 @@ stream.pipe(process.stdout);
 Connect to a podium component server and fetch the html content:
 
 ```js
-const PodiumClient = require('@podium/client');
-const client = new PodiumClient();
+const Client = require('@podium/podlet-client');
+const client = new Client();
 
 const component = client.register({
     uri: 'http://foo.site.com/manifest.json'
@@ -55,10 +55,10 @@ component.fetch().then((content) => {
 
 ## Constructor
 
-Create a new Podium Client instance.
+Create a new Podlet Client instance.
 
 ```js
-const client = new PodiumClient(options);
+const client = new Client(options);
 ```
 
 ### options (optional)
@@ -71,17 +71,17 @@ An options object containing configuration. The following values can be provided
 
 ## API
 
-The Podium Client instance have the following API:
+The Podlet Client instance have the following API:
 
 ### .register(options)
 
-Registers a podium component.
+Registers a podlet.
 
 Example:
 
 ```js
-const PodiumClient = require('@podium/client');
-const client = new PodiumClient();
+const Client = require('@podium/podlet-client');
+const client = new Client();
 
 const component = client.register({uri: 'http://foo.site.com/manifest.json'});
 ```

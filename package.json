@@ -1,8 +1,12 @@
 {
-  "name": "@podium/client",
+  "name": "@podium/podlet-client",
   "version": "2.0.0-alpha.1",
   "main": "lib/client.js",
-  "license": "",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git@github.schibsted.io:Podium/podlet-client.git"
+  },
   "files": [
     "lib"
   ],

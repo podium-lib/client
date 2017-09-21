@@ -65,7 +65,7 @@ const client = new PodiumClient(options);
 
 An options object containing configuration. The following values can be provided:
 
- * maxAge - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: 2 hours
+ * maxAge - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: Infinity
  * agent - {HTTPAgent} - Default HTTP Agent used for all requests.
 
 

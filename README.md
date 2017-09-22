@@ -29,7 +29,7 @@ const component = client.register({
 const stream = component.stream();
 stream.on('error', (error) => {
     console.log(error)
-})
+});
 stream.pipe(process.stdout);
 ```
 
@@ -58,6 +58,7 @@ component.fetch().then((content) => {
 Create a new Podlet Client instance.
 
 ```js
+const Client = require('@podium/podlet-client');
 const client = new Client(options);
 ```
 
@@ -99,9 +100,9 @@ The following values can be provided:
 
 A registered Podium component is stored in a Podium Resource Object.
 
-The Podium Resource Object contain methods for retreiving the content of a
-Podium component. The URI to the content of a component are defined in the
-components manifest. This is the content root of the component.
+The Podium Resource Object contain methods for retrieving the content of a
+Podium component. The URI to the content of a component is defined in the
+component's manifest. This is the content root of the component.
 
 A Podium Resource Object has the following API:
 
@@ -109,7 +110,7 @@ A Podium Resource Object has the following API:
 
 Fetches the content of the component. Returns a `Promise`.
 
-### options (optional)
+#### options (optional)
 
 An options object containing configuration. The following values can be provided:
 
@@ -120,7 +121,7 @@ An options object containing configuration. The following values can be provided
 
 Streams the content of the component. Returns a `ReadStream`.
 
-### options (optional)
+#### options (optional)
 
 An options object containing configuration. The following values can be provided:
 

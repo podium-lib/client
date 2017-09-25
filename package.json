@@ -20,6 +20,7 @@
     "registry": "http://npm.finntech.no/"
   },
   "dependencies": {
+    "@podium/schemas": "^2.0.0-alpha.2",
     "joi": "^11.0.3",
     "pump": "^1.0.2",
     "request": "^2.82.0",

@@ -21,7 +21,7 @@ test('integration basic - ', async t => {
         // .log(console.log)
         .get('/manifest.json')
         .reply(200, EXAMPLE_A_JSON)
-        .get('/index')
+        .get('/index.html')
         .reply(200, EXAMPLE_A_HTML, {
             'podlet-version': '1.0.0-beta.2',
         });

@@ -108,9 +108,7 @@ test('client.js() - get all registered js assets - should return array with all 
     await Promise.all([
         a.fetch(),
         b.fetch(),
-    ]).then(() => {
-        // Do nothing
-    });
+    ]);
 
     const result = client.js();
 
@@ -132,9 +130,7 @@ test('client.js() - one manifest does not hold js asset - should return array wh
         a.fetch(),
         b.fetch(),
         c.fetch(),
-    ]).then(() => {
-        // Do nothing
-    });
+    ]);
 
     const result = client.js();
 
@@ -156,9 +152,7 @@ test('client.css() - get all registered css assets - should return array with al
     await Promise.all([
         a.fetch(),
         b.fetch(),
-    ]).then(() => {
-        // Do nothing
-    });
+    ]);
 
     const result = client.css();
 
@@ -179,9 +173,7 @@ test('client.css() - one manifest does not hold css asset - should return array 
         a.fetch(),
         b.fetch(),
         c.fetch(),
-    ]).then(() => {
-        // Do nothing
-    });
+    ]);
 
     const result = client.css();
 

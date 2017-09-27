@@ -2,7 +2,45 @@
 
 const Resource = require('../lib/resource');
 const Client = require('../');
+const nock = require('nock');
 const test = require('ava');
+const path = require('path');
+const fs = require('fs');
+
+const EXAMPLE_A = fs.readFileSync(
+    path.resolve(__dirname, 'fixtures/example.a.json'),
+    { encoding: 'utf8' }
+);
+
+const EXAMPLE_B = fs.readFileSync(
+    path.resolve(__dirname, 'fixtures/example.b.json'),
+    { encoding: 'utf8' }
+);
+
+const EXAMPLE_C = fs.readFileSync(
+    path.resolve(__dirname, 'fixtures/example.c.json'),
+    { encoding: 'utf8' }
+);
+
+function mockServer() {
+    const headers = {
+        'podlet-version': '1.0.0-beta.2',
+    };
+
+    nock('http://example.org')
+        .get('/a/index.html')
+        .reply(200, '<p>A</p>', headers)
+        .get('/b/index.html')
+        .reply(200, '<p>B</p>', headers)
+        .get('/c/index.html')
+        .reply(200, '<p>C</p>', headers)
+        .get('/a/manifest.json')
+        .reply(200, EXAMPLE_A)
+        .get('/b/manifest.json')
+        .reply(200, EXAMPLE_B)
+        .get('/c/manifest.json')
+        .reply(200, EXAMPLE_C);
+};
 
 /**
  * Constructor
@@ -42,4 +80,111 @@ test('client.register() - call with a invalid value for "options.uri" - should t
         error.message,
         'The value for "options.uri", /wrong, is not a valid URI'
     );
+});
+
+test('client.register() - call with a invalid value for "options.uri" - should throw', t => {
+    const client = new Client();
+    const error = t.throws(() => {
+        client.register({ uri: '/wrong' });
+    }, Error);
+
+    t.is(
+        error.message,
+        'The value for "options.uri", /wrong, is not a valid URI'
+    );
+});
+
+/**
+ * .js()
+ */
+
+test('client.js() - get all registered js assets - should return array with all js assets defined in manifests', async t => {
+    mockServer();
+
+    const client = new Client();
+    const a = client.register({ uri: 'http://example.org/a/manifest.json' });
+    const b = client.register({ uri: 'http://example.org/b/manifest.json' });
+
+    await Promise.all([
+        a.fetch(),
+        b.fetch(),
+    ]).then(() => {
+        // Do nothing
+    });
+
+    const result = client.js();
+
+    t.true(Array.isArray(result));
+    t.true(result[0] === 'scripts-a.js');
+    t.true(result[1] === 'scripts-b.js');
+});
+
+
+test('client.js() - one manifest does not hold js asset - should return array where non defined js asset is omitted', async t => {
+    mockServer();
+
+    const client = new Client();
+    const a = client.register({ uri: 'http://example.org/a/manifest.json' });
+    const b = client.register({ uri: 'http://example.org/b/manifest.json' });
+    const c = client.register({ uri: 'http://example.org/c/manifest.json' });
+
+    await Promise.all([
+        a.fetch(),
+        b.fetch(),
+        c.fetch(),
+    ]).then(() => {
+        // Do nothing
+    });
+
+    const result = client.js();
+
+    t.true(Array.isArray(result));
+    t.true(result.length === 2);
+});
+
+/**
+ * .css()
+ */
+
+test('client.css() - get all registered css assets - should return array with all css assets defined in manifests', async t => {
+    mockServer();
+
+    const client = new Client();
+    const a = client.register({ uri: 'http://example.org/a/manifest.json' });
+    const b = client.register({ uri: 'http://example.org/b/manifest.json' });
+
+    await Promise.all([
+        a.fetch(),
+        b.fetch(),
+    ]).then(() => {
+        // Do nothing
+    });
+
+    const result = client.css();
+
+    t.true(Array.isArray(result));
+    t.true(result[0] === 'styles-a.css');
+    t.true(result[1] === 'styles-b.css');
+});
+
+test('client.css() - one manifest does not hold css asset - should return array where non defined css asset is omitted', async t => {
+    mockServer();
+
+    const client = new Client();
+    const a = client.register({ uri: 'http://example.org/a/manifest.json' });
+    const b = client.register({ uri: 'http://example.org/b/manifest.json' });
+    const c = client.register({ uri: 'http://example.org/c/manifest.json' });
+
+    await Promise.all([
+        a.fetch(),
+        b.fetch(),
+        c.fetch(),
+    ]).then(() => {
+        // Do nothing
+    });
+
+    const result = client.css();
+
+    t.true(Array.isArray(result));
+    t.true(result.length === 2);
 });

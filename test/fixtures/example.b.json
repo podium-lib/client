@@ -1,9 +1,9 @@
 {
-    "name": "example-a",
+    "name": "example-b",
     "version": "1.0.0-beta.2",
     "content": "/index.html",
     "assets": {
-        "js": "scripts-a.js",
-        "css": "styles-a.css"
+        "js": "scripts-b.js",
+        "css": "styles-b.css"
     }
 }

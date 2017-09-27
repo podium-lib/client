@@ -95,6 +95,44 @@ The following values can be provided:
 
  * `uri` Uri to the manifest of a podium component  - Required
 
+### .js()
+
+Retrieve list of all js references from all registered and fetched podlets.
+
+```js
+const Client = require('@podium/podlet-client');
+const client = new Client();
+
+const foo = client.register({uri: 'http://foo.site.com/manifest.json'});
+const bar = client.register({uri: 'http://bar.site.com/manifest.json'});
+
+Promise.all([
+    foo.fetch(),
+    bar.fetch()
+]).then(() => {
+    client.js(); // Array of js entries
+});
+```
+
+### .css()
+
+Retrieve list of all css references from all registered and fetched podlets.
+
+```js
+const Client = require('@podium/podlet-client');
+const client = new Client();
+
+const foo = client.register({uri: 'http://foo.site.com/manifest.json'});
+const bar = client.register({uri: 'http://bar.site.com/manifest.json'});
+
+Promise.all([
+    foo.fetch(),
+    bar.fetch()
+]).then(() => {
+    client.css(); // Array of css entries
+});
+```
+
 
 ## Podium Resource Object
 

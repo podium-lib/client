@@ -106,12 +106,12 @@ const client = new Client();
 const foo = client.register({uri: 'http://foo.site.com/manifest.json'});
 const bar = client.register({uri: 'http://bar.site.com/manifest.json'});
 
-Promise.all([
+await Promise.all([
     foo.fetch(),
     bar.fetch()
-]).then(() => {
-    client.js(); // Array of js entries
-});
+]);
+
+client.js(); // Array of js entries
 ```
 
 ### .css()
@@ -125,12 +125,12 @@ const client = new Client();
 const foo = client.register({uri: 'http://foo.site.com/manifest.json'});
 const bar = client.register({uri: 'http://bar.site.com/manifest.json'});
 
-Promise.all([
+await Promise.all([
     foo.fetch(),
     bar.fetch()
-]).then(() => {
-    client.css(); // Array of css entries
-});
+]);
+
+client.css(); // Array of css entries
 ```
 
 

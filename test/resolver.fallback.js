@@ -8,10 +8,7 @@ const path = require('path');
 const fs = require('fs');
 
 const MANIFEST_IS_ABSOLUTE_URI = fs.readFileSync(
-    path.resolve(
-        __dirname,
-        'fixtures/manifest.fallback.is.absolute.uri.json'
-    ),
+    path.resolve(__dirname, 'fixtures/manifest.fallback.is.absolute.uri.json'),
     { encoding: 'utf8' }
 );
 

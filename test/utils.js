@@ -50,7 +50,11 @@ test('.uriBuilder() - "base" is without <filename>.json and does not end with "/
 });
 
 test('.uriBuilder() - "extra" is provided - should append "extra"', t => {
-    const result = utils.uriBuilder('/podlet', 'http://localhost:7000/foo/', '/a/b');
+    const result = utils.uriBuilder(
+        '/podlet',
+        'http://localhost:7000/foo/',
+        '/a/b'
+    );
     t.true(result === 'http://localhost:7000/foo/podlet/a/b');
 });
 

@@ -40,7 +40,7 @@ function mockServer() {
         .reply(200, EXAMPLE_B)
         .get('/c/manifest.json')
         .reply(200, EXAMPLE_C);
-};
+}
 
 /**
  * Constructor
@@ -105,10 +105,7 @@ test('client.js() - get all registered js assets - should return array with all 
     const a = client.register({ uri: 'http://example.org/a/manifest.json' });
     const b = client.register({ uri: 'http://example.org/b/manifest.json' });
 
-    await Promise.all([
-        a.fetch(),
-        b.fetch(),
-    ]);
+    await Promise.all([a.fetch(), b.fetch()]);
 
     const result = client.js();
 
@@ -116,7 +113,6 @@ test('client.js() - get all registered js assets - should return array with all 
     t.true(result[0] === 'scripts-a.js');
     t.true(result[1] === 'scripts-b.js');
 });
-
 
 test('client.js() - one manifest does not hold js asset - should return array where non defined js asset is omitted', async t => {
     mockServer();
@@ -126,11 +122,7 @@ test('client.js() - one manifest does not hold js asset - should return array wh
     const b = client.register({ uri: 'http://example.org/b/manifest.json' });
     const c = client.register({ uri: 'http://example.org/c/manifest.json' });
 
-    await Promise.all([
-        a.fetch(),
-        b.fetch(),
-        c.fetch(),
-    ]);
+    await Promise.all([a.fetch(), b.fetch(), c.fetch()]);
 
     const result = client.js();
 
@@ -149,10 +141,7 @@ test('client.css() - get all registered css assets - should return array with al
     const a = client.register({ uri: 'http://example.org/a/manifest.json' });
     const b = client.register({ uri: 'http://example.org/b/manifest.json' });
 
-    await Promise.all([
-        a.fetch(),
-        b.fetch(),
-    ]);
+    await Promise.all([a.fetch(), b.fetch()]);
 
     const result = client.css();
 
@@ -169,11 +158,7 @@ test('client.css() - one manifest does not hold css asset - should return array 
     const b = client.register({ uri: 'http://example.org/b/manifest.json' });
     const c = client.register({ uri: 'http://example.org/c/manifest.json' });
 
-    await Promise.all([
-        a.fetch(),
-        b.fetch(),
-        c.fetch(),
-    ]);
+    await Promise.all([a.fetch(), b.fetch(), c.fetch()]);
 
     const result = client.css();
 

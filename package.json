@@ -1,6 +1,6 @@
 {
   "name": "@podium/podlet-client",
-  "version": "2.0.0-alpha.1",
+  "version": "0.0.0",
   "main": "lib/client.js",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {

@@ -165,3 +165,7 @@ An options object containing configuration. The following values can be provided
 
  * pathname - {String} - A path which will be appended to the content root of the component when requested.
  * query - {Object} - An Object which will be appended as query parameters to the request to the component content.
+ 
+#### uri
+
+A property returning the location of the podium resource

@@ -51,3 +51,12 @@ test('resource.stream() - should return a stream', t => {
     const strm = resource.stream();
     t.true(strm instanceof stream);
 });
+
+/**
+ * .uri
+ */
+
+test('Resource().uri - instantiate new resource object - expose own uri', t => {
+    const resource = new Resource(REGISTRY, { uri: URI });
+    t.is(resource.uri, URI);
+});

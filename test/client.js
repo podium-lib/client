@@ -57,7 +57,10 @@ test('Client() - instantiate new client object - should have register method', t
 
 test('client.register() - call with a valid value for "options.uri" - should return a "Resources" object', t => {
     const client = new Client();
-    const resource = client.register({ uri: 'http://example-a.org' });
+    const resource = client.register({
+        uri: 'http://example-a.org',
+        name: 'example-a',
+    });
     t.true(resource instanceof Resource);
 });
 
@@ -73,7 +76,7 @@ test('client.register() - call with missing value for "options.uri" - should thr
 test('client.register() - call with a invalid value for "options.uri" - should throw', t => {
     const client = new Client();
     const error = t.throws(() => {
-        client.register({ uri: '/wrong' });
+        client.register({ uri: '/wrong', name: 'some-name' });
     }, Error);
 
     t.is(
@@ -82,15 +85,25 @@ test('client.register() - call with a invalid value for "options.uri" - should t
     );
 });
 
-test('client.register() - call with a invalid value for "options.uri" - should throw', t => {
+test('client.register() - call with missing value for "options.name" - should throw', t => {
     const client = new Client();
     const error = t.throws(() => {
-        client.register({ uri: '/wrong' });
+        client.register({ uri: 'http://example-a.org' });
+    }, Error);
+
+    t.is(error.message, '"options.name" must be defined');
+});
+
+test('client.register() - call duplicate names - should throw', t => {
+    const client = new Client();
+    client.register({ uri: 'http://example-a.org', name: 'some-name' });
+    const error = t.throws(() => {
+        client.register({ uri: 'http://example-a.org', name: 'some-name' });
     }, Error);
 
     t.is(
         error.message,
-        'The value for "options.uri", /wrong, is not a valid URI'
+        'Resource with the name "some-name" has already been registered.'
     );
 });
 
@@ -102,8 +115,14 @@ test('client.js() - get all registered js assets - should return array with all 
     mockServer();
 
     const client = new Client();
-    const a = client.register({ uri: 'http://example.org/a/manifest.json' });
-    const b = client.register({ uri: 'http://example.org/b/manifest.json' });
+    const a = client.register({
+        uri: 'http://example.org/a/manifest.json',
+        name: 'example-a',
+    });
+    const b = client.register({
+        uri: 'http://example.org/b/manifest.json',
+        name: 'example-b',
+    });
 
     await Promise.all([a.fetch(), b.fetch()]);
 
@@ -118,9 +137,18 @@ test('client.js() - one manifest does not hold js asset - should return array wh
     mockServer();
 
     const client = new Client();
-    const a = client.register({ uri: 'http://example.org/a/manifest.json' });
-    const b = client.register({ uri: 'http://example.org/b/manifest.json' });
-    const c = client.register({ uri: 'http://example.org/c/manifest.json' });
+    const a = client.register({
+        uri: 'http://example.org/a/manifest.json',
+        name: 'example-a',
+    });
+    const b = client.register({
+        uri: 'http://example.org/b/manifest.json',
+        name: 'example-b',
+    });
+    const c = client.register({
+        uri: 'http://example.org/c/manifest.json',
+        name: 'example-c',
+    });
 
     await Promise.all([a.fetch(), b.fetch(), c.fetch()]);
 
@@ -138,8 +166,14 @@ test('client.css() - get all registered css assets - should return array with al
     mockServer();
 
     const client = new Client();
-    const a = client.register({ uri: 'http://example.org/a/manifest.json' });
-    const b = client.register({ uri: 'http://example.org/b/manifest.json' });
+    const a = client.register({
+        uri: 'http://example.org/a/manifest.json',
+        name: 'example-a',
+    });
+    const b = client.register({
+        uri: 'http://example.org/b/manifest.json',
+        name: 'example-b',
+    });
 
     await Promise.all([a.fetch(), b.fetch()]);
 
@@ -154,9 +188,18 @@ test('client.css() - one manifest does not hold css asset - should return array 
     mockServer();
 
     const client = new Client();
-    const a = client.register({ uri: 'http://example.org/a/manifest.json' });
-    const b = client.register({ uri: 'http://example.org/b/manifest.json' });
-    const c = client.register({ uri: 'http://example.org/c/manifest.json' });
+    const a = client.register({
+        uri: 'http://example.org/a/manifest.json',
+        name: 'example-a',
+    });
+    const b = client.register({
+        uri: 'http://example.org/b/manifest.json',
+        name: 'example-b',
+    });
+    const c = client.register({
+        uri: 'http://example.org/c/manifest.json',
+        name: 'example-c',
+    });
 
     await Promise.all([a.fetch(), b.fetch(), c.fetch()]);
 
@@ -164,4 +207,24 @@ test('client.css() - one manifest does not hold css asset - should return array 
 
     t.true(Array.isArray(result));
     t.true(result.length === 2);
+});
+
+/**
+ * .getResource()
+ */
+
+test('client.getResource() - should return a registered resource', t => {
+    const client = new Client();
+    const a = client.register({
+        uri: 'http://example.org/a/manifest.json',
+        name: 'example-a',
+    });
+    const b = client.register({
+        uri: 'http://example.org/b/manifest.json',
+        name: 'example-b',
+    });
+
+    t.true(client.getResource('example-a') === a);
+    t.true(client.getResource('example-b') === b);
+    t.true(client.getResource('something else') === undefined);
 });

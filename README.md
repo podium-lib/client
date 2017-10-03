@@ -84,7 +84,7 @@ Example:
 const Client = require('@podium/podlet-client');
 const client = new Client();
 
-const component = client.register({uri: 'http://foo.site.com/manifest.json'});
+const component = client.register({uri: 'http://foo.site.com/manifest.json', name: 'resource'});
 ```
 
 Returns a Podium Resource Object.
@@ -93,7 +93,9 @@ Returns a Podium Resource Object.
 
 The following values can be provided:
 
- * `uri` Uri to the manifest of a podium component  - Required
+ * `uri` Uri to the manifest of a podium component - Required
+ * `name` Name of the podlet. This is used to reference the podlet in your
+ application, and does not have to match the name of the podlet itself - Required
 
 ### .js()
 
@@ -103,8 +105,8 @@ Retrieve list of all js references from all registered and fetched podlets.
 const Client = require('@podium/podlet-client');
 const client = new Client();
 
-const foo = client.register({uri: 'http://foo.site.com/manifest.json'});
-const bar = client.register({uri: 'http://bar.site.com/manifest.json'});
+const foo = client.register({uri: 'http://foo.site.com/manifest.json', name: 'resource-a'});
+const bar = client.register({uri: 'http://bar.site.com/manifest.json', name: 'resource-b'});
 
 await Promise.all([
     foo.fetch(),
@@ -122,8 +124,8 @@ Retrieve list of all css references from all registered and fetched podlets.
 const Client = require('@podium/podlet-client');
 const client = new Client();
 
-const foo = client.register({uri: 'http://foo.site.com/manifest.json'});
-const bar = client.register({uri: 'http://bar.site.com/manifest.json'});
+const foo = client.register({uri: 'http://foo.site.com/manifest.json', name: 'resource-a'});
+const bar = client.register({uri: 'http://bar.site.com/manifest.json', name: 'resource-b'});
 
 await Promise.all([
     foo.fetch(),
@@ -131,6 +133,21 @@ await Promise.all([
 ]);
 
 client.css(); // Array of css entries
+```
+
+### getResource(name)
+
+Allows you to query a client for a resource, instead of having to keep around
+the reference returned by `client.register` yourself.
+
+```js
+const Client = require('@podium/podlet-client');
+const client = new Client();
+
+const fooFromRegister = client.register({uri: 'http://foo.site.com/manifest.json', name: 'resource-a'});
+const fooFromClient = client.getResource('resource-a');
+
+console.log(fooFromRegister === fooFromClient); // logs `true`
 ```
 
 

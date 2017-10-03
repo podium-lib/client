@@ -29,6 +29,7 @@ test('integration basic - ', async t => {
     const client = new Client();
     const component = client.register({
         uri: 'http://example-a.org/manifest.json',
+        name: 'example-a',
     });
 
     const content = await component.fetch();

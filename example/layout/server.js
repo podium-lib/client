@@ -7,10 +7,14 @@ const PORT = parseInt(process.argv[2], 10);
 
 const client = new Client();
 client.on('dispose', key => {
-    console.log('event - disposing cache -', key);
+    console.log('event - manifest disposed -', key);
+});
+client.on('change', key => {
+    console.log('event - manifest changed -', key);
 });
 
 const podlet = client.register({
+    name: 'test',
     uri: 'http://localhost:7010/manifest.json',
 });
 podlet.on('info', info => {

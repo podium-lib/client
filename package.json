@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "test": "ava",
+    "test": "ava test/*.js",
     "test:verbose": "ava --verbose",
     "test:coverage": "nyc ava --verbose"
   },

@@ -156,7 +156,7 @@ The client emit the following events:
 
 ### change
 
-When there is a change in version number between the cached manifest hold
+When there is a change in version number between the cached manifest held
 by the client and the manifest on the remote source.
 
 The event will fire after the a new version of the manifest on the remote

@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const enableDestroy = require('server-destroy');
 
 class FakeServer {
     constructor(version, name) {
@@ -73,11 +74,24 @@ class FakeServer {
                     options,
                 });
             });
+
+            enableDestroy(this._server);
         });
     }
 
     close() {
-        this.server.close();
+        if (this._server) {
+            return new Promise((resolve, reject) => {
+                this._server.destroy(err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+        }
+        return Promise.resolve();
     }
 
     static makeVersion(index = 1) {

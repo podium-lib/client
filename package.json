@@ -12,9 +12,9 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "test": "ava test/*.js",
-    "test:verbose": "ava --verbose",
-    "test:coverage": "nyc ava --verbose"
+    "test": "jest",
+    "test:verbose": "jest --verbose",
+    "test:coverage": "jest --coverage"
   },
   "publishConfig": {
     "registry": "http://npm.finntech.no/"
@@ -26,17 +26,21 @@
     "ttl-mem-cache": "^1.4.0"
   },
   "devDependencies": {
-    "ava": "^0.22.0",
     "eslint": "^4.8.0",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
     "express": "^4.16.1",
-    "fastbench": "^1.0.1",
     "http-proxy": "^1.16.2",
     "is-stream": "^1.1.0",
-    "lolex": "^2.1.2",
+    "jest": "^21.2.1",
     "nock": "^9.0.22",
-    "nyc": "^11.2.1",
-    "prettier": "^1.7.4"
+    "prettier": "^1.7.4",
+    "server-destroy": "^1.0.1"
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "test/"
+    ],
+    "testEnvironment": "node"
   }
 }

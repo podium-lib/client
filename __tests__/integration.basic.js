@@ -2,21 +2,20 @@
 
 // const Resource = require('../lib/resource');
 const Client = require('../');
-const test = require('ava');
 const nock = require('nock');
 const path = require('path');
 const fs = require('fs');
 
 const EXAMPLE_A_JSON = fs.readFileSync(
-    path.resolve(__dirname, 'fixtures/example.a.json'),
+    path.resolve(__dirname, '../test/fixtures/example.a.json'),
     { encoding: 'utf8' }
 );
 const EXAMPLE_A_HTML = fs.readFileSync(
-    path.resolve(__dirname, 'fixtures/example.a.html'),
+    path.resolve(__dirname, '../test/fixtures/example.a.html'),
     { encoding: 'utf8' }
 );
 
-test('integration basic - ', async t => {
+test('integration basic - ', async () => {
     nock('http://example-a.org')
         // .log(console.log)
         .get('/manifest.json')
@@ -33,5 +32,5 @@ test('integration basic - ', async t => {
     });
 
     const content = await component.fetch();
-    t.is(EXAMPLE_A_HTML.trim(), content.trim());
+    expect(EXAMPLE_A_HTML.trim()).toBe(content.trim());
 });

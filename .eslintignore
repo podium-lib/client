@@ -1,5 +1,1 @@
-# Ignore nested node_modules
-node_modules/
-public/
-*.marko.js
-public-dev-assets/
+coverage/

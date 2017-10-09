@@ -3,22 +3,21 @@
 const Resource = require('../lib/resource');
 const Client = require('../');
 const nock = require('nock');
-const test = require('ava');
 const path = require('path');
 const fs = require('fs');
 
 const EXAMPLE_A = fs.readFileSync(
-    path.resolve(__dirname, 'fixtures/example.a.json'),
+    path.resolve(__dirname, '../test/fixtures/example.a.json'),
     { encoding: 'utf8' }
 );
 
 const EXAMPLE_B = fs.readFileSync(
-    path.resolve(__dirname, 'fixtures/example.b.json'),
+    path.resolve(__dirname, '../test/fixtures/example.b.json'),
     { encoding: 'utf8' }
 );
 
 const EXAMPLE_C = fs.readFileSync(
-    path.resolve(__dirname, 'fixtures/example.c.json'),
+    path.resolve(__dirname, '../test/fixtures/example.c.json'),
     { encoding: 'utf8' }
 );
 
@@ -50,63 +49,55 @@ function mockServer() {
  * Constructor
  */
 
-test('Client() - instantiate new client object - should have register method', t => {
+test('Client() - instantiate new client object - should have register method', () => {
     const client = new Client();
-    t.true(typeof client.register === 'function');
+    expect(client.register).toBeInstanceOf(Function);
 });
 
 /**
  * .register()
  */
 
-test('client.register() - call with a valid value for "options.uri" - should return a "Resources" object', t => {
+test('client.register() - call with a valid value for "options.uri" - should return a "Resources" object', () => {
     const client = new Client();
     const resource = client.register({
         uri: 'http://example-a.org',
         name: 'example-a',
     });
-    t.true(resource instanceof Resource);
+    expect(resource).toBeInstanceOf(Resource);
 });
 
-test('client.register() - call with missing value for "options.uri" - should throw', t => {
+test('client.register() - call with missing value for "options.uri" - should throw', () => {
     const client = new Client();
-    const error = t.throws(() => {
+
+    expect(() => {
         client.register({});
-    }, Error);
-
-    t.is(error.message, '"options.uri" must be defined');
+    }).toThrowError('"options.uri" must be defined');
 });
 
-test('client.register() - call with a invalid value for "options.uri" - should throw', t => {
+test('client.register() - call with a invalid value for "options.uri" - should throw', () => {
     const client = new Client();
-    const error = t.throws(() => {
+
+    expect(() => {
         client.register({ uri: '/wrong', name: 'some-name' });
-    }, Error);
-
-    t.is(
-        error.message,
-        'The value for "options.uri", /wrong, is not a valid URI'
-    );
+    }).toThrowError('The value for "options.uri", /wrong, is not a valid URI');
 });
 
-test('client.register() - call with missing value for "options.name" - should throw', t => {
+test('client.register() - call with missing value for "options.name" - should throw', () => {
     const client = new Client();
-    const error = t.throws(() => {
-        client.register({ uri: 'http://example-a.org' });
-    }, Error);
 
-    t.is(error.message, '"options.name" must be defined');
+    expect(() => {
+        client.register({ uri: 'http://example-a.org' });
+    }).toThrowError('"options.name" must be defined');
 });
 
-test('client.register() - call duplicate names - should throw', t => {
+test('client.register() - call duplicate names - should throw', () => {
     const client = new Client();
     client.register({ uri: 'http://example-a.org', name: 'some-name' });
-    const error = t.throws(() => {
-        client.register({ uri: 'http://example-a.org', name: 'some-name' });
-    }, Error);
 
-    t.is(
-        error.message,
+    expect(() => {
+        client.register({ uri: 'http://example-a.org', name: 'some-name' });
+    }).toThrowError(
         'Resource with the name "some-name" has already been registered.'
     );
 });
@@ -115,7 +106,7 @@ test('client.register() - call duplicate names - should throw', t => {
  * .js()
  */
 
-test('client.js() - get all registered js assets - should return array with all js assets defined in manifests', async t => {
+test('client.js() - get all registered js assets - should return array with all js assets defined in manifests', async () => {
     mockServer();
 
     const client = new Client();
@@ -130,14 +121,10 @@ test('client.js() - get all registered js assets - should return array with all 
 
     await Promise.all([a.fetch(), b.fetch()]);
 
-    const result = client.js();
-
-    t.true(Array.isArray(result));
-    t.true(result[0] === 'scripts-a.js');
-    t.true(result[1] === 'scripts-b.js');
+    expect(client.js()).toEqual(['scripts-a.js', 'scripts-b.js']);
 });
 
-test('client.js() - one manifest does not hold js asset - should return array where non defined js asset is omitted', async t => {
+test('client.js() - one manifest does not hold js asset - should return array where non defined js asset is omitted', async () => {
     mockServer();
 
     const client = new Client();
@@ -156,17 +143,14 @@ test('client.js() - one manifest does not hold js asset - should return array wh
 
     await Promise.all([a.fetch(), b.fetch(), c.fetch()]);
 
-    const result = client.js();
-
-    t.true(Array.isArray(result));
-    t.true(result.length === 2);
+    expect(client.js()).toEqual(['scripts-a.js', 'scripts-b.js']);
 });
 
 /**
  * .css()
  */
 
-test('client.css() - get all registered css assets - should return array with all css assets defined in manifests', async t => {
+test('client.css() - get all registered css assets - should return array with all css assets defined in manifests', async () => {
     mockServer();
 
     const client = new Client();
@@ -181,14 +165,10 @@ test('client.css() - get all registered css assets - should return array with al
 
     await Promise.all([a.fetch(), b.fetch()]);
 
-    const result = client.css();
-
-    t.true(Array.isArray(result));
-    t.true(result[0] === 'styles-a.css');
-    t.true(result[1] === 'styles-b.css');
+    expect(client.css()).toEqual(['styles-a.css', 'styles-b.css']);
 });
 
-test('client.css() - one manifest does not hold css asset - should return array where non defined css asset is omitted', async t => {
+test('client.css() - one manifest does not hold css asset - should return array where non defined css asset is omitted', async () => {
     mockServer();
 
     const client = new Client();
@@ -207,17 +187,14 @@ test('client.css() - one manifest does not hold css asset - should return array 
 
     await Promise.all([a.fetch(), b.fetch(), c.fetch()]);
 
-    const result = client.css();
-
-    t.true(Array.isArray(result));
-    t.true(result.length === 2);
+    expect(client.css()).toEqual(['styles-a.css', 'styles-b.css']);
 });
 
 /**
  * .getResource()
  */
 
-test('client.getResource() - should return a registered resource', t => {
+test('client.getResource() - should return a registered resource', () => {
     const client = new Client();
     const a = client.register({
         uri: 'http://example.org/a/manifest.json',
@@ -228,7 +205,7 @@ test('client.getResource() - should return a registered resource', t => {
         name: 'example-b',
     });
 
-    t.true(client.getResource('example-a') === a);
-    t.true(client.getResource('example-b') === b);
-    t.true(client.getResource('something else') === undefined);
+    expect(client.getResource('example-a')).toBe(a);
+    expect(client.getResource('example-b')).toBe(b);
+    expect(client.getResource('something else')).toBeUndefined();
 });

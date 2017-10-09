@@ -72,7 +72,9 @@ test('client.register() - call with missing value for "options.uri" - should thr
 
     expect(() => {
         client.register({ name: 'example' });
-    }).toThrowError('The value for "options.uri", undefined, is not a valid URI');
+    }).toThrowError(
+        'The value for "options.uri", undefined, is not a valid URI'
+    );
 });
 
 test('client.register() - call with a invalid value for "options.uri" - should throw', () => {
@@ -83,12 +85,24 @@ test('client.register() - call with a invalid value for "options.uri" - should t
     }).toThrowError('The value for "options.uri", /wrong, is not a valid URI');
 });
 
+test('client.register() - call with a invalid value for "options.name" - should throw', () => {
+    const client = new Client();
+
+    expect(() => {
+        client.register({ uri: 'http://example-a.org', name: 'some-name' });
+    }).toThrowError(
+        'The value for "options.name", some-name, is not a valid name'
+    );
+});
+
 test('client.register() - call with missing value for "options.name" - should throw', () => {
     const client = new Client();
 
     expect(() => {
         client.register({ uri: 'http://example-a.org' });
-    }).toThrowError('The value for "options.name", undefined, is not a valid name');
+    }).toThrowError(
+        'The value for "options.name", undefined, is not a valid name'
+    );
 });
 
 test('client.register() - call duplicate names - should throw', () => {
@@ -100,6 +114,36 @@ test('client.register() - call duplicate names - should throw', () => {
     }).toThrowError(
         'Resource with the name "someName" has already been registered.'
     );
+});
+
+test('client.register() - register resources - should set resource as property of client object', () => {
+    const client = new Client();
+    const a = client.register({
+        uri: 'http://example-a.org',
+        name: 'exampleA',
+    });
+    const b = client.register({
+        uri: 'http://example-b.org',
+        name: 'exampleB',
+    });
+    expect(client).toHaveProperty('exampleA');
+    expect(client).toHaveProperty('exampleB');
+    expect(a).toEqual(client.exampleA);
+    expect(b).toEqual(client.exampleB);
+});
+
+test('client.register() - register resources - should be possible to iterate over resources set on client object', () => {
+    const client = new Client();
+    const a = client.register({
+        uri: 'http://example-a.org',
+        name: 'exampleA',
+    });
+    const b = client.register({
+        uri: 'http://example-b.org',
+        name: 'exampleB',
+    });
+
+    expect([a, b]).toEqual(expect.arrayContaining(Array.from(client)));
 });
 
 /**

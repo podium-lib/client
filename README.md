@@ -150,6 +150,29 @@ const fooFromClient = client.getResource('resource-a');
 console.log(fooFromRegister === fooFromClient); // logs `true`
 ```
 
+## Events
+
+The client emit the following events:
+
+### change
+
+When there is a change in version number between the cached manifest held
+by the client and the manifest on the remote source.
+
+The event will fire after the a new version of the manifest on the remote
+source is fetched.
+
+Emits the new manifest.
+
+```js
+const client = new Client();
+client.on('change', manifest => {
+    console.log(manifest);
+});
+
+const resource = client.register({uri: 'http://foo.site.com/manifest.json', name: 'resource-a'});
+```
+
 
 ## Podium Resource Object
 
@@ -182,7 +205,7 @@ An options object containing configuration. The following values can be provided
 
  * pathname - {String} - A path which will be appended to the content root of the component when requested.
  * query - {Object} - An Object which will be appended as query parameters to the request to the component content.
- 
+
 #### uri
 
 A property returning the location of the podium resource

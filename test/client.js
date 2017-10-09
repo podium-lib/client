@@ -22,9 +22,13 @@ const EXAMPLE_C = fs.readFileSync(
     { encoding: 'utf8' }
 );
 
+function makeVersion(index = 1) {
+    return `1.0.0-beta.${index.toString()}`;
+}
+
 function mockServer() {
     const headers = {
-        'podlet-version': '1.0.0-beta.2',
+        'podlet-version': makeVersion(2),
     };
 
     nock('http://example.org')

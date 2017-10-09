@@ -29,7 +29,7 @@ test('integration basic - ', async t => {
     const client = new Client();
     const component = client.register({
         uri: 'http://example-a.org/manifest.json',
-        name: 'example-a',
+        name: 'exampleA',
     });
 
     const content = await component.fetch();

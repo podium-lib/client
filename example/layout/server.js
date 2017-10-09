@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 app.get('/stream', (req, res) => {
     console.log(`STREAM :: ${Date.now()}`);
 
-    const stream = podlet.stream();
+    const stream = client.podlet.stream();
     stream.on('error', error => {
         console.log(error);
     });

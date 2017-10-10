@@ -233,23 +233,3 @@ test('client.css() - one manifest does not hold css asset - should return array 
 
     expect(client.css()).toEqual(['styles-a.css', 'styles-b.css']);
 });
-
-/**
- * .getResource()
- */
-
-test('client.getResource() - should return a registered resource', () => {
-    const client = new Client();
-    const a = client.register({
-        uri: 'http://example.org/a/manifest.json',
-        name: 'exampleA',
-    });
-    const b = client.register({
-        uri: 'http://example.org/b/manifest.json',
-        name: 'exampleB',
-    });
-
-    expect(client.getResource('exampleA')).toBe(a);
-    expect(client.getResource('exampleB')).toBe(b);
-    expect(client.getResource('something else')).toBeUndefined();
-});

@@ -13,20 +13,19 @@ client.on('change', key => {
     console.log('event - manifest changed -', key);
 });
 
-const podlet = client.register({
-    name: 'test',
+client.register({
+    name: 'podlet',
     uri: 'http://localhost:7010/manifest.json',
 });
-podlet.on('info', info => {
+client.podlet.on('info', info => {
     console.log(info);
 });
 
 const app = express();
 
-// eslint-disable-next-line no-unused-vars
-app.get('/', (req, res, next) => {
+app.get('/', (req, res) => {
     console.log(`FETCH ::  ${Date.now()}`);
-    podlet
+    client.podlet
         .fetch()
         .then(html => {
             res.status(200).send(html);
@@ -37,11 +36,10 @@ app.get('/', (req, res, next) => {
         });
 });
 
-// eslint-disable-next-line no-unused-vars
-app.get('/stream', (req, res, next) => {
+app.get('/stream', (req, res) => {
     console.log(`STREAM :: ${Date.now()}`);
 
-    const stream = podlet.stream();
+    const stream = client.podlet.stream();
     stream.on('error', error => {
         console.log(error);
     });

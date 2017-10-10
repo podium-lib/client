@@ -62,6 +62,20 @@ const Client = require('@podium/podlet-client');
 const client = new Client(options);
 ```
 
+The client instance are iterable and hold each registered resource.
+
+```js
+const Client = require('@podium/podlet-client');
+const client = new Client();
+
+client.register({uri: 'http://foo.site.com/manifest.json', name: 'fooBar'});
+client.register({uri: 'http://bar.site.com/manifest.json', name: 'barFoo'});
+
+for (let resource of client) {
+    resource.fetch();
+}
+```
+
 ### options (optional)
 
 An options object containing configuration. The following values can be provided:
@@ -84,10 +98,24 @@ Example:
 const Client = require('@podium/podlet-client');
 const client = new Client();
 
-const component = client.register({uri: 'http://foo.site.com/manifest.json', name: 'resource'});
+const component = client.register({uri: 'http://foo.site.com/manifest.json', name: 'fooBar'});
 ```
 
 Returns a Podium Resource Object.
+
+The created Podium Resource Object is also stored on the instance of the client.
+It is stored with the `name` as property name.
+
+Example:
+
+```js
+const Client = require('@podium/podlet-client');
+const client = new Client();
+
+client.register({uri: 'http://foo.site.com/manifest.json', name: 'fooBar'});
+client.fooBar.fetch();
+```
+
 
 #### options (required)
 

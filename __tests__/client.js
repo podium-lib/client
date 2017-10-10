@@ -62,7 +62,7 @@ test('client.register() - call with a valid value for "options.uri" - should ret
     const client = new Client();
     const resource = client.register({
         uri: 'http://example-a.org',
-        name: 'example-a',
+        name: 'example',
     });
     expect(resource).toBeInstanceOf(Resource);
 });
@@ -71,16 +71,28 @@ test('client.register() - call with missing value for "options.uri" - should thr
     const client = new Client();
 
     expect(() => {
-        client.register({});
-    }).toThrowError('"options.uri" must be defined');
+        client.register({ name: 'example' });
+    }).toThrowError(
+        'The value for "options.uri", undefined, is not a valid URI'
+    );
 });
 
 test('client.register() - call with a invalid value for "options.uri" - should throw', () => {
     const client = new Client();
 
     expect(() => {
-        client.register({ uri: '/wrong', name: 'some-name' });
+        client.register({ uri: '/wrong', name: 'someName' });
     }).toThrowError('The value for "options.uri", /wrong, is not a valid URI');
+});
+
+test('client.register() - call with a invalid value for "options.name" - should throw', () => {
+    const client = new Client();
+
+    expect(() => {
+        client.register({ uri: 'http://example-a.org', name: 'some-name' });
+    }).toThrowError(
+        'The value for "options.name", some-name, is not a valid name'
+    );
 });
 
 test('client.register() - call with missing value for "options.name" - should throw', () => {
@@ -88,18 +100,50 @@ test('client.register() - call with missing value for "options.name" - should th
 
     expect(() => {
         client.register({ uri: 'http://example-a.org' });
-    }).toThrowError('"options.name" must be defined');
+    }).toThrowError(
+        'The value for "options.name", undefined, is not a valid name'
+    );
 });
 
 test('client.register() - call duplicate names - should throw', () => {
     const client = new Client();
-    client.register({ uri: 'http://example-a.org', name: 'some-name' });
+    client.register({ uri: 'http://example-a.org', name: 'someName' });
 
     expect(() => {
-        client.register({ uri: 'http://example-a.org', name: 'some-name' });
+        client.register({ uri: 'http://example-a.org', name: 'someName' });
     }).toThrowError(
-        'Resource with the name "some-name" has already been registered.'
+        'Resource with the name "someName" has already been registered.'
     );
+});
+
+test('client.register() - register resources - should set resource as property of client object', () => {
+    const client = new Client();
+    const a = client.register({
+        uri: 'http://example-a.org',
+        name: 'exampleA',
+    });
+    const b = client.register({
+        uri: 'http://example-b.org',
+        name: 'exampleB',
+    });
+    expect(client).toHaveProperty('exampleA');
+    expect(client).toHaveProperty('exampleB');
+    expect(a).toEqual(client.exampleA);
+    expect(b).toEqual(client.exampleB);
+});
+
+test('client.register() - register resources - should be possible to iterate over resources set on client object', () => {
+    const client = new Client();
+    const a = client.register({
+        uri: 'http://example-a.org',
+        name: 'exampleA',
+    });
+    const b = client.register({
+        uri: 'http://example-b.org',
+        name: 'exampleB',
+    });
+
+    expect([a, b]).toEqual(expect.arrayContaining(Array.from(client)));
 });
 
 /**
@@ -112,11 +156,11 @@ test('client.js() - get all registered js assets - should return array with all 
     const client = new Client();
     const a = client.register({
         uri: 'http://example.org/a/manifest.json',
-        name: 'example-a',
+        name: 'exampleA',
     });
     const b = client.register({
         uri: 'http://example.org/b/manifest.json',
-        name: 'example-b',
+        name: 'exampleB',
     });
 
     await Promise.all([a.fetch(), b.fetch()]);
@@ -130,15 +174,15 @@ test('client.js() - one manifest does not hold js asset - should return array wh
     const client = new Client();
     const a = client.register({
         uri: 'http://example.org/a/manifest.json',
-        name: 'example-a',
+        name: 'exampleA',
     });
     const b = client.register({
         uri: 'http://example.org/b/manifest.json',
-        name: 'example-b',
+        name: 'exampleB',
     });
     const c = client.register({
         uri: 'http://example.org/c/manifest.json',
-        name: 'example-c',
+        name: 'exampleC',
     });
 
     await Promise.all([a.fetch(), b.fetch(), c.fetch()]);
@@ -156,11 +200,11 @@ test('client.css() - get all registered css assets - should return array with al
     const client = new Client();
     const a = client.register({
         uri: 'http://example.org/a/manifest.json',
-        name: 'example-a',
+        name: 'exampleA',
     });
     const b = client.register({
         uri: 'http://example.org/b/manifest.json',
-        name: 'example-b',
+        name: 'exampleB',
     });
 
     await Promise.all([a.fetch(), b.fetch()]);
@@ -174,15 +218,15 @@ test('client.css() - one manifest does not hold css asset - should return array 
     const client = new Client();
     const a = client.register({
         uri: 'http://example.org/a/manifest.json',
-        name: 'example-a',
+        name: 'exampleA',
     });
     const b = client.register({
         uri: 'http://example.org/b/manifest.json',
-        name: 'example-b',
+        name: 'exampleB',
     });
     const c = client.register({
         uri: 'http://example.org/c/manifest.json',
-        name: 'example-c',
+        name: 'exampleC',
     });
 
     await Promise.all([a.fetch(), b.fetch(), c.fetch()]);
@@ -198,14 +242,14 @@ test('client.getResource() - should return a registered resource', () => {
     const client = new Client();
     const a = client.register({
         uri: 'http://example.org/a/manifest.json',
-        name: 'example-a',
+        name: 'exampleA',
     });
     const b = client.register({
         uri: 'http://example.org/b/manifest.json',
-        name: 'example-b',
+        name: 'exampleB',
     });
 
-    expect(client.getResource('example-a')).toBe(a);
-    expect(client.getResource('example-b')).toBe(b);
+    expect(client.getResource('exampleA')).toBe(a);
+    expect(client.getResource('exampleB')).toBe(b);
     expect(client.getResource('something else')).toBeUndefined();
 });

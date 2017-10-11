@@ -1,6 +1,7 @@
 'use strict';
 
 const Client = require('../');
+const Faker = require('../test/faker');
 
 /**
  * Constructor
@@ -16,29 +17,24 @@ test('Client() - instantiate new client object - should have register method', (
  */
 
 test("client.refreshManifests() - should populate all resources' manifests", async () => {
-    mockServer();
+    const serverA = new Faker({ name: 'aa', assets: { js: 'a.js', css : 'a.css' } });
+    const serverB = new Faker({ name: 'bb', assets: { js: 'b.js', css : 'b.css' } });
+    const serviceA = await serverA.listen();
+    const serviceB = await serverB.listen();
 
     const client = new Client();
-
-    client.register({
-        uri: 'http://example.org/a/manifest.json',
-        name: 'exampleA',
-    });
-    client.register({
-        uri: 'http://example.org/b/manifest.json',
-        name: 'exampleB',
-    });
-    client.register({
-        uri: 'http://example.org/c/manifest.json',
-        name: 'exampleC',
-    });
+    const a = client.register(serviceA.options);
+    const b = client.register(serviceB.options);
 
     expect(client.js()).toEqual([]);
     expect(client.css()).toEqual([]);
 
     const fetchResult = await client.refreshManifests();
 
-    expect(client.js()).toEqual(['scripts-a.js', 'scripts-b.js']);
-    expect(client.css()).toEqual(['styles-a.css', 'styles-b.css']);
+    expect(client.js()).toEqual(['a.js', 'b.js']);
+    expect(client.css()).toEqual(['a.css', 'b.css']);
     expect(fetchResult).toBeUndefined();
+
+    await serverA.close();
+    await serverB.close();
 });

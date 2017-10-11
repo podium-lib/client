@@ -10,6 +10,7 @@ class FakeServer {
         this._server = undefined;
 
         this._routeManifest = '/manifest.json';
+        this._routeFallback = '/fallback.html';
         this._routeContent = '/index.html';
 
         this._manifest = Object.assign(
@@ -21,7 +22,14 @@ class FakeServer {
             manifest
         );
 
-        this._metrics = { manifest: 0, content: 0 };
+        this._bodyContent = `<p>content ${this._manifest.name}</p>`;
+        this._bodyFallback = `<p>fallback ${this._manifest.name}</p>`;
+
+        this._metrics = {
+            manifest: 0,
+            fallback: 0,
+            content: 0,
+        };
 
         // Public
         Object.defineProperty(this, 'metrics', {
@@ -52,6 +60,24 @@ class FakeServer {
             enumerable: true,
         });
 
+        Object.defineProperty(this, 'contentBody', {
+            get: () => this._bodyContent,
+            set: value => {
+                this._bodyContent = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
+        Object.defineProperty(this, 'fallbackBody', {
+            get: () => this._bodyFallback,
+            set: value => {
+                this._bodyFallback = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
         // Middleware
         this._app.use((req, res, next) => {
             res.setHeader('podlet-version', this._manifest.version);
@@ -67,7 +93,13 @@ class FakeServer {
         // Content route
         this._app.get(this._routeContent, (req, res) => {
             this._metrics.content++;
-            res.status(200).send(`<p>${this._manifest.name}</p>`);
+            res.status(200).send(this._bodyContent);
+        });
+
+        // Fallback route
+        this._app.get(this._routeFallback, (req, res) => {
+            this._metrics.fallback++;
+            res.status(200).send(this._bodyFallback);
         });
     }
 

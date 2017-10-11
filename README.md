@@ -163,6 +163,26 @@ await Promise.all([
 client.css(); // Array of css entries
 ```
 
+### refreshManifests()
+
+Refreshes the manifests of all registered resources.
+
+```js
+const Client = require('@podium/podlet-client');
+const client = new Client();
+
+client.register({uri: 'http://foo.site.com/manifest.json', name: 'resourceA'});
+client.register({uri: 'http://bar.site.com/manifest.json', name: 'resourceB'});
+
+console.log(client.js()); // []
+console.log(client.css()); // []
+
+await client.refreshManifests();
+
+console.log(client.js()); // ['resource-a.js', 'resource-b.js']
+console.log(client.css()); // ['resource-a.css', 'resource-b.css']
+```
+
 ## Events
 
 The client emit the following events:

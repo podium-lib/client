@@ -17,14 +17,20 @@ test('Client() - instantiate new client object - should have register method', (
  */
 
 test("client.refreshManifests() - should populate all resources' manifests", async () => {
-    const serverA = new Faker({ name: 'aa', assets: { js: 'a.js', css : 'a.css' } });
-    const serverB = new Faker({ name: 'bb', assets: { js: 'b.js', css : 'b.css' } });
+    const serverA = new Faker({
+        name: 'aa',
+        assets: { js: 'a.js', css: 'a.css' },
+    });
+    const serverB = new Faker({
+        name: 'bb',
+        assets: { js: 'b.js', css: 'b.css' },
+    });
     const serviceA = await serverA.listen();
     const serviceB = await serverB.listen();
 
     const client = new Client();
-    const a = client.register(serviceA.options);
-    const b = client.register(serviceB.options);
+    client.register(serviceA.options);
+    client.register(serviceB.options);
 
     expect(client.js()).toEqual([]);
     expect(client.css()).toEqual([]);

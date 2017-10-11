@@ -163,19 +163,24 @@ await Promise.all([
 client.css(); // Array of css entries
 ```
 
-### getResource(name)
+### refreshManifests()
 
-Allows you to query a client for a resource, instead of having to keep around
-the reference returned by `client.register` yourself.
+Refreshes the manifests of all registered resources.
 
 ```js
 const Client = require('@podium/podlet-client');
 const client = new Client();
 
-const fooFromRegister = client.register({uri: 'http://foo.site.com/manifest.json', name: 'resource-a'});
-const fooFromClient = client.getResource('resource-a');
+client.register({uri: 'http://foo.site.com/manifest.json', name: 'resourceA'});
+client.register({uri: 'http://bar.site.com/manifest.json', name: 'resourceB'});
 
-console.log(fooFromRegister === fooFromClient); // logs `true`
+console.log(client.js()); // []
+console.log(client.css()); // []
+
+await client.refreshManifests();
+
+console.log(client.js()); // ['resource-a.js', 'resource-b.js']
+console.log(client.css()); // ['resource-a.css', 'resource-b.css']
 ```
 
 ## Events

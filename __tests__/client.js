@@ -12,21 +12,33 @@ test('Client() - instantiate new client object - should have register method', (
 });
 
 /**
- * .getResource()
+ * .refreshManifests()
  */
 
-test('client.getResource() - should return a registered resource', () => {
+test("client.refreshManifests() - should populate all resources' manifests", async () => {
+    mockServer();
+
     const client = new Client();
-    const a = client.register({
+
+    client.register({
         uri: 'http://example.org/a/manifest.json',
         name: 'exampleA',
     });
-    const b = client.register({
+    client.register({
         uri: 'http://example.org/b/manifest.json',
         name: 'exampleB',
     });
+    client.register({
+        uri: 'http://example.org/c/manifest.json',
+        name: 'exampleC',
+    });
 
-    expect(client.getResource('exampleA')).toBe(a);
-    expect(client.getResource('exampleB')).toBe(b);
-    expect(client.getResource('something else')).toBeUndefined();
+    expect(client.js()).toEqual([]);
+    expect(client.css()).toEqual([]);
+
+    const fetchResult = await client.refreshManifests();
+
+    expect(client.js()).toEqual(['scripts-a.js', 'scripts-b.js']);
+    expect(client.css()).toEqual(['styles-a.css', 'styles-b.css']);
+    expect(fetchResult).toBeUndefined();
 });

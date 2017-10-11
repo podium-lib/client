@@ -39,10 +39,35 @@ class FakeServer {
             },
         });
 
+        Object.defineProperty(this, 'manifest', {
+            get: () => this._manifest,
+            set: () => {
+                throw new Error('Cannot set read-only property.');
+            },
+        });
+
         Object.defineProperty(this, 'version', {
             get: () => this._manifest.version,
             set: value => {
                 this._manifest.version = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
+        Object.defineProperty(this, 'content', {
+            get: () => this._manifest.content,
+            set: value => {
+                this._manifest.content = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
+        Object.defineProperty(this, 'fallback', {
+            get: () => this._manifest.fallback,
+            set: value => {
+                this._manifest.fallback = value;
             },
             configurable: true,
             enumerable: true,

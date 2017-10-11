@@ -163,21 +163,6 @@ await Promise.all([
 client.css(); // Array of css entries
 ```
 
-### getResource(name)
-
-Allows you to query a client for a resource, instead of having to keep around
-the reference returned by `client.register` yourself.
-
-```js
-const Client = require('@podium/podlet-client');
-const client = new Client();
-
-const fooFromRegister = client.register({uri: 'http://foo.site.com/manifest.json', name: 'resource-a'});
-const fooFromClient = client.getResource('resource-a');
-
-console.log(fooFromRegister === fooFromClient); // logs `true`
-```
-
 ## Events
 
 The client emit the following events:

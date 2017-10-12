@@ -25,8 +25,10 @@ test("client.refreshManifests() - should populate all resources' manifests", asy
         name: 'bb',
         assets: { js: 'b.js', css: 'b.css' },
     });
-    const serviceA = await serverA.listen();
-    const serviceB = await serverB.listen();
+    const [serviceA, serviceB] = await Promise.all([
+        serverA.listen(),
+        serverB.listen(),
+    ]);
 
     const client = new Client();
     client.register(serviceA.options);
@@ -41,6 +43,5 @@ test("client.refreshManifests() - should populate all resources' manifests", asy
     expect(client.css()).toEqual(['a.css', 'b.css']);
     expect(fetchResult).toBeUndefined();
 
-    await serverA.close();
-    await serverB.close();
+    await Promise.all([serverA.close(), serverB.close()]);
 });

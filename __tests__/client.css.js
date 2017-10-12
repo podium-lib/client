@@ -10,8 +10,10 @@ const Faker = require('../test/faker');
 test('client.css() - get all registered css assets - should return array with all css assets defined in manifests', async () => {
     const serverA = new Faker({ name: 'aa', assets: { css: 'a.css' } });
     const serverB = new Faker({ name: 'bb', assets: { css: 'b.css' } });
-    const serviceA = await serverA.listen();
-    const serviceB = await serverB.listen();
+    const [serviceA, serviceB] = await Promise.all([
+        serverA.listen(),
+        serverB.listen(),
+    ]);
 
     const client = new Client();
     const a = client.register(serviceA.options);
@@ -21,17 +23,18 @@ test('client.css() - get all registered css assets - should return array with al
 
     expect(client.css()).toEqual(['a.css', 'b.css']);
 
-    await serverA.close();
-    await serverB.close();
+    await Promise.all([serverA.close(), serverB.close()]);
 });
 
 test('client.css() - one manifest does not hold css asset - should return array where non defined css asset is omitted', async () => {
     const serverA = new Faker({ name: 'aa', assets: { css: 'a.css' } });
     const serverB = new Faker({ name: 'bb', assets: { css: 'b.css' } });
     const serverC = new Faker({ name: 'cc' });
-    const serviceA = await serverA.listen();
-    const serviceB = await serverB.listen();
-    const serviceC = await serverC.listen();
+    const [serviceA, serviceB, serviceC] = await Promise.all([
+        serverA.listen(),
+        serverB.listen(),
+        serverC.listen(),
+    ]);
 
     const client = new Client();
     const a = client.register(serviceA.options);
@@ -42,7 +45,5 @@ test('client.css() - one manifest does not hold css asset - should return array 
 
     expect(client.css()).toEqual(['a.css', 'b.css']);
 
-    await serverA.close();
-    await serverB.close();
-    await serverC.close();
+    await Promise.all([serverA.close(), serverB.close(), serverC.close()]);
 });

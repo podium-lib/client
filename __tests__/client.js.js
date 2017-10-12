@@ -10,8 +10,10 @@ const Faker = require('../test/faker');
 test('client.js() - get all registered js assets - should return array with all js assets defined in manifests', async () => {
     const serverA = new Faker({ name: 'aa', assets: { js: 'a.js' } });
     const serverB = new Faker({ name: 'bb', assets: { js: 'b.js' } });
-    const serviceA = await serverA.listen();
-    const serviceB = await serverB.listen();
+    const [serviceA, serviceB] = await Promise.all([
+        serverA.listen(),
+        serverB.listen(),
+    ]);
 
     const client = new Client();
     const a = client.register(serviceA.options);
@@ -21,17 +23,18 @@ test('client.js() - get all registered js assets - should return array with all 
 
     expect(client.js()).toEqual(['a.js', 'b.js']);
 
-    await serverA.close();
-    await serverB.close();
+    await Promise.all([serverA.close(), serverB.close()]);
 });
 
 test('client.js() - one manifest does not hold js asset - should return array where non defined js asset is omitted', async () => {
     const serverA = new Faker({ name: 'aa', assets: { js: 'a.js' } });
     const serverB = new Faker({ name: 'bb', assets: { js: 'b.js' } });
     const serverC = new Faker({ name: 'cc' });
-    const serviceA = await serverA.listen();
-    const serviceB = await serverB.listen();
-    const serviceC = await serverC.listen();
+    const [serviceA, serviceB, serviceC] = await Promise.all([
+        serverA.listen(),
+        serverB.listen(),
+        serverC.listen(),
+    ]);
 
     const client = new Client();
     const a = client.register(serviceA.options);
@@ -42,7 +45,5 @@ test('client.js() - one manifest does not hold js asset - should return array wh
 
     expect(client.js()).toEqual(['a.js', 'b.js']);
 
-    await serverA.close();
-    await serverB.close();
-    await serverC.close();
+    await Promise.all([serverA.close(), serverB.close(), serverC.close()]);
 });

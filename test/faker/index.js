@@ -4,17 +4,32 @@ const express = require('express');
 const enableDestroy = require('server-destroy');
 
 class FakeServer {
-    constructor(version, name) {
+    constructor(manifest) {
         // Private
         this._app = express();
         this._server = undefined;
-        this._version = version || this.constructor.makeVersion();
-        this._name = name || 'component';
 
         this._routeManifest = '/manifest.json';
+        this._routeFallback = '/fallback.html';
         this._routeContent = '/index.html';
 
-        this._metrics = { manifest: 0, content: 0 };
+        this._manifest = Object.assign(
+            {
+                content: this._routeContent,
+                version: this.constructor.makeVersion(),
+                name: 'component',
+            },
+            manifest
+        );
+
+        this._bodyContent = `<p>content ${this._manifest.name}</p>`;
+        this._bodyFallback = `<p>fallback ${this._manifest.name}</p>`;
+
+        this._metrics = {
+            manifest: 0,
+            fallback: 0,
+            content: 0,
+        };
 
         // Public
         Object.defineProperty(this, 'metrics', {
@@ -24,10 +39,65 @@ class FakeServer {
             },
         });
 
+        Object.defineProperty(this, 'manifest', {
+            get: () => this._manifest,
+            set: () => {
+                throw new Error('Cannot set read-only property.');
+            },
+        });
+
         Object.defineProperty(this, 'version', {
-            get: () => this._version,
+            get: () => this._manifest.version,
             set: value => {
-                this._version = value;
+                this._manifest.version = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
+        Object.defineProperty(this, 'content', {
+            get: () => this._manifest.content,
+            set: value => {
+                this._manifest.content = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
+        Object.defineProperty(this, 'fallback', {
+            get: () => this._manifest.fallback,
+            set: value => {
+                this._manifest.fallback = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
+        Object.defineProperty(this, 'assets', {
+            get: () => this._manifest.assets,
+            set: value => {
+                if (!this._manifest.assets) {
+                    this._manifest.assets = {};
+                }
+                Object.assign(this._manifest.assets, value);
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
+        Object.defineProperty(this, 'contentBody', {
+            get: () => this._bodyContent,
+            set: value => {
+                this._bodyContent = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
+        Object.defineProperty(this, 'fallbackBody', {
+            get: () => this._bodyFallback,
+            set: value => {
+                this._bodyFallback = value;
             },
             configurable: true,
             enumerable: true,
@@ -35,24 +105,26 @@ class FakeServer {
 
         // Middleware
         this._app.use((req, res, next) => {
-            res.setHeader('podlet-version', this._version);
+            res.setHeader('podlet-version', this._manifest.version);
             next();
         });
 
         // Manifest route
         this._app.get(this._routeManifest, (req, res) => {
             this._metrics.manifest++;
-            res.status(200).json({
-                content: this._routeContent,
-                version: this._version,
-                name: this._name,
-            });
+            res.status(200).json(this._manifest);
         });
 
         // Content route
         this._app.get(this._routeContent, (req, res) => {
             this._metrics.content++;
-            res.status(200).send(`<p>${this._name}</p>`);
+            res.status(200).send(this._bodyContent);
+        });
+
+        // Fallback route
+        this._app.get(this._routeFallback, (req, res) => {
+            this._metrics.fallback++;
+            res.status(200).send(this._bodyFallback);
         });
     }
 
@@ -65,7 +137,7 @@ class FakeServer {
                 const content = `${address}${this._routeContent}`;
                 const options = {
                     uri: manifest,
-                    name: this._name,
+                    name: this._manifest.name,
                 };
                 resolve({
                     manifest,

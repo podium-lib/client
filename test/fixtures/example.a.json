@@ -1,9 +1,0 @@
-{
-    "name": "example-a",
-    "version": "1.0.0-beta.2",
-    "content": "/index.html",
-    "assets": {
-        "js": "scripts-a.js",
-        "css": "styles-a.css"
-    }
-}

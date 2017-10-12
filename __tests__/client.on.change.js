@@ -4,7 +4,7 @@ const Client = require('../');
 const Faker = require('../test/faker');
 
 test('client.on("change") - resource is new - should emit "change" event on first fetch', async () => {
-    const server = new Faker('1.0.0');
+    const server = new Faker({ version: '1.0.0' });
     const service = await server.listen();
 
     const client = new Client();
@@ -24,7 +24,7 @@ test('client.on("change") - resource is new - should emit "change" event on firs
 });
 
 test('client.on("change") - resource changes - should emit "change" event after update', async () => {
-    const server = new Faker('1.0.0');
+    const server = new Faker({ version: '1.0.0' });
     const service = await server.listen();
     const client = new Client();
 
@@ -50,7 +50,7 @@ test('client.on("change") - resource changes - should emit "change" event after 
 });
 
 test('client.on("change") - resource changes - should be a change in the emitted manifest', async () => {
-    const server = new Faker('1.0.0');
+    const server = new Faker({ version: '1.0.0' });
     const service = await server.listen();
     const client = new Client();
 

@@ -2,93 +2,84 @@
 
 const fallback = require('../lib/resolver.fallback.js');
 const State = require('../lib/state.js');
-const nock = require('nock');
-const path = require('path');
-const fs = require('fs');
-
-const MANIFEST_IS_ABSOLUTE_URI = fs.readFileSync(
-    path.resolve(
-        __dirname,
-        '../test/fixtures/manifest.fallback.is.absolute.uri.json'
-    ),
-    { encoding: 'utf8' }
-);
-
-const MANIFEST_NO_FALLBACK = fs.readFileSync(
-    path.resolve(
-        __dirname,
-        '../test/fixtures/manifest.fallback.not.defined.json'
-    ),
-    { encoding: 'utf8' }
-);
-
-const MANIFEST_IS_HTML = fs.readFileSync(
-    path.resolve(__dirname, '../test/fixtures/manifest.fallback.is.html.json'),
-    { encoding: 'utf8' }
-);
-
-const MANIFEST_IS_RELATIVE_URI = fs.readFileSync(
-    path.resolve(
-        __dirname,
-        '../test/fixtures/manifest.fallback.is.relative.uri.json'
-    ),
-    { encoding: 'utf8' }
-);
+const Faker = require('../test/faker');
 
 test('resolver.fallback() - no fallback field - should return empty String', async () => {
+    const server = new Faker();
     const state = new State();
-    state.manifest = JSON.parse(MANIFEST_NO_FALLBACK);
+
+    state.manifest = server.manifest;
     const result = await fallback(state);
     expect(result.fallback).toBe('');
 });
 
 test('resolver.fallback() - fallback field contains HTML - should set value on "state.fallback"', async () => {
+    const server = new Faker();
+    server.fallback = '<p>haz fallback</p>';
+
     const state = new State();
-    state.manifest = JSON.parse(MANIFEST_IS_HTML);
+    state.manifest = server.manifest;
+
     const result = await fallback(state);
-    expect(result.fallback).toBe('<p>haz fallback</p>');
+    expect(result.fallback).toBe(server.fallback);
 });
 
 test('resolver.fallback() - fallback field is a relative URI - should fetch fallback and set content on "state.fallback"', async () => {
-    nock('http://example-a.org')
-        .get('/fallback.html')
-        .reply(200, '<p>served fallback</p>');
+    const server = new Faker();
+    const service = await server.listen();
 
-    const state = new State({}, { uri: 'http://example-a.org/manifest.json' });
-    state.manifest = JSON.parse(MANIFEST_IS_RELATIVE_URI);
+    server.fallback = '/fallback.html';
+
+    const state = new State({}, { uri: service.options.uri });
+    state.manifest = server.manifest;
+
     const result = await fallback(state);
-    expect(result.fallback).toBe('<p>served fallback</p>');
+    expect(result.fallback).toBe('<p>fallback component</p>');
+
+    await server.close();
 });
 
 test('resolver.fallback() - fallback field is a relative URI - should fetch fallback and set content on "state.manifest.fallback"', async () => {
-    nock('http://example-a.org')
-        .get('/fallback.html')
-        .reply(200, '<p>served fallback</p>');
+    const server = new Faker();
+    const service = await server.listen();
 
-    const state = new State({}, { uri: 'http://example-a.org/manifest.json' });
-    state.manifest = JSON.parse(MANIFEST_IS_RELATIVE_URI);
+    server.fallback = '/fallback.html';
+
+    const state = new State({}, { uri: service.options.uri });
+    state.manifest = server.manifest;
+
     const result = await fallback(state);
-    expect(result.manifest.fallback).toBe('<p>served fallback</p>');
+    expect(result.manifest.fallback).toBe('<p>fallback component</p>');
+
+    await server.close();
 });
 
 test('resolver.fallback() - fallback field is a absolute URI - should fetch fallback and set content on "state.fallback"', async () => {
-    nock('http://example-a.org')
-        .get('/fallback.html')
-        .reply(200, '<p>served fallback</p>');
+    const server = new Faker();
+    const service = await server.listen();
 
-    const state = new State({}, { uri: 'http://example-a.org/manifest.json' });
-    state.manifest = JSON.parse(MANIFEST_IS_ABSOLUTE_URI);
+    server.fallback = `${service.address}/fallback.html`;
+
+    const state = new State({}, { uri: service.options.uri });
+    state.manifest = server.manifest;
+
     const result = await fallback(state);
-    expect(result.fallback).toBe('<p>served fallback</p>');
+    expect(result.fallback).toBe('<p>fallback component</p>');
+
+    await server.close();
 });
 
 test('resolver.fallback() - fallback field is a absolute URI - should fetch fallback and set content on "state.manifest.fallback"', async () => {
-    nock('http://example-a.org')
-        .get('/fallback.html')
-        .reply(200, '<p>served fallback</p>');
+    const server = new Faker();
+    const service = await server.listen();
 
-    const state = new State({}, { uri: 'http://example-a.org/manifest.json' });
-    state.manifest = JSON.parse(MANIFEST_IS_ABSOLUTE_URI);
+    server.fallback = `${service.address}/fallback.html`;
+
+    const state = new State({}, { uri: service.options.uri });
+    state.manifest = server.manifest;
+
     const result = await fallback(state);
-    expect(result.manifest.fallback).toBe('<p>served fallback</p>');
+    expect(result.manifest.fallback).toBe('<p>fallback component</p>');
+
+    await server.close();
 });

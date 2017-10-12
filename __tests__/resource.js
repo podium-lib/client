@@ -63,3 +63,12 @@ test('Resource().uri - instantiate new resource object - expose own uri', () => 
     const resource = new Resource(REGISTRY, { uri: URI });
     expect(resource.uri).toBe(URI);
 });
+
+/**
+ * .name
+ */
+
+test('Resource().name - instantiate new resource object - expose own name', () => {
+    const resource = new Resource(REGISTRY, { uri: URI, name: 'some-name' });
+    expect(resource.name).toBe('some-name');
+});

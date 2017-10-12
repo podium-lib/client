@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@podium/schemas": "^2.0.0-alpha.2",
+    "http-cache-semantics": "^3.7.3",
     "joi": "^11.1.1",
     "request": "^2.83.0",
     "ttl-mem-cache": "^1.4.0"

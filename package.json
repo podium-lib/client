@@ -41,6 +41,14 @@
     "coveragePathIgnorePatterns": [
       "test/"
     ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 91,
+        "lines": 88,
+        "statements": 89
+      }
+    },
     "testEnvironment": "node"
   }
 }

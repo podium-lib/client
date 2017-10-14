@@ -1,8 +1,10 @@
 'use strict';
 
 const Resource = require('../lib/resource');
+const Faker = require('../test/faker');
 const stream = require('stream');
 const Cache = require('ttl-mem-cache');
+const getStream = require('get-stream');
 
 const REGISTRY = new Cache();
 const URI = 'http://example.org';
@@ -35,24 +37,34 @@ test('Resource() - instantiate new resource object - should have "stream" method
  * .fetch()
  */
 
-test.skip('resource.fetch() - should return a promise', async () => {
-    const resource = new Resource(REGISTRY, { uri: URI });
+test('resource.fetch() - should return a promise', async () => {
+    const server = new Faker({ version: '1.0.0' });
+    const service = await server.listen();
+
+    const resource = new Resource(REGISTRY, service.options);
     const fetch = resource.fetch();
-    expect(fetch instanceof Promise).toBe(true);
+    expect(fetch).toBeInstanceOf(Promise);
 
     await fetch;
+
+    await server.close();
 });
 
 /**
  * .stream()
  */
 
-test.skip('resource.stream() - should return a stream', done => {
-    const resource = new Resource(REGISTRY, { uri: URI });
+test('resource.stream() - should return a stream', async () => {
+    const server = new Faker({ version: '1.0.0' });
+    const service = await server.listen();
+
+    const resource = new Resource(REGISTRY, service.options);
     const strm = resource.stream();
-    expect(strm instanceof stream).toBe(true);
-    strm.on('end', done);
-    strm.on('error', done);
+    expect(strm).toBeInstanceOf(stream);
+
+    await getStream(strm);
+
+    await server.close();
 });
 
 /**

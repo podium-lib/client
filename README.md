@@ -1,5 +1,7 @@
 # podlet-client
 
+[![Build Status](https://travis.schibsted.io/Podium/podlet-client.svg?token=qt273uGfEz64UyWuNHJ1&branch=master)](https://travis.schibsted.io/Podium/podlet-client)
+
 Client for fetching podium component fragments over http.
 
 

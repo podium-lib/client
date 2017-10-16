@@ -35,8 +35,8 @@ test('resolver.manifest() - remote has "cache-control: public, max-age=10" heade
     const server = new Faker();
     const service = await server.listen();
     server.headersManifest = {
-        'cache-control': 'public, max-age=10'
-    }
+        'cache-control': 'public, max-age=10',
+    };
 
     const state = new State(registry, {
         uri: service.options.uri,
@@ -45,7 +45,7 @@ test('resolver.manifest() - remote has "cache-control: public, max-age=10" heade
     await manifest(state);
 
     // See NOTE I for details
-    expect((state.maxAge < 10000 && state.maxAge > 9000)).toBeTruthy();
+    expect(state.maxAge < 10000 && state.maxAge > 9000).toBeTruthy();
 
     await server.close();
 });
@@ -55,8 +55,8 @@ test('resolver.manifest() - remote has "cache-control: no-cache" header - should
     const server = new Faker();
     const service = await server.listen();
     server.headersManifest = {
-        'cache-control': 'no-cache'
-    }
+        'cache-control': 'no-cache',
+    };
 
     const state = new State(registry, {
         uri: service.options.uri,
@@ -78,8 +78,8 @@ test('resolver.manifest() - remote has "expires" header - should set state.maxAg
 
     // Set expire header time to two hours into future
     server.headersManifest = {
-        'expires': new Date(Date.now() + (1000 * 60 * 60 * 2)).toUTCString()
-    }
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 2).toUTCString(),
+    };
 
     const state = new State(registry, {
         uri: service.options.uri,
@@ -87,7 +87,7 @@ test('resolver.manifest() - remote has "expires" header - should set state.maxAg
     });
     await manifest(state);
 
-    expect(state.maxAge).toBe((1000 * 60 * 60 * 2));  // 2 hours
+    expect(state.maxAge).toBe(1000 * 60 * 60 * 2); // 2 hours
 
     await server.close();
     clock.uninstall();
@@ -97,10 +97,10 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     const clock = lolex.install();
 
     const serverA = new Faker({
-        name: 'aa'
+        name: 'aa',
     });
     const serverB = new Faker({
-        name: 'bb'
+        name: 'bb',
     });
 
     const serviceA = await serverA.listen();
@@ -108,11 +108,11 @@ test('resolver.manifest() - one remote has "expires" header second none - should
 
     // Set expires by http headers two hours into future
     serverA.headersManifest = {
-        'expires': new Date(Date.now() + (1000 * 60 * 60 * 2)).toUTCString()
-    }
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 2).toUTCString(),
+    };
 
     // Set default expires four hours into future
-    const client = new Client({ maxAge: (1000 * 60 * 60 * 4) });
+    const client = new Client({ maxAge: 1000 * 60 * 60 * 4 });
     client.register(serviceA.options);
     client.register(serviceB.options);
 
@@ -122,7 +122,7 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     expect(serverB.metrics.manifest).toEqual(1);
 
     // Tick clock three hours into future
-    clock.tick((1000 * 60 * 60 * 3));
+    clock.tick(1000 * 60 * 60 * 3);
 
     await client.refreshManifests();
 

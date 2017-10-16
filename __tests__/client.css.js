@@ -19,7 +19,7 @@ test('client.css() - get all registered css assets - should return array with al
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
-    await Promise.all([a.fetch(), b.fetch()]);
+    await Promise.all([a.fetch({}), b.fetch({})]);
 
     expect(client.css()).toEqual(['a.css', 'b.css']);
 
@@ -41,7 +41,7 @@ test('client.css() - one manifest does not hold css asset - should return array 
     const b = client.register(serviceB.options);
     const c = client.register(serviceC.options);
 
-    await Promise.all([a.fetch(), b.fetch(), c.fetch()]);
+    await Promise.all([a.fetch({}), b.fetch({}), c.fetch({})]);
 
     expect(client.css()).toEqual(['a.css', 'b.css']);
 

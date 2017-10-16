@@ -219,9 +219,13 @@ component's manifest. This is the content root of the component.
 
 A Podium Resource Object has the following API:
 
-### .fetch(options)
+### .fetch(podiumContext, options)
 
 Fetches the content of the component. Returns a `Promise`.
+
+#### podiumContext (required)
+
+The Podium Context. See https://github.schibsted.io/finn/podium/tree/master/packages/podium-context
 
 #### options (optional)
 
@@ -230,9 +234,13 @@ An options object containing configuration. The following values can be provided
  * pathname - {String} - A path which will be appended to the content root of the component when requested.
  * query - {Object} - An Object which will be appended as query parameters to the request to the component content.
 
-### .stream(options)
+### .stream(podiumContext, options)
 
 Streams the content of the component. Returns a `ReadStream`.
+
+#### podiumContext (required)
+
+The Podium Context. See https://github.schibsted.io/finn/podium/tree/master/packages/podium-context
 
 #### options (optional)
 

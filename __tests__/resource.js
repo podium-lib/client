@@ -42,10 +42,31 @@ test('resource.fetch() - should return a promise', async () => {
     const service = await server.listen();
 
     const resource = new Resource(REGISTRY, service.options);
-    const fetch = resource.fetch();
+    const fetch = resource.fetch({});
     expect(fetch).toBeInstanceOf(Promise);
 
     await fetch;
+
+    await server.close();
+});
+
+test('resource.fetch(podiumContext) - should pass it on', async () => {
+    const server = new Faker({ version: '1.0.0' });
+    server.answerWithHeaders = true;
+    const service = await server.listen();
+
+    const resource = new Resource(REGISTRY, service.options);
+    const response = JSON.parse(
+        await resource.fetch({
+            token: 'jwt',
+            resourceMountPath: '/podium-resource',
+        })
+    );
+
+    expect(response['podium-token']).toBe('jwt');
+    expect(response['podium-resource-mount-path']).toBe(
+        '/podium-resource/component'
+    );
 
     await server.close();
 });
@@ -59,7 +80,7 @@ test('resource.stream() - should return a stream', async () => {
     const service = await server.listen();
 
     const resource = new Resource(REGISTRY, service.options);
-    const strm = resource.stream();
+    const strm = resource.stream({});
     expect(strm).toBeInstanceOf(stream);
 
     await getStream(strm);

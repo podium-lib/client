@@ -15,8 +15,8 @@ test('integration basic - ', async () => {
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
-    expect(serverA.contentBody).toBe(await a.fetch());
-    expect(serverB.contentBody).toBe(await b.fetch());
+    expect(serverA.contentBody).toBe(await a.fetch({}));
+    expect(serverB.contentBody).toBe(await b.fetch({}));
 
     await Promise.all([serverA.close(), serverB.close()]);
 });

@@ -20,12 +20,14 @@
     "registry": "http://npm.finntech.no/"
   },
   "dependencies": {
+    "@podium/context": "^1.0.1-alpha.13",
     "@podium/schemas": "^2.0.0-alpha.2",
     "joi": "^11.1.1",
     "request": "^2.83.0",
     "ttl-mem-cache": "^1.4.0"
   },
   "devDependencies": {
+    "@finn-no/fiaas-logger": "^1.4.4",
     "eslint": "^4.8.0",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
@@ -35,6 +37,7 @@
     "is-stream": "^1.1.0",
     "jest": "^21.2.1",
     "prettier": "^1.7.4",
+    "prom-client": "^10.1.1",
     "server-destroy": "^1.0.1"
   },
   "jest": {
@@ -45,7 +48,7 @@
       "global": {
         "branches": 80,
         "functions": 91,
-        "lines": 88,
+        "lines": 89,
         "statements": 89
       }
     },

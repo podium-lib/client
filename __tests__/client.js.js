@@ -19,7 +19,7 @@ test('client.js() - get all registered js assets - should return array with all 
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
-    await Promise.all([a.fetch(), b.fetch()]);
+    await Promise.all([a.fetch({}), b.fetch({})]);
 
     expect(client.js()).toEqual(['a.js', 'b.js']);
 
@@ -41,7 +41,7 @@ test('client.js() - one manifest does not hold js asset - should return array wh
     const b = client.register(serviceB.options);
     const c = client.register(serviceC.options);
 
-    await Promise.all([a.fetch(), b.fetch(), c.fetch()]);
+    await Promise.all([a.fetch({}), b.fetch({}), c.fetch({})]);
 
     expect(client.js()).toEqual(['a.js', 'b.js']);
 

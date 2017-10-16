@@ -16,7 +16,7 @@ test('client.on("change") - resource is new - should emit "change" event on firs
     });
 
     const resource = client.register(service.options);
-    await resource.fetch();
+    await resource.fetch({});
 
     await changePromise;
 
@@ -38,11 +38,11 @@ test('client.on("change") - resource changes - should emit "change" event after 
     });
 
     const resource = client.register(service.options);
-    await resource.fetch();
-    await resource.fetch();
-    await resource.fetch();
+    await resource.fetch({});
+    await resource.fetch({});
+    await resource.fetch({});
     server.version = '2.0.0';
-    await resource.fetch();
+    await resource.fetch({});
 
     await changePromise;
 
@@ -70,11 +70,11 @@ test('client.on("change") - resource changes - should be a change in the emitted
     });
 
     const resource = client.register(service.options);
-    await resource.fetch();
-    await resource.fetch();
-    await resource.fetch();
+    await resource.fetch({});
+    await resource.fetch({});
+    await resource.fetch({});
     server.version = '2.0.0';
-    await resource.fetch();
+    await resource.fetch({});
 
     await changePromise;
 

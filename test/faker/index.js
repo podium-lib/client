@@ -2,6 +2,7 @@
 
 const express = require('express');
 const enableDestroy = require('server-destroy');
+const { internalMiddleware } = require('@podium/context');
 
 class FakeServer {
     constructor(manifest) {
@@ -16,6 +17,7 @@ class FakeServer {
         this._headersManifest = {};
         this._headersContent = {};
         this._headersFallback = {};
+        this._answerWithHeaders = false;
 
         this._manifest = Object.assign(
             {
@@ -133,11 +135,22 @@ class FakeServer {
             enumerable: true,
         });
 
+        Object.defineProperty(this, 'answerWithHeaders', {
+            get: () => this._answerWithHeaders,
+            set: value => {
+                this._answerWithHeaders = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
         // Middleware
         this._app.use((req, res, next) => {
             res.setHeader('podlet-version', this._manifest.version);
             next();
         });
+
+        this._app.use(internalMiddleware());
 
         // Manifest route
         this._app.get(this._routeManifest, (req, res) => {
@@ -154,7 +167,12 @@ class FakeServer {
             Object.keys(this._headersContent).forEach(key => {
                 res.setHeader(key, this._headersContent[key]);
             });
-            res.status(200).send(this._bodyContent);
+
+            if (this._answerWithHeaders) {
+                res.status(200).send(req.headers);
+            } else {
+                res.status(200).send(this._bodyContent);
+            }
         });
 
         // Fallback route

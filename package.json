@@ -23,7 +23,6 @@
     "@podium/schemas": "^2.0.0-alpha.2",
     "http-cache-semantics": "^3.8.0",
     "joi": "^13.0.0",
-    "lolex": "^2.1.3",
     "request": "^2.83.0",
     "ttl-mem-cache": "^1.4.0"
   },
@@ -34,6 +33,7 @@
     "express": "^4.16.2",
     "http-proxy": "^1.16.2",
     "is-stream": "^1.1.0",
+    "lolex": "^2.1.3",
     "jest": "^21.2.1",
     "prettier": "^1.7.4",
     "server-destroy": "^1.0.1"

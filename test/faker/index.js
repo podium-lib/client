@@ -10,8 +10,12 @@ class FakeServer {
         this._server = undefined;
 
         this._routeManifest = '/manifest.json';
-        this._routeFallback = '/fallback.html';
         this._routeContent = '/index.html';
+        this._routeFallback = '/fallback.html';
+
+        this._headersManifest = {};
+        this._headersContent = {};
+        this._headersFallback = {};
 
         this._manifest = Object.assign(
             {
@@ -21,7 +25,6 @@ class FakeServer {
             },
             manifest
         );
-
         this._bodyContent = `<p>content ${this._manifest.name}</p>`;
         this._bodyFallback = `<p>fallback ${this._manifest.name}</p>`;
 
@@ -85,6 +88,33 @@ class FakeServer {
             enumerable: true,
         });
 
+        Object.defineProperty(this, 'headersManifest', {
+            get: () => this._headersManifest,
+            set: value => {
+                this._headersManifest = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
+        Object.defineProperty(this, 'headersContent', {
+            get: () => this._headersContent,
+            set: value => {
+                this._headersContent = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
+        Object.defineProperty(this, 'headersFallback', {
+            get: () => this._headersFallback,
+            set: value => {
+                this._headersFallback = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
         Object.defineProperty(this, 'contentBody', {
             get: () => this._bodyContent,
             set: value => {
@@ -112,20 +142,33 @@ class FakeServer {
         // Manifest route
         this._app.get(this._routeManifest, (req, res) => {
             this._metrics.manifest++;
+            Object.keys(this._headersManifest).forEach(key => {
+                res.setHeader(key, this._headersManifest[key]);
+            });
             res.status(200).json(this._manifest);
         });
 
         // Content route
         this._app.get(this._routeContent, (req, res) => {
             this._metrics.content++;
+            Object.keys(this._headersContent).forEach(key => {
+                res.setHeader(key, this._headersContent[key]);
+            });
             res.status(200).send(this._bodyContent);
         });
 
         // Fallback route
         this._app.get(this._routeFallback, (req, res) => {
             this._metrics.fallback++;
+            Object.keys(this._headersFallback).forEach(key => {
+                res.setHeader(key, this._headersFallback[key]);
+            });
             res.status(200).send(this._bodyFallback);
         });
+
+        // Express config
+        this._app.disable('x-powered-by');
+        this._app.disable('etag');
     }
 
     listen() {

@@ -267,11 +267,11 @@ The client has an internal cache where it keep a cached version of the
 manifest for each registered Podium component.
 
 By default all manifest are cached 24 hours unless its detected a new
-version of the manifest by a change in the `podium-version` http header
+version of the manifest by a change in the `podlet-version` http header
 on the content URI. Then the cache is thrown and fresh version of the
 manifest is cached.
 
-The default lenght of time the manifests is cached can be configured
+The default length of time the manifests is cached can be configured
 by setting `maxAge` on the constructor of the client.
 
 ```js

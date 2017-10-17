@@ -25,6 +25,7 @@ const Client = require('@podium/podlet-client');
 const client = new Client();
 
 const component = client.register({
+    name: 'foo',
     uri: 'http://foo.site.com/manifest.json'
 });
 
@@ -44,6 +45,7 @@ const Client = require('@podium/podlet-client');
 const client = new Client();
 
 const component = client.register({
+    name: 'foo',
     uri: 'http://foo.site.com/manifest.json'
 });
 
@@ -135,8 +137,8 @@ Retrieve list of all js references from all registered and fetched podlets.
 const Client = require('@podium/podlet-client');
 const client = new Client();
 
-const foo = client.register({uri: 'http://foo.site.com/manifest.json', name: 'resource-a'});
-const bar = client.register({uri: 'http://bar.site.com/manifest.json', name: 'resource-b'});
+const foo = client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
+const bar = client.register({uri: 'http://bar.site.com/manifest.json', name: 'bar'});
 
 await Promise.all([
     foo.fetch(),
@@ -154,8 +156,8 @@ Retrieve list of all css references from all registered and fetched podlets.
 const Client = require('@podium/podlet-client');
 const client = new Client();
 
-const foo = client.register({uri: 'http://foo.site.com/manifest.json', name: 'resource-a'});
-const bar = client.register({uri: 'http://bar.site.com/manifest.json', name: 'resource-b'});
+const foo = client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
+const bar = client.register({uri: 'http://bar.site.com/manifest.json', name: 'bar'});
 
 await Promise.all([
     foo.fetch(),
@@ -173,16 +175,16 @@ Refreshes the manifests of all registered resources.
 const Client = require('@podium/podlet-client');
 const client = new Client();
 
-client.register({uri: 'http://foo.site.com/manifest.json', name: 'resourceA'});
-client.register({uri: 'http://bar.site.com/manifest.json', name: 'resourceB'});
+client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
+client.register({uri: 'http://bar.site.com/manifest.json', name: 'bar'});
 
 console.log(client.js()); // []
 console.log(client.css()); // []
 
 await client.refreshManifests();
 
-console.log(client.js()); // ['resource-a.js', 'resource-b.js']
-console.log(client.css()); // ['resource-a.css', 'resource-b.css']
+console.log(client.js()); // ['foo.js', 'bar.js']
+console.log(client.css()); // ['foo.css', 'bar.css']
 ```
 
 ## Events
@@ -205,7 +207,7 @@ client.on('change', manifest => {
     console.log(manifest);
 });
 
-const resource = client.register({uri: 'http://foo.site.com/manifest.json', name: 'resource-a'});
+const resource = client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
 ```
 
 

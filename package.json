@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@finn-no/fiaas-logger": "^1.4.4",
-    "eslint": "^4.8.0",
+    "eslint": "^4.9.0",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
     "express": "^4.16.2",

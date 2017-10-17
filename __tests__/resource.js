@@ -51,22 +51,22 @@ test('resource.fetch() - should return a promise', async () => {
 });
 
 test('resource.fetch(podiumContext) - should pass it on', async () => {
+    expect.assertions(2);
+
     const server = new Faker({ version: '1.0.0' });
-    server.answerWithHeaders = true;
     const service = await server.listen();
+    server.on('req:content', (count, req) => {
+        expect(req.headers['podium-token']).toBe('jwt');
+        expect(req.headers['podium-resource-mount-path']).toBe(
+            '/podium-resource/component'
+        );
+    });
 
     const resource = new Resource(REGISTRY, service.options);
-    const response = JSON.parse(
-        await resource.fetch({
-            token: 'jwt',
-            resourceMountPath: '/podium-resource',
-        })
-    );
-
-    expect(response['podium-token']).toBe('jwt');
-    expect(response['podium-resource-mount-path']).toBe(
-        '/podium-resource/component'
-    );
+    await resource.fetch({
+        token: 'jwt',
+        resourceMountPath: '/podium-resource',
+    });
 
     await server.close();
 });
@@ -102,6 +102,6 @@ test('Resource().uri - instantiate new resource object - expose own uri', () => 
  */
 
 test('Resource().name - instantiate new resource object - expose own name', () => {
-    const resource = new Resource(REGISTRY, { uri: URI, name: 'some-name' });
-    expect(resource.name).toBe('some-name');
+    const resource = new Resource(REGISTRY, { uri: URI, name: 'someName' });
+    expect(resource.name).toBe('someName');
 });

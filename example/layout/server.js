@@ -26,7 +26,7 @@ const app = express();
 app.get('/', (req, res) => {
     console.log(`FETCH ::  ${Date.now()}`);
     client.podlet
-        .fetch()
+        .fetch({})
         .then(html => {
             res.status(200).send(html);
         })
@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 app.get('/stream', (req, res) => {
     console.log(`STREAM :: ${Date.now()}`);
 
-    const stream = client.podlet.stream();
+    const stream = client.podlet.stream({});
     stream.on('error', error => {
         console.log(error);
     });

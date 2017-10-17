@@ -1,11 +1,14 @@
 'use strict';
 
 const express = require('express');
+const EventEmitter = require('events');
 const enableDestroy = require('server-destroy');
 const { internalMiddleware } = require('@podium/context');
 
-class FakeServer {
+class FakeServer extends EventEmitter {
     constructor(manifest) {
+        super();
+
         // Private
         this._app = express();
         this._server = undefined;
@@ -17,7 +20,6 @@ class FakeServer {
         this._headersManifest = {};
         this._headersContent = {};
         this._headersFallback = {};
-        this._answerWithHeaders = false;
 
         this._manifest = Object.assign(
             {
@@ -135,15 +137,6 @@ class FakeServer {
             enumerable: true,
         });
 
-        Object.defineProperty(this, 'answerWithHeaders', {
-            get: () => this._answerWithHeaders,
-            set: value => {
-                this._answerWithHeaders = value;
-            },
-            configurable: true,
-            enumerable: true,
-        });
-
         // Middleware
         this._app.use((req, res, next) => {
             res.setHeader('podlet-version', this._manifest.version);
@@ -158,6 +151,7 @@ class FakeServer {
             Object.keys(this._headersManifest).forEach(key => {
                 res.setHeader(key, this._headersManifest[key]);
             });
+            this.emit('req:manifest', this._metrics.manifest, req);
             res.status(200).json(this._manifest);
         });
 
@@ -167,12 +161,8 @@ class FakeServer {
             Object.keys(this._headersContent).forEach(key => {
                 res.setHeader(key, this._headersContent[key]);
             });
-
-            if (this._answerWithHeaders) {
-                res.status(200).send(req.headers);
-            } else {
-                res.status(200).send(this._bodyContent);
-            }
+            this.emit('req:content', this._metrics.content, req);
+            res.status(200).send(this._bodyContent);
         });
 
         // Fallback route
@@ -181,6 +171,7 @@ class FakeServer {
             Object.keys(this._headersFallback).forEach(key => {
                 res.setHeader(key, this._headersFallback[key]);
             });
+            this.emit('req:fallback', this._metrics.fallback, req);
             res.status(200).send(this._bodyFallback);
         });
 

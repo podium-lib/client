@@ -51,6 +51,8 @@ test('resource.fetch() - should return a promise', async () => {
 });
 
 test('resource.fetch(podiumContext) - should pass it on', async () => {
+    expect.assertions(2);
+
     const server = new Faker({ version: '1.0.0' });
     const service = await server.listen();
     server.on('req:content', (count, req) => {

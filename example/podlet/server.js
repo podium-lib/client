@@ -8,7 +8,7 @@ const PORT = parseInt(process.argv[2], 10);
 const app = express();
 
 app.use((req, res, next) => {
-    // console.log(req.get('user-agent'));
+    console.log(req.headers);
     next();
 });
 

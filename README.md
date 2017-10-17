@@ -259,3 +259,39 @@ This is the name provided during the call to `register`.
 #### uri
 
 A property returning the location of the podium resource.
+
+
+## Controlling caching of the manifest
+
+The client has an internal cache where it keep a cached version of the
+manifest for each registered Podium component.
+
+By default all manifest are cached 24 hours unless its detected a new
+version of the manifest by a change in the `podlet-version` http header
+on the content URI. Then the cache is thrown and fresh version of the
+manifest is cached.
+
+The default length of time the manifests is cached can be configured
+by setting `maxAge` on the constructor of the client.
+
+```js
+const client = new Client({ maxAge: (1000 * 60 * 60 * 4) });
+```
+
+It is also possible to control how long a manifest should be cached in
+the client from a Podium component. This is done by setting a [RFC 7234](https://tools.ietf.org/html/rfc7234)
+compatible http header on the manifest on the server serving the
+Podium component.
+
+Example: This will cache the manifest for 1 hour:
+
+```js
+const app = express();
+app.get('/manifest.json', (req, res) => {
+    res.setHeader('cache-control', 'public, max-age=3600');
+    res.status(200).json({
+        name: 'foo',
+        content: '/index.html'
+    });
+});
+```

@@ -59,3 +59,32 @@ test('State() - "false" value for streamThrough - "this.stream" should contain a
     const state = new State(REGISTRY, RESOURCE_OPTIONS, REQ_OPTIONS, false);
     expect(isStream.writable(state.stream)).toBe(true);
 });
+
+test('State() - get manifestUri - should return absolute URI to manifest', () => {
+    const state = new State(REGISTRY, RESOURCE_OPTIONS);
+    expect(state.manifestUri).toBe(RESOURCE_OPTIONS.uri);
+});
+
+test('State() - get fallbackUri when "fallback" in manifest is absolute - should return absolute URI to fallback', () => {
+    const state = new State(REGISTRY, RESOURCE_OPTIONS);
+    state.manifest = { fallback: 'http://foo.example.com/fallback.html' };
+    expect(state.fallbackUri).toBe('http://foo.example.com/fallback.html');
+});
+
+test('State() - get fallbackUri when "fallback" in manifest is relative - should return absolute URI to fallback', () => {
+    const state = new State(REGISTRY, RESOURCE_OPTIONS);
+    state.manifest = { fallback: '/fallback.html' };
+    expect(state.fallbackUri).toBe(`${RESOURCE_OPTIONS.uri}/fallback.html`);
+});
+
+test('State() - get contentUri when "content" in manifest is absolute - should return absolute URI to content', () => {
+    const state = new State(REGISTRY, RESOURCE_OPTIONS);
+    state.manifest = { content: 'http://foo.example.com/index.html' };
+    expect(state.contentUri).toBe('http://foo.example.com/index.html');
+});
+
+test('State() - get fallbackUri when "content" in manifest is relative - should return absolute URI to content', () => {
+    const state = new State(REGISTRY, RESOURCE_OPTIONS);
+    state.manifest = { content: '/index.html' };
+    expect(state.contentUri).toBe(`${RESOURCE_OPTIONS.uri}/index.html`);
+});

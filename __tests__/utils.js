@@ -70,3 +70,23 @@ test('.uriIsRelative() - "uri" is absolute - should return "false"', () => {
         false
     );
 });
+
+/**
+ * .isHeaderDefined()
+ */
+
+test('.isHeaderDefined() - header exist is headers object - should return true', () => {
+    expect(utils.isHeaderDefined({ foo: 'bar' }, 'foo')).toBeTruthy();
+});
+
+test('.isHeaderDefined() - header does not exist in headers object - should return false', () => {
+    expect(utils.isHeaderDefined({}, 'foo')).toBeFalsy();
+});
+
+test('.isHeaderDefined() - header exist as empty string in headers object - should return false', () => {
+    expect(utils.isHeaderDefined({ foo: '' }, 'foo')).toBeFalsy();
+});
+
+test('.isHeaderDefined() - header exist as whitespace in headers object - should return false', () => {
+    expect(utils.isHeaderDefined({ foo: '  ' }, 'foo')).toBeFalsy();
+});

@@ -17,8 +17,26 @@ const RESOURCE_OPTIONS = {
  * Constructor
  */
 
+test('State() - "registry" not provided to constructor - should throw', () => {
+    expect(() => {
+        // eslint-disable-next-line no-unused-vars
+        const state = new State();
+    }).toThrowError(
+        'you must pass a "registry" object to the State constructor'
+    );
+});
+
+test('State() - "options.uri" not provided to constructor - should throw', () => {
+    expect(() => {
+        // eslint-disable-next-line no-unused-vars
+        const state = new State(REGISTRY);
+    }).toThrowError(
+        'you must pass a URI in "options.uri" to the State constructor'
+    );
+});
+
 test('State() - set "registry" - should be persisted on "this.registry"', () => {
-    const state = new State(REGISTRY);
+    const state = new State(REGISTRY, RESOURCE_OPTIONS);
     expect(state.registry).not.toBeUndefined();
 });
 

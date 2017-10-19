@@ -15,11 +15,10 @@ const lolex = require('lolex');
  */
 
 test('resolver.manifest() - remote has no cache header - should set state.maxAge to default', async () => {
-    const registry = new Cache();
     const server = new Faker();
     const service = await server.listen();
 
-    const state = new State(registry, {
+    const state = new State(new Cache(), {
         uri: service.options.uri,
         maxAge: 40000,
     });
@@ -31,14 +30,13 @@ test('resolver.manifest() - remote has no cache header - should set state.maxAge
 });
 
 test('resolver.manifest() - remote has "cache-control: public, max-age=10" header - should set state.maxAge to header value', async () => {
-    const registry = new Cache();
     const server = new Faker();
     const service = await server.listen();
     server.headersManifest = {
         'cache-control': 'public, max-age=10',
     };
 
-    const state = new State(registry, {
+    const state = new State(new Cache(), {
         uri: service.options.uri,
         maxAge: 40000,
     });
@@ -51,14 +49,13 @@ test('resolver.manifest() - remote has "cache-control: public, max-age=10" heade
 });
 
 test('resolver.manifest() - remote has "cache-control: no-cache" header - should set state.maxAge to default', async () => {
-    const registry = new Cache();
     const server = new Faker();
     const service = await server.listen();
     server.headersManifest = {
         'cache-control': 'no-cache',
     };
 
-    const state = new State(registry, {
+    const state = new State(new Cache(), {
         uri: service.options.uri,
         maxAge: 40000,
     });
@@ -72,7 +69,6 @@ test('resolver.manifest() - remote has "cache-control: no-cache" header - should
 test('resolver.manifest() - remote has "expires" header - should set state.maxAge to header value', async () => {
     const clock = lolex.install();
 
-    const registry = new Cache();
     const server = new Faker();
     const service = await server.listen();
 
@@ -81,7 +77,7 @@ test('resolver.manifest() - remote has "expires" header - should set state.maxAg
         expires: new Date(Date.now() + 1000 * 60 * 60 * 2).toUTCString(),
     };
 
-    const state = new State(registry, {
+    const state = new State(new Cache(), {
         uri: service.options.uri,
         maxAge: 40000,
     });

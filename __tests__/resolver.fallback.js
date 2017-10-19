@@ -3,10 +3,11 @@
 const fallback = require('../lib/resolver.fallback.js');
 const State = require('../lib/state.js');
 const Faker = require('../test/faker');
+const Cache = require('ttl-mem-cache');
 
 test('resolver.fallback() - no fallback field - should return empty String', async () => {
     const server = new Faker();
-    const state = new State();
+    const state = new State(new Cache(), { uri: 'http://example.com' });
 
     state.manifest = server.manifest;
     const result = await fallback(state);
@@ -17,7 +18,7 @@ test('resolver.fallback() - fallback field contains HTML - should set value on "
     const server = new Faker();
     server.fallback = '<p>haz fallback</p>';
 
-    const state = new State();
+    const state = new State(new Cache(), { uri: 'http://example.com' });
     state.manifest = server.manifest;
 
     const result = await fallback(state);
@@ -30,11 +31,11 @@ test('resolver.fallback() - fallback field is a relative URI - should fetch fall
 
     server.fallback = '/fallback.html';
 
-    const state = new State({}, { uri: service.options.uri });
+    const state = new State(new Cache(), { uri: service.options.uri });
     state.manifest = server.manifest;
 
     const result = await fallback(state);
-    expect(result.fallback).toBe('<p>fallback component</p>');
+    expect(result.fallback).toBe(server.fallbackBody);
 
     await server.close();
 });
@@ -45,11 +46,11 @@ test('resolver.fallback() - fallback field is a relative URI - should fetch fall
 
     server.fallback = '/fallback.html';
 
-    const state = new State({}, { uri: service.options.uri });
+    const state = new State(new Cache(), { uri: service.options.uri });
     state.manifest = server.manifest;
 
     const result = await fallback(state);
-    expect(result.manifest.fallback).toBe('<p>fallback component</p>');
+    expect(result.manifest.fallback).toBe(server.fallbackBody);
 
     await server.close();
 });
@@ -60,11 +61,11 @@ test('resolver.fallback() - fallback field is a absolute URI - should fetch fall
 
     server.fallback = `${service.address}/fallback.html`;
 
-    const state = new State({}, { uri: service.options.uri });
+    const state = new State(new Cache(), { uri: service.options.uri });
     state.manifest = server.manifest;
 
     const result = await fallback(state);
-    expect(result.fallback).toBe('<p>fallback component</p>');
+    expect(result.fallback).toBe(server.fallbackBody);
 
     await server.close();
 });
@@ -75,11 +76,11 @@ test('resolver.fallback() - fallback field is a absolute URI - should fetch fall
 
     server.fallback = `${service.address}/fallback.html`;
 
-    const state = new State({}, { uri: service.options.uri });
+    const state = new State(new Cache(), { uri: service.options.uri });
     state.manifest = server.manifest;
 
     const result = await fallback(state);
-    expect(result.manifest.fallback).toBe('<p>fallback component</p>');
+    expect(result.manifest.fallback).toBe(server.fallbackBody);
 
     await server.close();
 });

@@ -23,7 +23,7 @@
     "@podium/context": "^1.0.1-alpha.13",
     "@podium/schemas": "^2.0.0-alpha.2",
     "http-cache-semantics": "^3.8.0",
-    "joi": "^13.0.0",
+    "joi": "^13.0.1",
     "request": "^2.83.0",
     "ttl-mem-cache": "^1.4.0"
   },

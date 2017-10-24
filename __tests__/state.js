@@ -106,3 +106,17 @@ test('State() - get fallbackUri when "content" in manifest is relative - should 
     state.manifest = { content: '/index.html' };
     expect(state.contentUri).toBe(`${RESOURCE_OPTIONS.uri}/index.html`);
 });
+
+test('State() - "options.throwable" is not defined - "this.throwable" should be "false"', () => {
+    const state = new State(REGISTRY, RESOURCE_OPTIONS, REQ_OPTIONS);
+    expect(state.throwable).toBeFalsy();
+});
+
+test('State() - "options.throwable" is defined to be true - "this.throwable" should be "true"', () => {
+    const options = {
+        uri: 'http://example.org',
+        throwable: true,
+    };
+    const state = new State(REGISTRY, options, REQ_OPTIONS);
+    expect(state.throwable).toBeTruthy();
+});

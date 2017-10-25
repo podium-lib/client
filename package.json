@@ -25,7 +25,7 @@
     "http-cache-semantics": "^3.8.0",
     "joi": "^13.0.0",
     "request": "^2.83.0",
-    "ttl-mem-cache": "^1.4.0"
+    "ttl-mem-cache": "^1.5.0"
   },
   "devDependencies": {
     "@finn-no/fiaas-logger": "^1.4.4",

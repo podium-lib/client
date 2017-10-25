@@ -32,6 +32,8 @@
     "eslint": "^4.9.0",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
+    "memwatch-next": "^0.3.0",
+    "benchmark": "^2.1.4",
     "express": "^4.16.2",
     "get-stream": "^3.0.0",
     "http-proxy": "^1.16.2",

@@ -130,3 +130,94 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     await serverB.close();
     clock.uninstall();
 });
+
+test('resolver.manifest() - throwable:true - remote can not be resolved - should throw', async () => {
+    const state = new State(new Cache(), {
+        uri: 'http://meeh.øk/manifest.json',
+        throwable: true,
+    });
+
+    try {
+        await manifest(state);
+    } catch (error) {
+        expect(error.message).toMatch(/ENOTFOUND/);
+    }
+});
+
+test('resolver.manifest() - throwable:true - remote responds with http 500 - should throw', async () => {
+    const server = new Faker();
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.error,
+        throwable: true,
+    });
+
+    try {
+        await manifest(state);
+    } catch (error) {
+        expect(error.message).toMatch(/Could not read manifest/);
+    }
+
+    await server.close();
+});
+
+test('resolver.manifest() - throwable:true - manifest is not valid - should throw', async () => {
+    const server = new Faker();
+    server.manifestBody = { __id: 'component' };
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.manifest,
+        throwable: true,
+    });
+
+    try {
+        await manifest(state);
+    } catch (error) {
+        expect(error.message).toMatch(/is required/);
+    }
+
+    await server.close();
+});
+
+test('resolver.manifest() - throwable:false - remote can not be resolved - "state.manifest" should be undefined', async () => {
+    const state = new State(new Cache(), {
+        uri: 'http://meeh.øk/manifest.json',
+        throwable: false,
+    });
+
+    await manifest(state);
+    expect(state.manifest).toBeUndefined();
+});
+
+test('resolver.manifest() - throwable:false - remote responds with http 500 - "state.manifest" should be undefined', async () => {
+    const server = new Faker();
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.error,
+        throwable: false,
+    });
+
+    await manifest(state);
+    expect(state.manifest).toBeUndefined();
+
+    await server.close();
+});
+
+test('resolver.manifest() - throwable:false - manifest is not valid - "state.manifest" should be undefined', async () => {
+    const server = new Faker();
+    server.manifestBody = { __id: 'component' };
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.manifest,
+        throwable: false,
+    });
+
+    await manifest(state);
+    expect(state.manifest).toBeUndefined();
+
+    await server.close();
+});

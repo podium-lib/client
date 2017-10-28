@@ -14,6 +14,17 @@ const lolex = require('lolex');
  * check if cache time are within a range.
  */
 
+test('resolver.manifest() - "state.manifest" holds a manifest - should resolve with same manifest', async () => {
+    const state = new State(new Cache(), {
+        uri: 'http://does.not.mather.com',
+    });
+    state.manifest = { name: 'component' };
+
+    await manifest(state);
+
+    expect(state.manifest.name).toBe('component');
+});
+
 test('resolver.manifest() - remote has no cache header - should set state.maxAge to default', async () => {
     const server = new Faker();
     const service = await server.listen();
@@ -133,7 +144,7 @@ test('resolver.manifest() - one remote has "expires" header second none - should
 
 test('resolver.manifest() - throwable:true - remote can not be resolved - should throw', async () => {
     const state = new State(new Cache(), {
-        uri: 'http://meeh.øk/manifest.json',
+        uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: true,
     });
 
@@ -183,7 +194,7 @@ test('resolver.manifest() - throwable:true - manifest is not valid - should thro
 
 test('resolver.manifest() - throwable:false - remote can not be resolved - "state.manifest" should be undefined', async () => {
     const state = new State(new Cache(), {
-        uri: 'http://meeh.øk/manifest.json',
+        uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
     });
 

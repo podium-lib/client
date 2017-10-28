@@ -84,3 +84,75 @@ test('resolver.fallback() - fallback field is a absolute URI - should fetch fall
 
     await server.close();
 });
+
+test('resolver.fallback() - throwable:true - remote can not be resolved - should throw', async () => {
+    const state = new State(new Cache(), {
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+        throwable: true,
+    });
+
+    state.manifest = {
+        fallback: 'http://does.not.exist.finn.no/fallback.html',
+    };
+
+    try {
+        await fallback(state);
+    } catch (error) {
+        expect(error.message).toMatch(/ENOTFOUND/);
+    }
+});
+
+test('resolver.fallback() - throwable:true - remote responds with http 500 - should throw', async () => {
+    const server = new Faker();
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.options.uri,
+        throwable: true,
+    });
+
+    state.manifest = {
+        fallback: service.error,
+    };
+
+    try {
+        await fallback(state);
+    } catch (error) {
+        expect(error.message).toMatch(/Could not read fallback/);
+    }
+
+    await server.close();
+});
+
+test('resolver.fallback() - throwable:false - remote can not be resolved - "state.manifest" should be empty string', async () => {
+    const state = new State(new Cache(), {
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+        throwable: false,
+    });
+
+    state.manifest = {
+        fallback: 'http://does.not.exist.finn.no/fallback.html',
+    };
+
+    await fallback(state);
+    expect(state.fallback).toBe('');
+});
+
+test('resolver.fallback() - throwable:false - remote responds with http 500 - "state.manifest" should be empty string', async () => {
+    const server = new Faker();
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.options.uri,
+        throwable: false,
+    });
+
+    state.manifest = {
+        fallback: service.error,
+    };
+
+    await fallback(state);
+    expect(state.fallback).toBe('');
+
+    await server.close();
+});

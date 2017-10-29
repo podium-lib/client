@@ -113,3 +113,178 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
     expect(state.manifest).toBeUndefined();
     await server.close();
 });
+
+test('resolver.content() - throwable:true - remote can not be resolved - should throw', async () => {
+    const state = new State(new Cache(), {
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+        throwable: true,
+    });
+
+    // See TODO I
+    state.reqOptions.podiumContext = {};
+
+    state.manifest = {
+        content: 'http://does.not.exist.finn.no/index.html',
+    };
+
+    try {
+        await content(state);
+    } catch (error) {
+        expect(error.message).toMatch(/ENOTFOUND/);
+        expect(state.success).toBeFalsy();
+    }
+});
+
+test('resolver.content() - throwable:true - remote responds with http 500 - should throw', async () => {
+    const server = new Faker();
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.options.uri,
+        throwable: true,
+    });
+
+    // See TODO I
+    state.reqOptions.podiumContext = {};
+
+    state.manifest = {
+        content: service.error,
+    };
+
+    try {
+        await content(state);
+    } catch (error) {
+        expect(error.message).toMatch(/Could not read content/);
+        expect(state.success).toBeFalsy();
+    }
+
+    await server.close();
+});
+
+test('resolver.content() - throwable:false - remote can not be resolved - "state.stream" should stream empty string', async () => {
+    const state = new State(new Cache(), {
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+        throwable: false,
+    });
+
+    // See TODO I
+    state.reqOptions.podiumContext = {};
+
+    state.manifest = {
+        content: 'http://does.not.exist.finn.no/index.html',
+    };
+
+    const buffer = [];
+    const to = new stream.Writable({
+        write: (chunk, enc, next) => {
+            buffer.push(chunk);
+            next();
+        },
+    }).on('finish', () => {
+        expect(buffer.join().toString()).toBe('');
+        expect(state.success).toBeTruthy();
+    });
+
+    state.stream.pipe(to);
+
+    await content(state);
+});
+
+test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "state.stream" should stream fallback', async () => {
+    const state = new State(new Cache(), {
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+        throwable: false,
+    });
+
+    // See TODO I
+    state.reqOptions.podiumContext = {};
+
+    state.manifest = {
+        content: 'http://does.not.exist.finn.no/index.html',
+    };
+
+    state.fallback = '<p>haz fallback</p>';
+
+    const buffer = [];
+    const to = new stream.Writable({
+        write: (chunk, enc, next) => {
+            buffer.push(chunk);
+            next();
+        },
+    }).on('finish', () => {
+        expect(buffer.join().toString()).toBe('<p>haz fallback</p>');
+        expect(state.success).toBeTruthy();
+    });
+
+    state.stream.pipe(to);
+
+    await content(state);
+});
+
+test('resolver.content() - throwable:false - remote responds with http 500 - "state.stream" should stream empty string', async () => {
+    const server = new Faker();
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.options.uri,
+        throwable: false,
+    });
+
+    // See TODO I
+    state.reqOptions.podiumContext = {};
+
+    state.manifest = {
+        content: service.error,
+    };
+
+    const buffer = [];
+    const to = new stream.Writable({
+        write: (chunk, enc, next) => {
+            buffer.push(chunk);
+            next();
+        },
+    }).on('finish', () => {
+        expect(buffer.join().toString()).toBe('');
+        expect(state.success).toBeTruthy();
+    });
+
+    state.stream.pipe(to);
+
+    await content(state);
+    await server.close();
+});
+
+test('resolver.content() - throwable:false with fallback set - remote responds with http 500 - "state.stream" should stream fallback', async () => {
+    const server = new Faker();
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.options.uri,
+        throwable: false,
+    });
+
+    // See TODO I
+    state.reqOptions.podiumContext = {};
+
+    state.manifest = {
+        content: service.error,
+    };
+
+    state.fallback = '<p>haz fallback</p>';
+
+    const buffer = [];
+    const to = new stream.Writable({
+        write: (chunk, enc, next) => {
+            buffer.push(chunk);
+            next();
+        },
+    }).on('finish', () => {
+        expect(buffer.join().toString()).toBe('<p>haz fallback</p>');
+        expect(state.success).toBeTruthy();
+    });
+
+    state.stream.pipe(to);
+
+    await content(state);
+    await server.close();
+});

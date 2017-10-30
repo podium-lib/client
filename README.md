@@ -84,8 +84,8 @@ for (let resource of client) {
 
 An options object containing configuration. The following values can be provided:
 
- * maxAge - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: Infinity
- * agent - {HTTPAgent} - Default HTTP Agent used for all requests.
+ * `maxAge` - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: Infinity
+ * `agent` - {HTTPAgent} - Default HTTP Agent used for all requests.
 
 
 ## API
@@ -120,14 +120,13 @@ client.register({uri: 'http://foo.site.com/manifest.json', name: 'fooBar'});
 client.fooBar.fetch();
 ```
 
-
 #### options (required)
 
 The following values can be provided:
 
- * `uri` Uri to the manifest of a podium component - Required
- * `name` Name of the podlet. This is used to reference the podlet in your
- application, and does not have to match the name of the podlet itself - Required
+ * `uri` - {String} - Uri to the manifest of a podium component - Required
+ * `name` - {String} - Name of the podlet. This is used to reference the podlet in your application, and does not have to match the name of the podlet itself - Required
+ * `throwable` - {Boolean} - If it should be thrown an error if something fails during the process of fetching a podium component. Defaults to `false` - Optional.
 
 ### .js()
 
@@ -233,8 +232,8 @@ The Podium Context. See https://github.schibsted.io/finn/podium/tree/master/pack
 
 An options object containing configuration. The following values can be provided:
 
- * pathname - {String} - A path which will be appended to the content root of the component when requested.
- * query - {Object} - An Object which will be appended as query parameters to the request to the component content.
+ * `pathname` - {String} - A path which will be appended to the content root of the component when requested.
+ * `query` - {Object} - An Object which will be appended as query parameters to the request to the component content.
 
 ### .stream(podiumContext, options)
 
@@ -248,15 +247,17 @@ The Podium Context. See https://github.schibsted.io/finn/podium/tree/master/pack
 
 An options object containing configuration. The following values can be provided:
 
- * pathname - {String} - A path which will be appended to the content root of the component when requested.
- * query - {Object} - An Object which will be appended as query parameters to the request to the component content.
+ * `pathname` - {String} - A path which will be appended to the content root of the component when requested.
+ * `query` - {Object} - An Object which will be appended as query parameters to the request to the component content.
 
-#### name
+
+### .name
+
 
 A property returning the name of the podium resource.
 This is the name provided during the call to `register`.
 
-#### uri
+### .uri
 
 A property returning the location of the podium resource.
 
@@ -295,3 +296,47 @@ app.get('/manifest.json', (req, res) => {
     });
 });
 ```
+
+## On defining throwable
+
+By default the client will never throw if something fails in the process
+of retreiving the manifest, the fallback or the content itself. It will
+simply provide a fallback if it has one or an empty String for the
+resource in an error situation.
+
+Though; there are cases where one would like to throw an error one can
+act upon if there are errors in the process of retrieving the manifest,
+the fallback or the content.
+
+One can do so by setting the option `throwable` to `true` on the
+`.register()` method.
+
+Example:
+
+```js
+const Client = require('@podium/podlet-client');
+const client = new Client();
+
+const foo = client.register({
+    name: 'foo',
+    uri: 'http://foo.site.com/manifest.json'
+});
+
+const bar = client.register({
+    name: 'bar',
+    uri: 'http://bar.site.com/manifest.json',
+    throwable: true
+});
+
+Promise
+    .all([foo.fetch(), bar.fetch()])
+    .then((content) => {
+        console.log(content);
+    }).catch((error) => {
+        console.log(error);
+    });
+```
+
+In this example, the `catch` will be triggered if `bar` encounters
+an error in the process of retrieving content from the remote.
+If the same happens with `foo` the `catch` will NOT be triggered.

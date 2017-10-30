@@ -24,12 +24,13 @@ test('integration basic - ', async () => {
 test('integration - throwable:true - remote manifest can not be resolved - should throw', async () => {
     const client = new Client();
     const component = client.register({
+        throwable: true,
         name: 'component',
         uri: 'http://does.not.exist.finn.no/manifest.json',
     });
 
     try {
-        await component.fetch({}, { throwable: true });
+        await component.fetch({});
     } catch (error) {
         expect(error.message).toMatch(/Error reading manifest/);
     }
@@ -53,10 +54,14 @@ test('integration - throwable:true - remote fallback can not be resolved - shoul
     const service = await server.listen();
 
     const client = new Client();
-    const component = client.register(service.options);
+    const component = client.register({
+        throwable: true,
+        name: service.options.name,
+        uri: service.options.uri,
+    });
 
     try {
-        await component.fetch({}, { throwable: true });
+        await component.fetch({});
     } catch (error) {
         expect(error.message).toMatch(/Error reading fallback/);
     }
@@ -87,10 +92,14 @@ test('integration - throwable:true - remote fallback responds with http 500 - sh
     const service = await server.listen();
 
     const client = new Client();
-    const component = client.register(service.options);
+    const component = client.register({
+        throwable: true,
+        name: service.options.name,
+        uri: service.options.uri,
+    });
 
     try {
-        await component.fetch({}, { throwable: true });
+        await component.fetch({});
     } catch (error) {
         expect(error.message).toMatch(/Could not read fallback/);
     }
@@ -122,10 +131,14 @@ test('integration - throwable:true - remote content can not be resolved - should
     const service = await server.listen();
 
     const client = new Client();
-    const component = client.register(service.options);
+    const component = client.register({
+        throwable: true,
+        name: service.options.name,
+        uri: service.options.uri,
+    });
 
     try {
-        await component.fetch({}, { throwable: true });
+        await component.fetch({});
     } catch (error) {
         expect(error.message).toMatch(/Error reading content/);
     }
@@ -157,10 +170,14 @@ test('integration - throwable:true - remote content responds with http 500 - sho
     const service = await server.listen();
 
     const client = new Client();
-    const component = client.register(service.options);
+    const component = client.register({
+        throwable: true,
+        name: service.options.name,
+        uri: service.options.uri,
+    });
 
     try {
-        await component.fetch({}, { throwable: true });
+        await component.fetch({});
     } catch (error) {
         expect(error.message).toMatch(/Could not read content/);
     }

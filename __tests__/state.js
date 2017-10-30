@@ -1,6 +1,7 @@
 'use strict';
 
 const isStream = require('is-stream');
+const stream = require('stream');
 const Cache = require('ttl-mem-cache');
 const State = require('../lib/state');
 
@@ -105,6 +106,28 @@ test('State() - get fallbackUri when "content" in manifest is relative - should 
     const state = new State(REGISTRY, RESOURCE_OPTIONS);
     state.manifest = { content: '/index.html' };
     expect(state.contentUri).toBe(`${RESOURCE_OPTIONS.uri}/index.html`);
+});
+
+test('State() - fallbackStream - "this.fallbackStream()" should return a readable stream', () => {
+    const state = new State(REGISTRY, RESOURCE_OPTIONS, REQ_OPTIONS);
+    expect(isStream.readable(state.fallbackStream())).toBe(true);
+});
+
+test('State() - fallbackStream - "this.fallbackStream()" should stream fallback content', () => {
+    const state = new State(REGISTRY, RESOURCE_OPTIONS, REQ_OPTIONS);
+    state.fallback = '<p>haz fllback</p>';
+
+    const buffer = [];
+    const to = new stream.Writable({
+        write: (chunk, enc, next) => {
+            buffer.push(chunk);
+            next();
+        },
+    });
+
+    state.fallbackStream(() => {
+        expect(buffer.join().toString()).toBe('<p>haz fllback</p>');
+    }).pipe(to);
 });
 
 test('State() - "options.throwable" is not defined - "this.throwable" should be "false"', () => {

@@ -151,7 +151,7 @@ test('resolver.manifest() - throwable:true - remote can not be resolved - should
     try {
         await manifest(state);
     } catch (error) {
-        expect(error.message).toMatch(/ENOTFOUND/);
+        expect(error.message).toMatch(/Error reading manifest/);
     }
 });
 

@@ -31,7 +31,7 @@ test('integration - throwable:true - remote manifest can not be resolved - shoul
     try {
         await component.fetch({}, { throwable: true });
     } catch (error) {
-        expect(error.message).toMatch(/ENOTFOUND/);
+        expect(error.message).toMatch(/Error reading manifest/);
     }
 });
 
@@ -58,8 +58,7 @@ test('integration - throwable:true - remote fallback can not be resolved - shoul
     try {
         await component.fetch({}, { throwable: true });
     } catch (error) {
-
-        expect(error.message).toMatch(/ENOTFOUND/);
+        expect(error.message).toMatch(/Error reading fallback/);
     }
 
     await server.close();
@@ -130,7 +129,7 @@ test('integration - throwable:true - remote content can not be resolved - should
         await component.fetch({}, { throwable: true });
     } catch (error) {
 
-        expect(error.message).toMatch(/ENOTFOUND/);
+        expect(error.message).toMatch(/Error reading content/);
     }
 
     await server.close();

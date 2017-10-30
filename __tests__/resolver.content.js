@@ -130,7 +130,7 @@ test('resolver.content() - throwable:true - remote can not be resolved - should 
     try {
         await content(state);
     } catch (error) {
-        expect(error.message).toMatch(/ENOTFOUND/);
+        expect(error.message).toMatch(/Error reading content/);
         expect(state.success).toBeFalsy();
     }
 });

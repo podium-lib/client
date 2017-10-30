@@ -98,7 +98,7 @@ test('resolver.fallback() - throwable:true - remote can not be resolved - should
     try {
         await fallback(state);
     } catch (error) {
-        expect(error.message).toMatch(/ENOTFOUND/);
+        expect(error.message).toMatch(/Error reading fallback/);
     }
 });
 

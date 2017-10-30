@@ -22,6 +22,7 @@
   "dependencies": {
     "@podium/context": "^1.0.1-alpha.14",
     "@podium/schemas": "^2.0.0-alpha.6",
+    "boom": "^6.0.0",
     "http-cache-semantics": "^3.8.0",
     "joi": "^13.0.1",
     "request": "^2.83.0",

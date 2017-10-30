@@ -340,3 +340,7 @@ Promise
 In this example, the `catch` will be triggered if `bar` encounters
 an error in the process of retrieving content from the remote.
 If the same happens with `foo` the `catch` will NOT be triggered.
+
+When a resource is flagged as throwable and it throws an error the
+error will be an enriched [boom error object](https://github.com/hapijs/boom)
+with detailed information on what went wrong.

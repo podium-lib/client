@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "test": "jest",
     "test:verbose": "jest --verbose",
     "test:coverage": "jest --coverage"

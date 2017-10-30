@@ -125,9 +125,11 @@ test('State() - fallbackStream - "this.fallbackStream()" should stream fallback 
         },
     });
 
-    state.fallbackStream(() => {
-        expect(buffer.join().toString()).toBe('<p>haz fllback</p>');
-    }).pipe(to);
+    state
+        .fallbackStream(() => {
+            expect(buffer.join().toString()).toBe('<p>haz fllback</p>');
+        })
+        .pipe(to);
 });
 
 test('State() - "options.throwable" is not defined - "this.throwable" should be "false"', () => {

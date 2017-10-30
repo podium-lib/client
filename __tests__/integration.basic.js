@@ -25,7 +25,7 @@ test('integration - throwable:true - remote manifest can not be resolved - shoul
     const client = new Client();
     const component = client.register({
         name: 'component',
-        uri: 'http://does.not.exist.finn.no/manifest.json'
+        uri: 'http://does.not.exist.finn.no/manifest.json',
     });
 
     try {
@@ -39,7 +39,7 @@ test('integration - throwable:false - remote manifest can not be resolved - shou
     const client = new Client();
     const component = client.register({
         name: 'component',
-        uri: 'http://does.not.exist.finn.no/manifest.json'
+        uri: 'http://does.not.exist.finn.no/manifest.json',
     });
 
     const result = await component.fetch({});
@@ -48,7 +48,7 @@ test('integration - throwable:false - remote manifest can not be resolved - shou
 
 test('integration - throwable:true - remote fallback can not be resolved - should throw', async () => {
     const server = new Faker({
-        fallback: 'http://does.not.exist.finn.no/fallback.html'
+        fallback: 'http://does.not.exist.finn.no/fallback.html',
     });
     const service = await server.listen();
 
@@ -92,7 +92,6 @@ test('integration - throwable:true - remote fallback responds with http 500 - sh
     try {
         await component.fetch({}, { throwable: true });
     } catch (error) {
-
         expect(error.message).toMatch(/Could not read fallback/);
     }
 
@@ -118,7 +117,7 @@ test('integration - throwable:false - remote fallback responds with http 500 - s
 test('integration - throwable:true - remote content can not be resolved - should throw', async () => {
     const server = new Faker({
         fallback: '/fallback.html',
-        content: 'http://does.not.exist.finn.no/content.html'
+        content: 'http://does.not.exist.finn.no/content.html',
     });
     const service = await server.listen();
 
@@ -128,7 +127,6 @@ test('integration - throwable:true - remote content can not be resolved - should
     try {
         await component.fetch({}, { throwable: true });
     } catch (error) {
-
         expect(error.message).toMatch(/Error reading content/);
     }
 
@@ -164,7 +162,6 @@ test('integration - throwable:true - remote content responds with http 500 - sho
     try {
         await component.fetch({}, { throwable: true });
     } catch (error) {
-
         expect(error.message).toMatch(/Could not read content/);
     }
 

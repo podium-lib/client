@@ -14,6 +14,17 @@ const lolex = require('lolex');
  * check if cache time are within a range.
  */
 
+test('resolver.manifest() - "state.manifest" holds a manifest - should resolve with same manifest', async () => {
+    const state = new State(new Cache(), {
+        uri: 'http://does.not.mather.com',
+    });
+    state.manifest = { name: 'component' };
+
+    await manifest(state);
+
+    expect(state.manifest.name).toBe('component');
+});
+
 test('resolver.manifest() - remote has no cache header - should set state.maxAge to default', async () => {
     const server = new Faker();
     const service = await server.listen();
@@ -129,4 +140,101 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     await serverA.close();
     await serverB.close();
     clock.uninstall();
+});
+
+test('resolver.manifest() - throwable:true - remote can not be resolved - should throw', async () => {
+    expect.hasAssertions();
+
+    const state = new State(new Cache(), {
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+        throwable: true,
+    });
+
+    try {
+        await manifest(state);
+    } catch (error) {
+        expect(error.message).toMatch(/Error reading manifest/);
+    }
+});
+
+test('resolver.manifest() - throwable:true - remote responds with http 500 - should throw', async () => {
+    expect.hasAssertions();
+
+    const server = new Faker();
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.error,
+        throwable: true,
+    });
+
+    try {
+        await manifest(state);
+    } catch (error) {
+        expect(error.message).toMatch(/Could not read manifest/);
+    }
+
+    await server.close();
+});
+
+test('resolver.manifest() - throwable:true - manifest is not valid - should throw', async () => {
+    expect.hasAssertions();
+
+    const server = new Faker();
+    server.manifestBody = { __id: 'component' };
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.manifest,
+        throwable: true,
+    });
+
+    try {
+        await manifest(state);
+    } catch (error) {
+        expect(error.message).toMatch(/is required/);
+    }
+
+    await server.close();
+});
+
+test('resolver.manifest() - throwable:false - remote can not be resolved - "state.manifest" should be undefined', async () => {
+    const state = new State(new Cache(), {
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+        throwable: false,
+    });
+
+    await manifest(state);
+    expect(state.manifest).toBeUndefined();
+});
+
+test('resolver.manifest() - throwable:false - remote responds with http 500 - "state.manifest" should be undefined', async () => {
+    const server = new Faker();
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.error,
+        throwable: false,
+    });
+
+    await manifest(state);
+    expect(state.manifest).toBeUndefined();
+
+    await server.close();
+});
+
+test('resolver.manifest() - throwable:false - manifest is not valid - "state.manifest" should be undefined', async () => {
+    const server = new Faker();
+    server.manifestBody = { __id: 'component' };
+    const service = await server.listen();
+
+    const state = new State(new Cache(), {
+        uri: service.manifest,
+        throwable: false,
+    });
+
+    await manifest(state);
+    expect(state.manifest).toBeUndefined();
+
+    await server.close();
 });

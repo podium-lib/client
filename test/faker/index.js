@@ -16,6 +16,7 @@ class FakeServer extends EventEmitter {
         this._routeManifest = '/manifest.json';
         this._routeContent = '/index.html';
         this._routeFallback = '/fallback.html';
+        this._routeError = '/error';
 
         this._headersManifest = {};
         this._headersContent = {};
@@ -29,6 +30,8 @@ class FakeServer extends EventEmitter {
             },
             manifest
         );
+
+        this._bodyManifest = this._manifest;
         this._bodyContent = `<p>content ${this._manifest.name}</p>`;
         this._bodyFallback = `<p>fallback ${this._manifest.name}</p>`;
 
@@ -36,6 +39,7 @@ class FakeServer extends EventEmitter {
             manifest: 0,
             fallback: 0,
             content: 0,
+            error: 0,
         };
 
         // Public
@@ -51,6 +55,8 @@ class FakeServer extends EventEmitter {
             set: () => {
                 throw new Error('Cannot set read-only property.');
             },
+            configurable: true,
+            enumerable: true,
         });
 
         Object.defineProperty(this, 'version', {
@@ -119,6 +125,15 @@ class FakeServer extends EventEmitter {
             enumerable: true,
         });
 
+        Object.defineProperty(this, 'manifestBody', {
+            get: () => this._bodyManifest,
+            set: value => {
+                this._bodyManifest = value;
+            },
+            configurable: true,
+            enumerable: true,
+        });
+
         Object.defineProperty(this, 'contentBody', {
             get: () => this._bodyContent,
             set: value => {
@@ -152,7 +167,7 @@ class FakeServer extends EventEmitter {
                 res.setHeader(key, this._headersManifest[key]);
             });
             this.emit('req:manifest', this._metrics.manifest, req);
-            res.status(200).json(this._manifest);
+            res.status(200).json(this._bodyManifest);
         });
 
         // Content route
@@ -175,6 +190,13 @@ class FakeServer extends EventEmitter {
             res.status(200).send(this._bodyFallback);
         });
 
+        // Error route
+        this._app.get(this._routeError, (req, res) => {
+            this._metrics.error++;
+            this.emit('req:error', this._metrics.error, req);
+            res.status(500).send('Internal server error');
+        });
+
         // Express config
         this._app.disable('x-powered-by');
         this._app.disable('etag');
@@ -187,6 +209,7 @@ class FakeServer extends EventEmitter {
                     .address}:${this._server.address().port}`;
                 const manifest = `${address}${this._routeManifest}`;
                 const content = `${address}${this._routeContent}`;
+                const error = `${address}${this._routeError}`;
                 const options = {
                     uri: manifest,
                     name: this._manifest.name,
@@ -194,6 +217,7 @@ class FakeServer extends EventEmitter {
                 resolve({
                     manifest,
                     content,
+                    error,
                     address,
                     options,
                 });

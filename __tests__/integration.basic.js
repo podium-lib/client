@@ -22,6 +22,8 @@ test('integration basic - ', async () => {
 });
 
 test('integration - throwable:true - remote manifest can not be resolved - should throw', async () => {
+    expect.hasAssertions();
+
     const client = new Client();
     const component = client.register({
         throwable: true,
@@ -48,6 +50,8 @@ test('integration - throwable:false - remote manifest can not be resolved - shou
 });
 
 test('integration - throwable:true - remote fallback can not be resolved - should throw', async () => {
+    expect.hasAssertions();
+
     const server = new Faker({
         fallback: 'http://does.not.exist.finn.no/fallback.html',
     });
@@ -86,6 +90,8 @@ test('integration - throwable:false - remote fallback can not be resolved - shou
 });
 
 test('integration - throwable:true - remote fallback responds with http 500 - should throw', async () => {
+    expect.hasAssertions();
+
     const server = new Faker({
         fallback: '/error',
     });
@@ -124,6 +130,8 @@ test('integration - throwable:false - remote fallback responds with http 500 - s
 });
 
 test('integration - throwable:true - remote content can not be resolved - should throw', async () => {
+    expect.hasAssertions();
+
     const server = new Faker({
         fallback: '/fallback.html',
         content: 'http://does.not.exist.finn.no/content.html',
@@ -163,6 +171,8 @@ test('integration - throwable:false - remote content can not be resolved - shoul
 });
 
 test('integration - throwable:true - remote content responds with http 500 - should throw', async () => {
+    expect.hasAssertions();
+
     const server = new Faker({
         fallback: '/fallback.html',
         content: '/error',

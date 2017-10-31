@@ -86,6 +86,8 @@ test('resolver.fallback() - fallback field is a absolute URI - should fetch fall
 });
 
 test('resolver.fallback() - throwable:true - remote can not be resolved - should throw', async () => {
+    expect.hasAssertions();
+
     const state = new State(new Cache(), {
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: true,
@@ -103,6 +105,8 @@ test('resolver.fallback() - throwable:true - remote can not be resolved - should
 });
 
 test('resolver.fallback() - throwable:true - remote responds with http 500 - should throw', async () => {
+    expect.hasAssertions();
+
     const server = new Faker();
     const service = await server.listen();
 

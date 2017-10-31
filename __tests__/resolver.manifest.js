@@ -143,6 +143,8 @@ test('resolver.manifest() - one remote has "expires" header second none - should
 });
 
 test('resolver.manifest() - throwable:true - remote can not be resolved - should throw', async () => {
+    expect.hasAssertions();
+
     const state = new State(new Cache(), {
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: true,
@@ -156,6 +158,8 @@ test('resolver.manifest() - throwable:true - remote can not be resolved - should
 });
 
 test('resolver.manifest() - throwable:true - remote responds with http 500 - should throw', async () => {
+    expect.hasAssertions();
+
     const server = new Faker();
     const service = await server.listen();
 
@@ -174,6 +178,8 @@ test('resolver.manifest() - throwable:true - remote responds with http 500 - sho
 });
 
 test('resolver.manifest() - throwable:true - manifest is not valid - should throw', async () => {
+    expect.hasAssertions();
+
     const server = new Faker();
     server.manifestBody = { __id: 'component' };
     const service = await server.listen();

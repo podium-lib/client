@@ -14,6 +14,8 @@ const Cache = require('ttl-mem-cache');
  */
 
 test('resolver.content() - state "streamThrough" is true - should stream content through on state.stream', async () => {
+    expect.hasAssertions();
+
     const server = new Faker();
     const service = await server.listen();
     const state = new State(
@@ -115,6 +117,8 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
 });
 
 test('resolver.content() - throwable:true - remote can not be resolved - should throw', async () => {
+    expect.hasAssertions();
+
     const state = new State(new Cache(), {
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: true,
@@ -136,6 +140,8 @@ test('resolver.content() - throwable:true - remote can not be resolved - should 
 });
 
 test('resolver.content() - throwable:true - remote responds with http 500 - should throw', async () => {
+    expect.hasAssertions();
+
     const server = new Faker();
     const service = await server.listen();
 
@@ -162,6 +168,8 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
 });
 
 test('resolver.content() - throwable:false - remote can not be resolved - "state.stream" should stream empty string', async () => {
+    expect.hasAssertions();
+
     const state = new State(new Cache(), {
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
@@ -191,6 +199,8 @@ test('resolver.content() - throwable:false - remote can not be resolved - "state
 });
 
 test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "state.stream" should stream fallback', async () => {
+    expect.hasAssertions();
+
     const state = new State(new Cache(), {
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
@@ -222,6 +232,8 @@ test('resolver.content() - throwable:false with fallback set - remote can not be
 });
 
 test('resolver.content() - throwable:false - remote responds with http 500 - "state.stream" should stream empty string', async () => {
+    expect.hasAssertions();
+
     const server = new Faker();
     const service = await server.listen();
 
@@ -255,6 +267,8 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "st
 });
 
 test('resolver.content() - throwable:false with fallback set - remote responds with http 500 - "state.stream" should stream fallback', async () => {
+    expect.hasAssertions();
+
     const server = new Faker();
     const service = await server.listen();
 

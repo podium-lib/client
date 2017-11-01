@@ -6,6 +6,18 @@ const utils = require('../lib/utils');
  * .uriBuilder()
  */
 
+test('.uriBuilder() - no arguments - should throw', () => {
+    expect(() => {
+        utils.uriBuilder();
+    }).toThrowError(/Invalid URL/);
+});
+
+test('.uriBuilder() - "base is empty" - should throw', () => {
+    expect(() => {
+        utils.uriBuilder('/podlet.html');
+    }).toThrowError(/Invalid URL/);
+});
+
 test('.uriBuilder() - "base" has long path with <filename>.json - should replace <filename>.json file with "input"', () => {
     const result = utils.uriBuilder(
         '/podlet.html',

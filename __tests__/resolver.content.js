@@ -25,6 +25,7 @@ test('resolver.content() - state "streamThrough" is true - should stream content
         true
     );
     state.manifest = server.manifest;
+    state.status = 'fresh';
 
     // See TODO I
     state.reqOptions.podiumContext = {};
@@ -56,6 +57,7 @@ test('resolver.content() - state "streamThrough" is false - should buffer conten
         false
     );
     state.manifest = server.manifest;
+    state.status = 'fresh';
 
     // See TODO I
     state.reqOptions.podiumContext = {};
@@ -71,6 +73,7 @@ test('resolver.content() - "podlet-version" header is same as manifest.version -
 
     const state = new State(new Cache(), { uri: service.options.uri });
     state.manifest = server.manifest;
+    state.status = 'cached';
 
     // See TODO I
     state.reqOptions.podiumContext = {};
@@ -89,6 +92,7 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
 
     const state = new State(new Cache(), { uri: service.options.uri });
     state.manifest = server.manifest;
+    state.status = 'cached';
 
     // See TODO I
     state.reqOptions.podiumContext = {};
@@ -98,7 +102,7 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
     await server.close();
 });
 
-test('resolver.content() - "podlet-version" header is different than manifest.version - should set state.manifest to "undefined"', async () => {
+test('resolver.content() - "podlet-version" header is different than manifest.version - should set state.manifest to {_fallback: ""}', async () => {
     const server = new Faker();
     const service = await server.listen();
     server.headersContent = {
@@ -107,12 +111,13 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
 
     const state = new State(new Cache(), { uri: service.options.uri });
     state.manifest = server.manifest;
+    state.status = 'cached';
 
     // See TODO I
     state.reqOptions.podiumContext = {};
 
     await content(state);
-    expect(state.manifest).toBeUndefined();
+    expect(state.manifest).toEqual({ _fallback: '' });
     await server.close();
 });
 
@@ -130,6 +135,7 @@ test('resolver.content() - throwable:true - remote can not be resolved - should 
     state.manifest = {
         content: 'http://does.not.exist.finn.no/index.html',
     };
+    state.status = 'cached';
 
     try {
         await content(state);
@@ -156,6 +162,7 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
     state.manifest = {
         content: service.error,
     };
+    state.status = 'cached';
 
     try {
         await content(state);
@@ -181,6 +188,7 @@ test('resolver.content() - throwable:false - remote can not be resolved - "state
     state.manifest = {
         content: 'http://does.not.exist.finn.no/index.html',
     };
+    state.status = 'cached';
 
     const buffer = [];
     const to = new stream.Writable({
@@ -212,7 +220,7 @@ test('resolver.content() - throwable:false with fallback set - remote can not be
     state.manifest = {
         content: 'http://does.not.exist.finn.no/index.html',
     };
-
+    state.status = 'cached';
     state.fallback = '<p>haz fallback</p>';
 
     const buffer = [];
@@ -248,6 +256,7 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "st
     state.manifest = {
         content: service.error,
     };
+    state.status = 'cached';
 
     const buffer = [];
     const to = new stream.Writable({
@@ -283,7 +292,7 @@ test('resolver.content() - throwable:false with fallback set - remote responds w
     state.manifest = {
         content: service.error,
     };
-
+    state.status = 'cached';
     state.fallback = '<p>haz fallback</p>';
 
     const buffer = [];

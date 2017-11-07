@@ -17,8 +17,14 @@ client.register({
     name: 'podlet',
     uri: 'http://localhost:7010/manifest.json',
 });
+client.podlet.on('debug', info => {
+    console.log('DEBUG:', info);
+});
 client.podlet.on('info', info => {
-    console.log(info);
+    console.log('INFO:', info);
+});
+client.podlet.on('warn', info => {
+    console.log('WARN:', info);
 });
 
 const app = express();

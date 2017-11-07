@@ -5,24 +5,15 @@ const State = require('../lib/state.js');
 const Faker = require('../test/faker');
 const Cache = require('ttl-mem-cache');
 
-test('resolver.fallback() - no fallback field - should return empty String', async () => {
+test('resolver.fallback() - fallback field contains unvalid value - should set value on "state.fallback" to empty String', async () => {
     const server = new Faker();
-    const state = new State(new Cache(), { uri: 'http://example.com' });
+    server.fallback = 'ht++ps://blæ.finn.no/fallback.html';
 
+    const state = new State(new Cache(), { uri: 'http://example.com' });
     state.manifest = server.manifest;
+
     const result = await fallback(state);
     expect(result.fallback).toBe('');
-});
-
-test('resolver.fallback() - fallback field contains HTML - should set value on "state.fallback"', async () => {
-    const server = new Faker();
-    server.fallback = '<p>haz fallback</p>';
-
-    const state = new State(new Cache(), { uri: 'http://example.com' });
-    state.manifest = server.manifest;
-
-    const result = await fallback(state);
-    expect(result.fallback).toBe(server.fallback);
 });
 
 test('resolver.fallback() - fallback field is a relative URI - should fetch fallback and set content on "state.fallback"', async () => {
@@ -50,7 +41,7 @@ test('resolver.fallback() - fallback field is a relative URI - should fetch fall
     state.manifest = server.manifest;
 
     const result = await fallback(state);
-    expect(result.manifest.fallback).toBe(server.fallbackBody);
+    expect(result.manifest._fallback).toBe(server.fallbackBody);
 
     await server.close();
 });
@@ -70,7 +61,7 @@ test('resolver.fallback() - fallback field is a absolute URI - should fetch fall
     await server.close();
 });
 
-test('resolver.fallback() - fallback field is a absolute URI - should fetch fallback and set content on "state.manifest.fallback"', async () => {
+test('resolver.fallback() - fallback field is a absolute URI - should fetch fallback and set content on "state.manifest._fallback"', async () => {
     const server = new Faker();
     const service = await server.listen();
 
@@ -80,7 +71,7 @@ test('resolver.fallback() - fallback field is a absolute URI - should fetch fall
     state.manifest = server.manifest;
 
     const result = await fallback(state);
-    expect(result.manifest.fallback).toBe(server.fallbackBody);
+    expect(result.manifest._fallback).toBe(server.fallbackBody);
 
     await server.close();
 });
@@ -159,4 +150,17 @@ test('resolver.fallback() - throwable:false - remote responds with http 500 - "s
     expect(state.fallback).toBe('');
 
     await server.close();
+});
+
+test('resolver.fallback() - manifest have is an empty string - "state.status" should have the value "fresh"', async () => {
+    const state = new State(new Cache(), {
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+    });
+
+    state.manifest = {
+        fallback: '',
+    };
+
+    await fallback(state);
+    expect(state.status).toBe('fresh');
 });

@@ -52,9 +52,9 @@ test('State() - set "reqOptions" - should be persisted on "this.reqOptions"', ()
     expect(state.reqOptions.query.b).toBe('c');
 });
 
-test('State() - "this.manifest" should be undefined', () => {
+test('State() - "this.manifest" should be {_fallback: ""}', () => {
     const state = new State(REGISTRY, RESOURCE_OPTIONS, REQ_OPTIONS);
-    expect(state.manifest).toBeUndefined();
+    expect(state.manifest).toEqual({ _fallback: '' });
 });
 
 test('State() - "this.content" should be empty String', () => {
@@ -115,7 +115,8 @@ test('State() - fallbackStream - "this.fallbackStream()" should return a readabl
 
 test('State() - fallbackStream - "this.fallbackStream()" should stream fallback content', () => {
     const state = new State(REGISTRY, RESOURCE_OPTIONS, REQ_OPTIONS);
-    state.fallback = '<p>haz fllback</p>';
+    state.manifest = {};
+    state.fallback = '<p>haz fallback</p>';
 
     const buffer = [];
     const to = new stream.Writable({
@@ -127,7 +128,7 @@ test('State() - fallbackStream - "this.fallbackStream()" should stream fallback 
 
     state
         .fallbackStream(() => {
-            expect(buffer.join().toString()).toBe('<p>haz fllback</p>');
+            expect(buffer.join().toString()).toBe('<p>haz fallback</p>');
         })
         .pipe(to);
 });

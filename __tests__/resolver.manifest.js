@@ -198,17 +198,17 @@ test('resolver.manifest() - throwable:true - manifest is not valid - should thro
     await server.close();
 });
 
-test('resolver.manifest() - throwable:false - remote can not be resolved - "state.manifest" should be undefined', async () => {
+test('resolver.manifest() - throwable:false - remote can not be resolved - "state.manifest" should be {_fallback: ""}', async () => {
     const state = new State(new Cache(), {
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
     });
 
     await manifest(state);
-    expect(state.manifest).toBeUndefined();
+    expect(state.manifest).toEqual({ _fallback: '' });
 });
 
-test('resolver.manifest() - throwable:false - remote responds with http 500 - "state.manifest" should be undefined', async () => {
+test('resolver.manifest() - throwable:false - remote responds with http 500 - "state.manifest" should be {_fallback: ""}', async () => {
     const server = new Faker();
     const service = await server.listen();
 
@@ -218,12 +218,12 @@ test('resolver.manifest() - throwable:false - remote responds with http 500 - "s
     });
 
     await manifest(state);
-    expect(state.manifest).toBeUndefined();
+    expect(state.manifest).toEqual({ _fallback: '' });
 
     await server.close();
 });
 
-test('resolver.manifest() - throwable:false - manifest is not valid - "state.manifest" should be undefined', async () => {
+test('resolver.manifest() - throwable:false - manifest is not valid - "state.manifest" should be {_fallback: ""}', async () => {
     const server = new Faker();
     server.manifestBody = { __id: 'component' };
     const service = await server.listen();
@@ -234,7 +234,7 @@ test('resolver.manifest() - throwable:false - manifest is not valid - "state.man
     });
 
     await manifest(state);
-    expect(state.manifest).toBeUndefined();
+    expect(state.manifest).toEqual({ _fallback: '' });
 
     await server.close();
 });

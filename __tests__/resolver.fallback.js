@@ -5,7 +5,7 @@ const State = require('../lib/state.js');
 const Faker = require('../test/faker');
 const Cache = require('ttl-mem-cache');
 
-test('resolver.fallback() - fallback field contains unvalid value - should set value on "state.fallback" to empty String', async () => {
+test('resolver.fallback() - fallback field contains invalid value - should set value on "state.fallback" to empty String', async () => {
     const server = new Faker();
     server.fallback = 'ht++ps://blæ.finn.no/fallback.html';
 
@@ -152,7 +152,7 @@ test('resolver.fallback() - throwable:false - remote responds with http 500 - "s
     await server.close();
 });
 
-test('resolver.fallback() - manifest have is an empty string - "state.status" should have the value "fresh"', async () => {
+test('resolver.fallback() - manifest is an empty string - "state.status" should have the value "fresh"', async () => {
     const state = new State(new Cache(), {
         uri: 'http://does.not.exist.finn.no/manifest.json',
     });

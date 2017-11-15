@@ -18,6 +18,11 @@ const RESOURCE_OPTIONS = {
  * Constructor
  */
 
+test('State() - object tag - should be PodletClientState', () => {
+    const state = new State(REGISTRY, RESOURCE_OPTIONS);
+    expect(Object.prototype.toString.call(state)).toEqual('[object PodletClientState]');
+});
+
 test('State() - "registry" not provided to constructor - should throw', () => {
     expect(() => {
         // eslint-disable-next-line no-unused-vars

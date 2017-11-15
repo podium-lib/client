@@ -20,7 +20,9 @@ const RESOURCE_OPTIONS = {
 
 test('State() - object tag - should be PodletClientState', () => {
     const state = new State(REGISTRY, RESOURCE_OPTIONS);
-    expect(Object.prototype.toString.call(state)).toEqual('[object PodletClientState]');
+    expect(Object.prototype.toString.call(state)).toEqual(
+        '[object PodletClientState]'
+    );
 });
 
 test('State() - "registry" not provided to constructor - should throw', () => {

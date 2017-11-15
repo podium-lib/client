@@ -14,9 +14,10 @@ test('Client() - instantiate new client object - should have register method', (
 
 test('Client() - object tag - should be PodletClient', () => {
     const client = new Client();
-    expect(Object.prototype.toString.call(client)).toEqual('[object PodletClient]');
+    expect(Object.prototype.toString.call(client)).toEqual(
+        '[object PodletClient]'
+    );
 });
-
 
 /**
  * .refreshManifests()

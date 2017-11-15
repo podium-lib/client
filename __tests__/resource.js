@@ -13,6 +13,13 @@ const URI = 'http://example.org';
  * Constructor
  */
 
+test('Resource() - object tag - should be PodletClientResource', () => {
+    const resource = new Resource(REGISTRY, { uri: URI });
+    expect(Object.prototype.toString.call(resource)).toEqual(
+        '[object PodletClientResource]'
+    );
+});
+
 test('Resource() - set "registry" - should be persisted on "this.registry"', () => {
     const resource = new Resource(REGISTRY, { uri: URI });
     expect(resource.registry).not.toBeUndefined();

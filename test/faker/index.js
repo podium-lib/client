@@ -205,8 +205,9 @@ class FakeServer extends EventEmitter {
     listen() {
         return new Promise(resolve => {
             this._server = this._app.listen(0, 'localhost', () => {
-                const address = `http://${this._server.address()
-                    .address}:${this._server.address().port}`;
+                const address = `http://${this._server.address().address}:${
+                    this._server.address().port
+                }`;
                 const manifest = `${address}${this._routeManifest}`;
                 const content = `${address}${this._routeContent}`;
                 const error = `${address}${this._routeError}`;

@@ -188,6 +188,21 @@ console.log(client.js()); // ['foo.js', 'bar.js']
 console.log(client.css()); // ['foo.css', 'bar.css']
 ```
 
+### .dump()
+
+Returns an Array of all loaded manifests ready to be used by `.load()`.
+
+### .load()
+
+Loads an Array of manifests, provided by `.dump()`, into the client. If any of
+the items in the loaded Array contains a key which already are in the cache
+the entry in the cache will be overwritten.
+
+If any of the entries in the loaded Array are not compatible with the format
+which `.dump()` exports, they will not be inserted into the cache.
+
+Returns and Array with the keys which was inserted into the cache.
+
 ## Events
 
 The client emit the following events:

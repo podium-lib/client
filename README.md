@@ -84,6 +84,7 @@ for (let resource of client) {
 
 An options object containing configuration. The following values can be provided:
 
+ * `timeout` - {Number} - Default value, in milliseconds, for how long a request should wait before connection is terminated. Default: 1000
  * `maxAge` - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: Infinity
  * `agent` - {HTTPAgent} - Default HTTP Agent used for all requests.
 
@@ -126,6 +127,7 @@ The following values can be provided:
 
  * `uri` - {String} - Uri to the manifest of a podium component - Required
  * `name` - {String} - Name of the podlet. This is used to reference the podlet in your application, and does not have to match the name of the podlet itself - Required
+ * `timeout` - {Number} - How long, in milliseconds, the request should wait before connection is terminated. Overrides the global default. Default: 1000 - Optional.
  * `throwable` - {Boolean} - If it should be thrown an error if something fails during the process of fetching a podium component. Defaults to `false` - Optional.
 
 ### .js()

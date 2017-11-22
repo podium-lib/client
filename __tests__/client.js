@@ -52,3 +52,71 @@ test("client.refreshManifests() - should populate all resources' manifests", asy
 
     await Promise.all([serverA.close(), serverB.close()]);
 });
+
+/**
+ * .dump()
+ */
+
+test("client.dump() - should dump resources' manifests", async () => {
+    const serverA = new Faker({
+        name: 'aa',
+        assets: { js: 'a.js', css: 'a.css' },
+    });
+    const serverB = new Faker({
+        name: 'bb',
+        assets: { js: 'b.js', css: 'b.css' },
+    });
+    const [serviceA, serviceB] = await Promise.all([
+        serverA.listen(),
+        serverB.listen(),
+    ]);
+
+    const client = new Client();
+    const a = client.register(serviceA.options);
+    const b = client.register(serviceB.options);
+
+    await Promise.all([a.fetch({}), b.fetch({})]);
+
+    const dump = client.dump();
+
+    expect(dump.length).toEqual(2);
+
+    await Promise.all([serverA.close(), serverB.close()]);
+});
+
+/**
+ * .load()
+ */
+
+test("client.load() - should load dumped resources' manifests", async () => {
+    const serverA = new Faker({
+        name: 'aa',
+        assets: { js: 'a.js', css: 'a.css' },
+    });
+    const serverB = new Faker({
+        name: 'bb',
+        assets: { js: 'b.js', css: 'b.css' },
+    });
+    const [serviceA, serviceB] = await Promise.all([
+        serverA.listen(),
+        serverB.listen(),
+    ]);
+
+    const clientA = new Client();
+    const aa = clientA.register(serviceA.options);
+    const ab = clientA.register(serviceB.options);
+
+    await Promise.all([aa.fetch({}), ab.fetch({})]);
+
+    const clientB = new Client();
+    clientB.register(serviceA.options);
+    clientB.register(serviceB.options);
+
+    const dump = clientA.dump();
+    clientB.load(dump);
+
+    expect(clientB.js()).toEqual(['a.js', 'b.js']);
+    expect(clientB.css()).toEqual(['a.css', 'b.css']);
+
+    await Promise.all([serverA.close(), serverB.close()]);
+});

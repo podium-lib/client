@@ -1,6 +1,6 @@
 'use strict';
 
-const manifest = require('../lib/resolver.manifest.js');
+const Manifest = require('../lib/resolver.manifest.js');
 const Client = require('../');
 const Cache = require('ttl-mem-cache');
 const State = require('../lib/state.js');
@@ -15,12 +15,13 @@ const lolex = require('lolex');
  */
 
 test('resolver.manifest() - "state.manifest" holds a manifest - should resolve with same manifest', async () => {
+    const manifest = new Manifest();
     const state = new State(new Cache(), {
         uri: 'http://does.not.mather.com',
     });
     state.manifest = { name: 'component' };
 
-    await manifest(state);
+    await manifest.resolve(state);
 
     expect(state.manifest.name).toBe('component');
 });
@@ -29,11 +30,13 @@ test('resolver.manifest() - remote has no cache header - should set state.maxAge
     const server = new Faker();
     const service = await server.listen();
 
+    const manifest = new Manifest();
     const state = new State(new Cache(), {
         uri: service.options.uri,
         maxAge: 40000,
     });
-    await manifest(state);
+
+    await manifest.resolve(state);
 
     expect(state.maxAge).toBe(40000);
 
@@ -47,11 +50,13 @@ test('resolver.manifest() - remote has "cache-control: public, max-age=10" heade
         'cache-control': 'public, max-age=10',
     };
 
+    const manifest = new Manifest();
     const state = new State(new Cache(), {
         uri: service.options.uri,
         maxAge: 40000,
     });
-    await manifest(state);
+
+    await manifest.resolve(state);
 
     // See NOTE I for details
     expect(state.maxAge < 10000 && state.maxAge > 9000).toBeTruthy();
@@ -66,11 +71,13 @@ test('resolver.manifest() - remote has "cache-control: no-cache" header - should
         'cache-control': 'no-cache',
     };
 
+    const manifest = new Manifest();
     const state = new State(new Cache(), {
         uri: service.options.uri,
         maxAge: 40000,
     });
-    await manifest(state);
+
+    await manifest.resolve(state);
 
     expect(state.maxAge).toBe(40000);
 
@@ -88,11 +95,13 @@ test('resolver.manifest() - remote has "expires" header - should set state.maxAg
         expires: new Date(Date.now() + 1000 * 60 * 60 * 2).toUTCString(),
     };
 
+    const manifest = new Manifest();
     const state = new State(new Cache(), {
         uri: service.options.uri,
         maxAge: 40000,
     });
-    await manifest(state);
+
+    await manifest.resolve(state);
 
     expect(state.maxAge).toBe(1000 * 60 * 60 * 2); // 2 hours
 
@@ -145,13 +154,14 @@ test('resolver.manifest() - one remote has "expires" header second none - should
 test('resolver.manifest() - throwable:true - remote can not be resolved - should throw', async () => {
     expect.hasAssertions();
 
+    const manifest = new Manifest();
     const state = new State(new Cache(), {
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: true,
     });
 
     try {
-        await manifest(state);
+        await manifest.resolve(state);
     } catch (error) {
         expect(error.message).toMatch(/Error reading manifest/);
     }
@@ -163,13 +173,14 @@ test('resolver.manifest() - throwable:true - remote responds with http 500 - sho
     const server = new Faker();
     const service = await server.listen();
 
+    const manifest = new Manifest();
     const state = new State(new Cache(), {
         uri: service.error,
         throwable: true,
     });
 
     try {
-        await manifest(state);
+        await manifest.resolve(state);
     } catch (error) {
         expect(error.message).toMatch(/Could not read manifest/);
     }
@@ -184,13 +195,14 @@ test('resolver.manifest() - throwable:true - manifest is not valid - should thro
     server.manifestBody = { __id: 'component' };
     const service = await server.listen();
 
+    const manifest = new Manifest();
     const state = new State(new Cache(), {
         uri: service.manifest,
         throwable: true,
     });
 
     try {
-        await manifest(state);
+        await manifest.resolve(state);
     } catch (error) {
         expect(error.message).toMatch(/is required/);
     }
@@ -199,12 +211,13 @@ test('resolver.manifest() - throwable:true - manifest is not valid - should thro
 });
 
 test('resolver.manifest() - throwable:false - remote can not be resolved - "state.manifest" should be {_fallback: ""}', async () => {
+    const manifest = new Manifest();
     const state = new State(new Cache(), {
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
     });
 
-    await manifest(state);
+    await manifest.resolve(state);
     expect(state.manifest).toEqual({ _fallback: '' });
 });
 
@@ -212,12 +225,13 @@ test('resolver.manifest() - throwable:false - remote responds with http 500 - "s
     const server = new Faker();
     const service = await server.listen();
 
+    const manifest = new Manifest();
     const state = new State(new Cache(), {
         uri: service.error,
         throwable: false,
     });
 
-    await manifest(state);
+    await manifest.resolve(state);
     expect(state.manifest).toEqual({ _fallback: '' });
 
     await server.close();
@@ -228,12 +242,13 @@ test('resolver.manifest() - throwable:false - manifest is not valid - "state.man
     server.manifestBody = { __id: 'component' };
     const service = await server.listen();
 
+    const manifest = new Manifest();
     const state = new State(new Cache(), {
         uri: service.manifest,
         throwable: false,
     });
 
-    await manifest(state);
+    await manifest.resolve(state);
     expect(state.manifest).toEqual({ _fallback: '' });
 
     await server.close();

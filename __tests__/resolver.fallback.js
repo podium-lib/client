@@ -1,6 +1,6 @@
 'use strict';
 
-const fallback = require('../lib/resolver.fallback.js');
+const Fallback = require('../lib/resolver.fallback.js');
 const State = require('../lib/state.js');
 const Faker = require('../test/faker');
 const Cache = require('ttl-mem-cache');
@@ -12,7 +12,8 @@ test('resolver.fallback() - fallback field contains invalid value - should set v
     const state = new State(new Cache(), { uri: 'http://example.com' });
     state.manifest = server.manifest;
 
-    const result = await fallback(state);
+    const fallback = new Fallback();
+    const result = await fallback.resolve(state);
     expect(result.fallback).toBe('');
 });
 
@@ -25,7 +26,8 @@ test('resolver.fallback() - fallback field is a relative URI - should fetch fall
     const state = new State(new Cache(), { uri: service.options.uri });
     state.manifest = server.manifest;
 
-    const result = await fallback(state);
+    const fallback = new Fallback();
+    const result = await fallback.resolve(state);
     expect(result.fallback).toBe(server.fallbackBody);
 
     await server.close();
@@ -40,7 +42,8 @@ test('resolver.fallback() - fallback field is a relative URI - should fetch fall
     const state = new State(new Cache(), { uri: service.options.uri });
     state.manifest = server.manifest;
 
-    const result = await fallback(state);
+    const fallback = new Fallback();
+    const result = await fallback.resolve(state);
     expect(result.manifest._fallback).toBe(server.fallbackBody);
 
     await server.close();
@@ -55,7 +58,8 @@ test('resolver.fallback() - fallback field is a absolute URI - should fetch fall
     const state = new State(new Cache(), { uri: service.options.uri });
     state.manifest = server.manifest;
 
-    const result = await fallback(state);
+    const fallback = new Fallback();
+    const result = await fallback.resolve(state);
     expect(result.fallback).toBe(server.fallbackBody);
 
     await server.close();
@@ -70,7 +74,8 @@ test('resolver.fallback() - fallback field is a absolute URI - should fetch fall
     const state = new State(new Cache(), { uri: service.options.uri });
     state.manifest = server.manifest;
 
-    const result = await fallback(state);
+    const fallback = new Fallback();
+    const result = await fallback.resolve(state);
     expect(result.manifest._fallback).toBe(server.fallbackBody);
 
     await server.close();
@@ -89,7 +94,8 @@ test('resolver.fallback() - throwable:true - remote can not be resolved - should
     };
 
     try {
-        await fallback(state);
+        const fallback = new Fallback();
+        await fallback.resolve(state);
     } catch (error) {
         expect(error.message).toMatch(/Error reading fallback/);
     }
@@ -111,7 +117,8 @@ test('resolver.fallback() - throwable:true - remote responds with http 500 - sho
     };
 
     try {
-        await fallback(state);
+        const fallback = new Fallback();
+        await fallback.resolve(state);
     } catch (error) {
         expect(error.message).toMatch(/Could not read fallback/);
     }
@@ -129,7 +136,8 @@ test('resolver.fallback() - throwable:false - remote can not be resolved - "stat
         fallback: 'http://does.not.exist.finn.no/fallback.html',
     };
 
-    await fallback(state);
+    const fallback = new Fallback();
+    await fallback.resolve(state);
     expect(state.fallback).toBe('');
 });
 
@@ -146,7 +154,8 @@ test('resolver.fallback() - throwable:false - remote responds with http 500 - "s
         fallback: service.error,
     };
 
-    await fallback(state);
+    const fallback = new Fallback();
+    await fallback.resolve(state);
     expect(state.fallback).toBe('');
 
     await server.close();
@@ -161,6 +170,7 @@ test('resolver.fallback() - manifest is an empty string - "state.status" should 
         fallback: '',
     };
 
-    await fallback(state);
+    const fallback = new Fallback();
+    await fallback.resolve(state);
     expect(state.status).toBe('fresh');
 });

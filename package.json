@@ -23,7 +23,7 @@
   "dependencies": {
     "@podium/context": "^1.0.1",
     "@podium/schemas": "^2.0.0",
-    "abslog": "^1.1.0",
+    "abslog": "^1.2.0",
     "boom": "^7.1.1",
     "http-cache-semantics": "^3.8.0",
     "joi": "^13.0.2",

@@ -2,7 +2,6 @@
 
 const Manifest = require('../lib/resolver.manifest.js');
 const Client = require('../');
-const Cache = require('ttl-mem-cache');
 const State = require('../lib/state.js');
 const Faker = require('../test/faker');
 const lolex = require('lolex');
@@ -23,7 +22,7 @@ test('resolver.manifest() - object tag - should be PodletClientManifestResolver'
 
 test('resolver.manifest() - "state.manifest" holds a manifest - should resolve with same manifest', async () => {
     const manifest = new Manifest();
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: 'http://does.not.mather.com',
     });
     state.manifest = { name: 'component' };
@@ -38,7 +37,7 @@ test('resolver.manifest() - remote has no cache header - should set state.maxAge
     const service = await server.listen();
 
     const manifest = new Manifest();
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.options.uri,
         maxAge: 40000,
     });
@@ -58,7 +57,7 @@ test('resolver.manifest() - remote has "cache-control: public, max-age=10" heade
     };
 
     const manifest = new Manifest();
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.options.uri,
         maxAge: 40000,
     });
@@ -79,7 +78,7 @@ test('resolver.manifest() - remote has "cache-control: no-cache" header - should
     };
 
     const manifest = new Manifest();
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.options.uri,
         maxAge: 40000,
     });
@@ -103,7 +102,7 @@ test('resolver.manifest() - remote has "expires" header - should set state.maxAg
     };
 
     const manifest = new Manifest();
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.options.uri,
         maxAge: 40000,
     });
@@ -162,7 +161,7 @@ test('resolver.manifest() - throwable:true - remote can not be resolved - should
     expect.hasAssertions();
 
     const manifest = new Manifest();
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: true,
     });
@@ -181,7 +180,7 @@ test('resolver.manifest() - throwable:true - remote responds with http 500 - sho
     const service = await server.listen();
 
     const manifest = new Manifest();
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.error,
         throwable: true,
     });
@@ -203,7 +202,7 @@ test('resolver.manifest() - throwable:true - manifest is not valid - should thro
     const service = await server.listen();
 
     const manifest = new Manifest();
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.manifest,
         throwable: true,
     });
@@ -219,7 +218,7 @@ test('resolver.manifest() - throwable:true - manifest is not valid - should thro
 
 test('resolver.manifest() - throwable:false - remote can not be resolved - "state.manifest" should be {_fallback: ""}', async () => {
     const manifest = new Manifest();
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
     });
@@ -233,7 +232,7 @@ test('resolver.manifest() - throwable:false - remote responds with http 500 - "s
     const service = await server.listen();
 
     const manifest = new Manifest();
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.error,
         throwable: false,
     });
@@ -250,7 +249,7 @@ test('resolver.manifest() - throwable:false - manifest is not valid - "state.man
     const service = await server.listen();
 
     const manifest = new Manifest();
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.manifest,
         throwable: false,
     });

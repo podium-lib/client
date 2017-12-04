@@ -1,6 +1,6 @@
 'use strict';
 
-const content = require('../lib/resolver.content.js');
+const Content = require('../lib/resolver.content.js');
 const stream = require('stream');
 const State = require('../lib/state.js');
 const Faker = require('../test/faker');
@@ -12,6 +12,13 @@ const Cache = require('ttl-mem-cache');
  * "Cannot read property 'resourceMountPath' of undefined" error.
  * This is britle in the implementation. Harden.
  */
+
+test('resolver.content() - object tag - should be PodletClientContentResolver', () => {
+    const content = new Content();
+    expect(Object.prototype.toString.call(content)).toEqual(
+        '[object PodletClientContentResolver]'
+    );
+});
 
 test('resolver.content() - state "streamThrough" is true - should stream content through on state.stream', async () => {
     expect.hasAssertions();
@@ -42,7 +49,8 @@ test('resolver.content() - state "streamThrough" is true - should stream content
 
     state.stream.pipe(to);
 
-    await content(state);
+    const content = new Content();
+    await content.resolve(state);
     await server.close();
 });
 
@@ -62,7 +70,9 @@ test('resolver.content() - state "streamThrough" is false - should buffer conten
     // See TODO I
     state.reqOptions.podiumContext = {};
 
-    const result = await content(state);
+    const content = new Content();
+    const result = await content.resolve(state);
+
     expect(result.content).toBe(server.contentBody);
     await server.close();
 });
@@ -78,7 +88,9 @@ test('resolver.content() - "podlet-version" header is same as manifest.version -
     // See TODO I
     state.reqOptions.podiumContext = {};
 
-    await content(state);
+    const content = new Content();
+    await content.resolve(state);
+
     expect(state.manifest).toBeDefined();
     await server.close();
 });
@@ -97,7 +109,9 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
     // See TODO I
     state.reqOptions.podiumContext = {};
 
-    await content(state);
+    const content = new Content();
+    await content.resolve(state);
+
     expect(state.manifest).toBeDefined();
     await server.close();
 });
@@ -116,7 +130,9 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
     // See TODO I
     state.reqOptions.podiumContext = {};
 
-    await content(state);
+    const content = new Content();
+    await content.resolve(state);
+
     expect(state.manifest).toEqual({ _fallback: '' });
     await server.close();
 });
@@ -137,8 +153,10 @@ test('resolver.content() - throwable:true - remote can not be resolved - should 
     };
     state.status = 'cached';
 
+    const content = new Content();
+
     try {
-        await content(state);
+        await content.resolve(state);
     } catch (error) {
         expect(error.message).toMatch(/Error reading content/);
         expect(state.success).toBeFalsy();
@@ -164,8 +182,10 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
     };
     state.status = 'cached';
 
+    const content = new Content();
+
     try {
-        await content(state);
+        await content.resolve(state);
     } catch (error) {
         expect(error.message).toMatch(/Could not read content/);
         expect(state.success).toBeFalsy();
@@ -203,7 +223,8 @@ test('resolver.content() - throwable:false - remote can not be resolved - "state
 
     state.stream.pipe(to);
 
-    await content(state);
+    const content = new Content();
+    await content.resolve(state);
 });
 
 test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "state.stream" should stream fallback', async () => {
@@ -236,7 +257,8 @@ test('resolver.content() - throwable:false with fallback set - remote can not be
 
     state.stream.pipe(to);
 
-    await content(state);
+    const content = new Content();
+    await content.resolve(state);
 });
 
 test('resolver.content() - throwable:false - remote responds with http 500 - "state.stream" should stream empty string', async () => {
@@ -271,7 +293,9 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "st
 
     state.stream.pipe(to);
 
-    await content(state);
+    const content = new Content();
+    await content.resolve(state);
+
     await server.close();
 });
 
@@ -308,6 +332,8 @@ test('resolver.content() - throwable:false with fallback set - remote responds w
 
     state.stream.pipe(to);
 
-    await content(state);
+    const content = new Content();
+    await content.resolve(state);
+
     await server.close();
 });

@@ -5,7 +5,9 @@ const Client = require('../../');
 
 const PORT = parseInt(process.argv[2], 10);
 
-const client = new Client();
+const client = new Client({
+    logger: console,
+});
 client.on('dispose', key => {
     console.log('event - manifest disposed -', key);
 });
@@ -17,20 +19,10 @@ client.register({
     name: 'podlet',
     uri: 'http://localhost:7010/manifest.json',
 });
-client.podlet.on('debug', info => {
-    console.log('DEBUG:', info);
-});
-client.podlet.on('info', info => {
-    console.log('INFO:', info);
-});
-client.podlet.on('warn', info => {
-    console.log('WARN:', info);
-});
 
 const app = express();
 
 app.get('/', (req, res) => {
-    console.log(`FETCH ::  ${Date.now()}`);
     client.podlet
         .fetch({})
         .then(html => {
@@ -43,8 +35,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/stream', (req, res) => {
-    console.log(`STREAM :: ${Date.now()}`);
-
     const stream = client.podlet.stream({});
     stream.on('error', error => {
         console.log(error);

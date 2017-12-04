@@ -2,10 +2,8 @@
 
 const isStream = require('is-stream');
 const stream = require('stream');
-// const Cache = require('ttl-mem-cache');
 const State = require('../lib/state');
 
-// const REGISTRY = new Cache();
 const REQ_OPTIONS = {
     pathname: 'a',
     query: { b: 'c' },
@@ -24,16 +22,7 @@ test('State() - object tag - should be PodletClientState', () => {
         '[object PodletClientState]'
     );
 });
-/*
-test('State() - "registry" not provided to constructor - should throw', () => {
-    expect(() => {
-        // eslint-disable-next-line no-unused-vars
-        const state = new State();
-    }).toThrowError(
-        'you must pass a "registry" object to the State constructor'
-    );
-});
-*/
+
 test('State() - "options.uri" not provided to constructor - should throw', () => {
     expect(() => {
         // eslint-disable-next-line no-unused-vars
@@ -42,12 +31,7 @@ test('State() - "options.uri" not provided to constructor - should throw', () =>
         'you must pass a URI in "options.uri" to the State constructor'
     );
 });
-/*
-test('State() - set "registry" - should be persisted on "this.registry"', () => {
-    const state = new State(REGISTRY, RESOURCE_OPTIONS);
-    expect(state.registry).not.toBeUndefined();
-});
-*/
+
 test('State() - set "uri" - should be persisted on "this.uri"', () => {
     const state = new State(RESOURCE_OPTIONS);
     expect(state.uri).toBe(RESOURCE_OPTIONS.uri);

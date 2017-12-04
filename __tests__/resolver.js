@@ -12,7 +12,6 @@ test('resolver() - object tag - should be PodletClientResolver', () => {
     );
 });
 
-
 test('resolver() - "registry" not provided to constructor - should throw', () => {
     expect(() => {
         // eslint-disable-next-line no-unused-vars

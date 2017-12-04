@@ -24,11 +24,7 @@ test('resolver.content() - state "streamThrough" is true - should stream content
 
     const server = new Faker();
     const service = await server.listen();
-    const state = new State(
-        { uri: service.options.uri },
-        {},
-        true
-    );
+    const state = new State({ uri: service.options.uri }, {}, true);
     state.manifest = server.manifest;
     state.status = 'fresh';
 
@@ -56,11 +52,7 @@ test('resolver.content() - state "streamThrough" is false - should buffer conten
     const server = new Faker();
     const service = await server.listen();
 
-    const state = new State(
-        { uri: service.options.uri },
-        {},
-        false
-    );
+    const state = new State({ uri: service.options.uri }, {}, false);
     state.manifest = server.manifest;
     state.status = 'fresh';
 

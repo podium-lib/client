@@ -4,7 +4,6 @@ const Content = require('../lib/resolver.content.js');
 const stream = require('stream');
 const State = require('../lib/state.js');
 const Faker = require('../test/faker');
-const Cache = require('ttl-mem-cache');
 
 /**
  * TODO I:
@@ -26,7 +25,6 @@ test('resolver.content() - state "streamThrough" is true - should stream content
     const server = new Faker();
     const service = await server.listen();
     const state = new State(
-        new Cache(),
         { uri: service.options.uri },
         {},
         true
@@ -59,7 +57,6 @@ test('resolver.content() - state "streamThrough" is false - should buffer conten
     const service = await server.listen();
 
     const state = new State(
-        new Cache(),
         { uri: service.options.uri },
         {},
         false
@@ -81,7 +78,7 @@ test('resolver.content() - "podlet-version" header is same as manifest.version -
     const server = new Faker();
     const service = await server.listen();
 
-    const state = new State(new Cache(), { uri: service.options.uri });
+    const state = new State({ uri: service.options.uri });
     state.manifest = server.manifest;
     state.status = 'cached';
 
@@ -102,7 +99,7 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
         'podlet-version': '',
     };
 
-    const state = new State(new Cache(), { uri: service.options.uri });
+    const state = new State({ uri: service.options.uri });
     state.manifest = server.manifest;
     state.status = 'cached';
 
@@ -123,7 +120,7 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
         'podlet-version': '2.0.0',
     };
 
-    const state = new State(new Cache(), { uri: service.options.uri });
+    const state = new State({ uri: service.options.uri });
     state.manifest = server.manifest;
     state.status = 'cached';
 
@@ -140,7 +137,7 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
 test('resolver.content() - throwable:true - remote can not be resolved - should throw', async () => {
     expect.hasAssertions();
 
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: true,
     });
@@ -169,7 +166,7 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
     const server = new Faker();
     const service = await server.listen();
 
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.options.uri,
         throwable: true,
     });
@@ -197,7 +194,7 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
 test('resolver.content() - throwable:false - remote can not be resolved - "state.stream" should stream empty string', async () => {
     expect.hasAssertions();
 
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
     });
@@ -230,7 +227,7 @@ test('resolver.content() - throwable:false - remote can not be resolved - "state
 test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "state.stream" should stream fallback', async () => {
     expect.hasAssertions();
 
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
     });
@@ -267,7 +264,7 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "st
     const server = new Faker();
     const service = await server.listen();
 
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.options.uri,
         throwable: false,
     });
@@ -305,7 +302,7 @@ test('resolver.content() - throwable:false with fallback set - remote responds w
     const server = new Faker();
     const service = await server.listen();
 
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.options.uri,
         throwable: false,
     });

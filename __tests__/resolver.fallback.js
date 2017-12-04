@@ -3,7 +3,6 @@
 const Fallback = require('../lib/resolver.fallback.js');
 const State = require('../lib/state.js');
 const Faker = require('../test/faker');
-const Cache = require('ttl-mem-cache');
 
 test('resolver.fallback() - object tag - should be PodletClientFallbackResolver', () => {
     const fallback = new Fallback();
@@ -16,7 +15,7 @@ test('resolver.fallback() - fallback field contains invalid value - should set v
     const server = new Faker();
     server.fallback = 'ht++ps://blæ.finn.no/fallback.html';
 
-    const state = new State(new Cache(), { uri: 'http://example.com' });
+    const state = new State({ uri: 'http://example.com' });
     state.manifest = server.manifest;
 
     const fallback = new Fallback();
@@ -30,7 +29,7 @@ test('resolver.fallback() - fallback field is a relative URI - should fetch fall
 
     server.fallback = '/fallback.html';
 
-    const state = new State(new Cache(), { uri: service.options.uri });
+    const state = new State({ uri: service.options.uri });
     state.manifest = server.manifest;
 
     const fallback = new Fallback();
@@ -46,7 +45,7 @@ test('resolver.fallback() - fallback field is a relative URI - should fetch fall
 
     server.fallback = '/fallback.html';
 
-    const state = new State(new Cache(), { uri: service.options.uri });
+    const state = new State({ uri: service.options.uri });
     state.manifest = server.manifest;
 
     const fallback = new Fallback();
@@ -62,7 +61,7 @@ test('resolver.fallback() - fallback field is a absolute URI - should fetch fall
 
     server.fallback = `${service.address}/fallback.html`;
 
-    const state = new State(new Cache(), { uri: service.options.uri });
+    const state = new State({ uri: service.options.uri });
     state.manifest = server.manifest;
 
     const fallback = new Fallback();
@@ -78,7 +77,7 @@ test('resolver.fallback() - fallback field is a absolute URI - should fetch fall
 
     server.fallback = `${service.address}/fallback.html`;
 
-    const state = new State(new Cache(), { uri: service.options.uri });
+    const state = new State({ uri: service.options.uri });
     state.manifest = server.manifest;
 
     const fallback = new Fallback();
@@ -91,7 +90,7 @@ test('resolver.fallback() - fallback field is a absolute URI - should fetch fall
 test('resolver.fallback() - throwable:true - remote can not be resolved - should throw', async () => {
     expect.hasAssertions();
 
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: true,
     });
@@ -114,7 +113,7 @@ test('resolver.fallback() - throwable:true - remote responds with http 500 - sho
     const server = new Faker();
     const service = await server.listen();
 
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.options.uri,
         throwable: true,
     });
@@ -134,7 +133,7 @@ test('resolver.fallback() - throwable:true - remote responds with http 500 - sho
 });
 
 test('resolver.fallback() - throwable:false - remote can not be resolved - "state.manifest" should be empty string', async () => {
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
     });
@@ -152,7 +151,7 @@ test('resolver.fallback() - throwable:false - remote responds with http 500 - "s
     const server = new Faker();
     const service = await server.listen();
 
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: service.options.uri,
         throwable: false,
     });
@@ -169,7 +168,7 @@ test('resolver.fallback() - throwable:false - remote responds with http 500 - "s
 });
 
 test('resolver.fallback() - manifest is an empty string - "state.status" should have the value "fresh"', async () => {
-    const state = new State(new Cache(), {
+    const state = new State({
         uri: 'http://does.not.exist.finn.no/manifest.json',
     });
 

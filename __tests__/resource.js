@@ -20,11 +20,6 @@ test('Resource() - object tag - should be PodletClientResource', () => {
     );
 });
 
-test('Resource() - set "registry" - should be persisted on "this.registry"', () => {
-    const resource = new Resource(REGISTRY, { uri: URI });
-    expect(resource.registry).not.toBeUndefined();
-});
-
 test('Resource() - set "options.uri" - should be 20 items', () => {
     const resource = new Resource(REGISTRY, { uri: URI });
     expect(resource.options.uri).toBe(URI);

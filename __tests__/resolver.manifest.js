@@ -14,6 +14,13 @@ const lolex = require('lolex');
  * check if cache time are within a range.
  */
 
+test('resolver.manifest() - object tag - should be PodletClientManifestResolver', () => {
+    const manifest = new Manifest();
+    expect(Object.prototype.toString.call(manifest)).toEqual(
+        '[object PodletClientManifestResolver]'
+    );
+});
+
 test('resolver.manifest() - "state.manifest" holds a manifest - should resolve with same manifest', async () => {
     const manifest = new Manifest();
     const state = new State(new Cache(), {

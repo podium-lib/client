@@ -13,6 +13,13 @@ const Cache = require('ttl-mem-cache');
  * This is britle in the implementation. Harden.
  */
 
+test('resolver.content() - object tag - should be PodletClientContentResolver', () => {
+    const content = new Content();
+    expect(Object.prototype.toString.call(content)).toEqual(
+        '[object PodletClientContentResolver]'
+    );
+});
+
 test('resolver.content() - state "streamThrough" is true - should stream content through on state.stream', async () => {
     expect.hasAssertions();
 

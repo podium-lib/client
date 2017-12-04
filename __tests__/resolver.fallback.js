@@ -5,6 +5,13 @@ const State = require('../lib/state.js');
 const Faker = require('../test/faker');
 const Cache = require('ttl-mem-cache');
 
+test('resolver.fallback() - object tag - should be PodletClientFallbackResolver', () => {
+    const fallback = new Fallback();
+    expect(Object.prototype.toString.call(fallback)).toEqual(
+        '[object PodletClientFallbackResolver]'
+    );
+});
+
 test('resolver.fallback() - fallback field contains invalid value - should set value on "state.fallback" to empty String', async () => {
     const server = new Faker();
     server.fallback = 'ht++ps://blæ.finn.no/fallback.html';

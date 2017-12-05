@@ -94,3 +94,17 @@ test('client.register() - register resources - should be possible to iterate ove
 
     expect([a, b]).toEqual(expect.arrayContaining(Array.from(client)));
 });
+
+test('client.register() - try to manually set register resource - should throw', () => {
+    const client = new Client();
+    client.register({
+        uri: 'http://example-a.org',
+        name: 'exampleA',
+    });
+
+    expect(() => {
+        client.exampleA = 'foo';
+    }).toThrowError(
+        'Cannot set read-only property.'
+    );
+});

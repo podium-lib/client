@@ -259,3 +259,66 @@ test('resolver.manifest() - throwable:false - manifest is not valid - "state.man
 
     await server.close();
 });
+
+test('resolver.manifest() - "content" in manifest is relative - "state.manifest.content" should be absolute', async () => {
+    const server = new Faker();
+    const service = await server.listen();
+
+    const manifest = new Manifest();
+    const state = new State({
+        uri: service.manifest,
+    });
+
+    await manifest.resolve(state);
+    expect(state.manifest.content).toEqual(service.content);
+
+    await server.close();
+});
+
+test('resolver.manifest() - "content" in manifest is absolute - "state.manifest.content" should be absolute', async () => {
+    const server = new Faker();
+    server.content = 'http://does.not.mather.com';
+    const service = await server.listen();
+
+    const manifest = new Manifest();
+    const state = new State({
+        uri: service.manifest,
+    });
+
+    await manifest.resolve(state);
+    expect(state.manifest.content).toEqual('http://does.not.mather.com');
+
+    await server.close();
+});
+
+test('resolver.manifest() - "fallback" in manifest is relative - "state.manifest.fallback" should be absolute', async () => {
+    const server = new Faker();
+    server.fallback = '/fallback.html';
+    const service = await server.listen();
+
+    const manifest = new Manifest();
+    const state = new State({
+        uri: service.manifest,
+    });
+
+    await manifest.resolve(state);
+    expect(state.manifest.fallback).toEqual(`${service.address}/fallback.html`);
+
+    await server.close();
+});
+
+test('resolver.manifest() - "fallback" in manifest is absolute - "state.manifest.fallback" should be absolute', async () => {
+    const server = new Faker();
+    server.fallback = 'http://does.not.mather.com';
+    const service = await server.listen();
+
+    const manifest = new Manifest();
+    const state = new State({
+        uri: service.manifest,
+    });
+
+    await manifest.resolve(state);
+    expect(state.manifest.fallback).toEqual('http://does.not.mather.com');
+
+    await server.close();
+});

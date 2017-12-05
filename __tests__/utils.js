@@ -84,6 +84,28 @@ test('.uriIsRelative() - "uri" is absolute - should return "false"', () => {
 });
 
 /**
+ * .uriRelativeToAbsolute()
+ */
+
+test('.uriRelativeToAbsolute() - "input" is relative - should build absolute URI', () => {
+    const result = utils.uriRelativeToAbsolute(
+        '/podlet',
+        'http://localhost:7000/foo/',
+        '/a/b'
+    );
+    expect(result).toBe('http://localhost:7000/foo/podlet/a/b');
+});
+
+test('.uriRelativeToAbsolute() - "input" is absolute - should return absolute URI', () => {
+    const result = utils.uriRelativeToAbsolute(
+        'http://localhost:7000/foo/podlet/a/b',
+        'http://localhost:7000/bar/',
+        '/b/a'
+    );
+    expect(result).toBe('http://localhost:7000/foo/podlet/a/b');
+});
+
+/**
  * .isHeaderDefined()
  */
 

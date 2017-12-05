@@ -25,6 +25,7 @@ test('resolver.content() - state "streamThrough" is true - should stream content
     const server = new Faker();
     const service = await server.listen();
     const state = new State({ uri: service.options.uri }, {}, true);
+    server.manifest.content = service.content;
     state.manifest = server.manifest;
     state.status = 'fresh';
 
@@ -53,6 +54,7 @@ test('resolver.content() - state "streamThrough" is false - should buffer conten
     const service = await server.listen();
 
     const state = new State({ uri: service.options.uri }, {}, false);
+    server.manifest.content = service.content;
     state.manifest = server.manifest;
     state.status = 'fresh';
 
@@ -71,6 +73,7 @@ test('resolver.content() - "podlet-version" header is same as manifest.version -
     const service = await server.listen();
 
     const state = new State({ uri: service.options.uri });
+    server.manifest.content = service.content;
     state.manifest = server.manifest;
     state.status = 'cached';
 
@@ -92,6 +95,7 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
     };
 
     const state = new State({ uri: service.options.uri });
+    server.manifest.content = service.content;
     state.manifest = server.manifest;
     state.status = 'cached';
 
@@ -113,6 +117,7 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
     };
 
     const state = new State({ uri: service.options.uri });
+    server.manifest.content = service.content;
     state.manifest = server.manifest;
     state.status = 'cached';
 

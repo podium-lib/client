@@ -23,39 +23,7 @@ test('resolver.fallback() - fallback field contains invalid value - should set v
     expect(result.fallback).toBe('');
 });
 
-test('resolver.fallback() - fallback field is a relative URI - should fetch fallback and set content on "state.fallback"', async () => {
-    const server = new Faker();
-    const service = await server.listen();
-
-    server.fallback = '/fallback.html';
-
-    const state = new State({ uri: service.options.uri });
-    state.manifest = server.manifest;
-
-    const fallback = new Fallback();
-    const result = await fallback.resolve(state);
-    expect(result.fallback).toBe(server.fallbackBody);
-
-    await server.close();
-});
-
-test('resolver.fallback() - fallback field is a relative URI - should fetch fallback and set content on "state.manifest.fallback"', async () => {
-    const server = new Faker();
-    const service = await server.listen();
-
-    server.fallback = '/fallback.html';
-
-    const state = new State({ uri: service.options.uri });
-    state.manifest = server.manifest;
-
-    const fallback = new Fallback();
-    const result = await fallback.resolve(state);
-    expect(result.manifest._fallback).toBe(server.fallbackBody);
-
-    await server.close();
-});
-
-test('resolver.fallback() - fallback field is a absolute URI - should fetch fallback and set content on "state.fallback"', async () => {
+test('resolver.fallback() - fallback field is a URI - should fetch fallback and set content on "state.fallback"', async () => {
     const server = new Faker();
     const service = await server.listen();
 
@@ -71,7 +39,7 @@ test('resolver.fallback() - fallback field is a absolute URI - should fetch fall
     await server.close();
 });
 
-test('resolver.fallback() - fallback field is a absolute URI - should fetch fallback and set content on "state.manifest._fallback"', async () => {
+test('resolver.fallback() - fallback field is a URI - should fetch fallback and set content on "state.manifest._fallback"', async () => {
     const server = new Faker();
     const service = await server.listen();
 

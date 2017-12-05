@@ -104,7 +104,5 @@ test('client.register() - try to manually set register resource - should throw',
 
     expect(() => {
         client.exampleA = 'foo';
-    }).toThrowError(
-        'Cannot set read-only property.'
-    );
+    }).toThrowError('Cannot set read-only property.');
 });

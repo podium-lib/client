@@ -43,7 +43,7 @@
     "is-stream": "^1.1.0",
     "lolex": "^2.3.0",
     "jest": "^21.2.1",
-    "prettier": "^1.8.2",
+    "prettier": "1.8.2",
     "prom-client": "^10.2.2",
     "server-destroy": "^1.0.1"
   },

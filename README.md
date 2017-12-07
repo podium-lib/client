@@ -87,6 +87,7 @@ An options object containing configuration. The following values can be provided
  * `timeout` - {Number} - Default value, in milliseconds, for how long a request should wait before connection is terminated. Default: 1000
  * `maxAge` - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: Infinity
  * `agent` - {HTTPAgent} - Default HTTP Agent used for all requests.
+ * `logger` - {Object} - A logger which conform to a log4j interface. See the doc for the internal [abstract logger](https://www.npmjs.com/package/abslog) for more information.
 
 
 ## API

@@ -2,6 +2,7 @@
 
 const Client = require('../');
 const Faker = require('../test/faker');
+const lolex = require('lolex');
 
 /**
  * Constructor
@@ -18,6 +19,64 @@ test('Client() - object tag - should be PodletClient', () => {
         '[object PodletClient]'
     );
 });
+
+/**
+ * .on('dispose')
+ */
+
+test('Client().on("dispose") - client is hot, manifest reaches timeout - should emit dispose event', async () => {
+    expect.hasAssertions();
+
+    const clock = lolex.install();
+
+    const server = new Faker({
+        name: 'aa',
+    });
+    const service = await server.listen();
+
+    const client = new Client();
+    client.on('dispose', key => {
+        expect(key).toEqual(service.options.uri);
+    });
+
+    const podlet = client.register(service.options);
+    await podlet.fetch({});
+
+    // Tick clock 25 hours into future
+    clock.tick(25 * 60 * 60 * 1000);
+
+    await podlet.fetch({});
+
+    await server.close();
+    clock.uninstall();
+});
+
+/**
+ * .register()
+ */
+
+test('.register() - register podlet - should return a PodletClientResource', () => {
+    const client = new Client();
+    const podlet = client.register({ uri: 'http://192.0.2.1', name: 'aa' });
+    expect(Object.prototype.toString.call(podlet)).toBe('[object PodletClientResource]');
+});
+
+test('.register() - "options.uri" is missing - should throw', () => {
+    expect.hasAssertions();
+    const client = new Client();
+    expect(() => {
+        client.register({ name: 'aa' });
+    }).toThrowError('The value for "options.uri", undefined, is not a valid URI');
+});
+
+test('.register() - "options.name" is missing - should throw', () => {
+    expect.hasAssertions();
+    const client = new Client();
+    expect(() => {
+        client.register({ uri: 'http://192.0.2.1' });
+    }).toThrowError('The value for "options.name", undefined, is not a valid name');
+});
+
 
 /**
  * .refreshManifests()

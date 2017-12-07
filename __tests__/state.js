@@ -70,6 +70,16 @@ test('State() - "false" value for streamThrough - "this.stream" should contain a
     expect(isStream.writable(state.stream)).toBe(true);
 });
 
+test('State() - this.stream errors - should emit error event', () => {
+    expect.hasAssertions();
+
+    const state = new State(RESOURCE_OPTIONS, REQ_OPTIONS, true);
+    state.stream.on('error', error => {
+        expect(error).toBe('error');
+    });
+    state.stream.emit('error', 'error');
+});
+
 test('State() - get manifestUri - should return URI to manifest', () => {
     const state = new State(RESOURCE_OPTIONS);
     expect(state.manifestUri).toBe(RESOURCE_OPTIONS.uri);

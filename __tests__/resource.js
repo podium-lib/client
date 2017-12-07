@@ -20,7 +20,16 @@ test('Resource() - object tag - should be PodletClientResource', () => {
     );
 });
 
-test('Resource() - set "options.uri" - should be 20 items', () => {
+test('Resource() - no "registry" - should throw', () => {
+    expect.hasAssertions();
+    expect(() => {
+        const resource = new Resource();
+    }).toThrowError(
+        'you must pass a "registry" object to the PodletClientResource constructor'
+    );
+});
+
+test('Resource() - set "options.uri" - should set value on "this.options.uri"', () => {
     const resource = new Resource(REGISTRY, { uri: URI });
     expect(resource.options.uri).toBe(URI);
 });

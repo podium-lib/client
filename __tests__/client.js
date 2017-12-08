@@ -52,33 +52,6 @@ test('Client().on("dispose") - client is hot, manifest reaches timeout - should 
 });
 
 /**
- * .register()
- */
-
-test('.register() - register podlet - should return a PodletClientResource', () => {
-    const client = new Client();
-    const podlet = client.register({ uri: 'http://192.0.2.1', name: 'aa' });
-    expect(Object.prototype.toString.call(podlet)).toBe('[object PodletClientResource]');
-});
-
-test('.register() - "options.uri" is missing - should throw', () => {
-    expect.hasAssertions();
-    const client = new Client();
-    expect(() => {
-        client.register({ name: 'aa' });
-    }).toThrowError('The value for "options.uri", undefined, is not a valid URI');
-});
-
-test('.register() - "options.name" is missing - should throw', () => {
-    expect.hasAssertions();
-    const client = new Client();
-    expect(() => {
-        client.register({ uri: 'http://192.0.2.1' });
-    }).toThrowError('The value for "options.name", undefined, is not a valid name');
-});
-
-
-/**
  * .refreshManifests()
  */
 

@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint no-unused-vars: "off" */
+
 const Resource = require('../lib/resource');
 const Faker = require('../test/faker');
 const stream = require('stream');

@@ -16,14 +16,19 @@ test('client.register() - call with a valid value for "options.uri" - should ret
     expect(resource).toBeInstanceOf(Resource);
 });
 
+test('client.register() - call with no options - should throw', () => {
+    const client = new Client();
+    expect(() => {
+        client.register();
+    }).toThrowError('You must provide a value to "options.uri"');
+});
+
 test('client.register() - call with missing value for "options.uri" - should throw', () => {
     const client = new Client();
 
     expect(() => {
         client.register({ name: 'example' });
-    }).toThrowError(
-        'The value for "options.uri", undefined, is not a valid URI'
-    );
+    }).toThrowError('You must provide a value to "options.uri"');
 });
 
 test('client.register() - call with a invalid value for "options.uri" - should throw', () => {
@@ -49,9 +54,7 @@ test('client.register() - call with missing value for "options.name" - should th
 
     expect(() => {
         client.register({ uri: 'http://example-a.org' });
-    }).toThrowError(
-        'The value for "options.name", undefined, is not a valid name'
-    );
+    }).toThrowError('You must provide a value to "options.name"');
 });
 
 test('client.register() - call duplicate names - should throw', () => {

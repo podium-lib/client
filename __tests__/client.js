@@ -2,6 +2,7 @@
 
 const Client = require('../');
 const Faker = require('../test/faker');
+const lolex = require('lolex');
 
 /**
  * Constructor
@@ -17,6 +18,37 @@ test('Client() - object tag - should be PodletClient', () => {
     expect(Object.prototype.toString.call(client)).toEqual(
         '[object PodletClient]'
     );
+});
+
+/**
+ * .on('dispose')
+ */
+
+test('Client().on("dispose") - client is hot, manifest reaches timeout - should emit dispose event', async () => {
+    expect.hasAssertions();
+
+    const clock = lolex.install();
+
+    const server = new Faker({
+        name: 'aa',
+    });
+    const service = await server.listen();
+
+    const client = new Client();
+    client.on('dispose', key => {
+        expect(key).toEqual(service.options.uri);
+    });
+
+    const podlet = client.register(service.options);
+    await podlet.fetch({});
+
+    // Tick clock 25 hours into future
+    clock.tick(25 * 60 * 60 * 1000);
+
+    await podlet.fetch({});
+
+    await server.close();
+    clock.uninstall();
 });
 
 /**

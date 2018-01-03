@@ -26,14 +26,14 @@
     "@podium/schemas": "^2.0.0",
     "abslog": "^1.2.0",
     "boom": "^7.1.1",
-    "http-cache-semantics": "^3.8.0",
+    "http-cache-semantics": "^3.8.1",
     "joi": "^13.0.2",
     "request": "^2.83.0",
-    "ttl-mem-cache": "^2.2.0"
+    "ttl-mem-cache": "^3.1.0"
   },
   "devDependencies": {
-    "@finn-no/fiaas-logger": "^1.4.4",
-    "eslint": "^4.11.0",
+    "@finn-no/fiaas-logger": "^1.4.8",
+    "eslint": "^4.14.0",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
     "memwatch-next": "^0.3.0",
@@ -42,9 +42,9 @@
     "get-stream": "^3.0.0",
     "http-proxy": "^1.16.2",
     "is-stream": "^1.1.0",
-    "lolex": "^2.3.0",
-    "jest": "^21.2.1",
-    "prettier": "1.8.2",
+    "lolex": "^2.3.1",
+    "jest": "^22.0.4",
+    "prettier": "1.9.2",
     "prom-client": "^10.2.2",
     "server-destroy": "^1.0.1"
   },

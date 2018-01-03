@@ -139,13 +139,11 @@ test('.isHeaderDefined() - header exist as whitespace in headers object - should
 
 test('.hasManifestChange() - new value is same as old value - should return false', () => {
     const item = {
-        value: {
-            oldVal: {
-                version: '1.0.0',
-            },
-            newVal: {
-                version: '1.0.0',
-            },
+        oldVal: {
+            version: '1.0.0',
+        },
+        newVal: {
+            version: '1.0.0',
         },
     };
 
@@ -154,13 +152,11 @@ test('.hasManifestChange() - new value is same as old value - should return fals
 
 test('.hasManifestChange() - new value is newer then old value - should return true', () => {
     const item = {
-        value: {
-            oldVal: {
-                version: '1.0.0',
-            },
-            newVal: {
-                version: '2.0.0',
-            },
+        oldVal: {
+            version: '1.0.0',
+        },
+        newVal: {
+            version: '2.0.0',
         },
     };
 
@@ -169,13 +165,11 @@ test('.hasManifestChange() - new value is newer then old value - should return t
 
 test('.hasManifestChange() - old value is newer then new value - should return true', () => {
     const item = {
-        value: {
-            oldVal: {
-                version: '2.0.0',
-            },
-            newVal: {
-                version: '1.0.0',
-            },
+        oldVal: {
+            version: '2.0.0',
+        },
+        newVal: {
+            version: '1.0.0',
         },
     };
 
@@ -184,10 +178,8 @@ test('.hasManifestChange() - old value is newer then new value - should return t
 
 test('.hasManifestChange() - new value is not defined, old value is defined - should return true', () => {
     const item = {
-        value: {
-            oldVal: {
-                version: '2.0.0',
-            },
+        oldVal: {
+            version: '2.0.0',
         },
     };
 
@@ -196,10 +188,8 @@ test('.hasManifestChange() - new value is not defined, old value is defined - sh
 
 test('.hasManifestChange() - old value is not defined, new value is defined - should return true', () => {
     const item = {
-        value: {
-            newVal: {
-                version: '2.0.0',
-            },
+        newVal: {
+            version: '2.0.0',
         },
     };
 
@@ -207,9 +197,6 @@ test('.hasManifestChange() - old value is not defined, new value is defined - sh
 });
 
 test('.hasManifestChange() - both old and new value is not defined - should return false', () => {
-    const item = {
-        value: {},
-    };
-
+    const item = {};
     expect(utils.hasManifestChange(item)).toBeFalsy();
 });

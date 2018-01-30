@@ -69,16 +69,16 @@ test('resource.fetch(podiumContext) - should pass it on', async () => {
     const server = new Faker({ version: '1.0.0' });
     const service = await server.listen();
     server.on('req:content', (count, req) => {
-        expect(req.headers['podium-token']).toBe('jwt');
-        expect(req.headers['podium-resource-mount-path']).toBe(
-            '/podium-resource/component'
+        expect(req.headers['podium-locale']).toBe('nb-NO');
+        expect(req.headers['podium-mount-origin']).toBe(
+            'http://www.example.org'
         );
     });
 
     const resource = new Resource(REGISTRY, service.options);
     await resource.fetch({
-        token: 'jwt',
-        resourceMountPath: '/podium-resource',
+        'podium-locale': 'nb-NO',
+        'podium-mount-origin': 'http://www.example.org',
     });
 
     await server.close();

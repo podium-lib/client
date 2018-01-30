@@ -1,9 +1,9 @@
 'use strict';
 
+const Context = require('@podium/context');
 const express = require('express');
 const EventEmitter = require('events');
 const enableDestroy = require('server-destroy');
-const { internalMiddleware } = require('@podium/context');
 
 class FakeServer extends EventEmitter {
     constructor(manifest) {
@@ -12,6 +12,7 @@ class FakeServer extends EventEmitter {
         // Private
         this._app = express();
         this._server = undefined;
+        this._context = new Context('faker');
 
         this._routeManifest = '/manifest.json';
         this._routeContent = '/index.html';
@@ -158,7 +159,7 @@ class FakeServer extends EventEmitter {
             next();
         });
 
-        this._app.use(internalMiddleware());
+        this._app.use(this._context.middleware());
 
         // Manifest route
         this._app.get(this._routeManifest, (req, res) => {

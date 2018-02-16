@@ -22,11 +22,13 @@
   },
   "dependencies": {
     "@podium/context": "^1.0.1",
+    "@podium/metrics": "^2.0.0",
     "@podium/schemas": "^2.0.0",
     "abslog": "^1.2.0",
     "boom": "^7.1.1",
     "http-cache-semantics": "^3.8.1",
     "joi": "^13.0.2",
+    "readable-stream": "^2.3.4",
     "request": "^2.83.0",
     "ttl-mem-cache": "^3.1.0"
   },

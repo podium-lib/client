@@ -21,6 +21,7 @@
     "registry": "http://npm.finntech.no/"
   },
   "dependencies": {
+    "@podium/metrics": "^2.0.0",
     "@podium/context": "^2.0.0-beta.3",
     "@podium/schemas": "^2.1.0-beta.1",
     "@podium/utils": "^2.0.0-beta.2",
@@ -28,6 +29,7 @@
     "boom": "^7.1.1",
     "http-cache-semantics": "^3.8.1",
     "joi": "^13.1.2",
+    "readable-stream": "^2.3.4",
     "request": "^2.83.0",
     "ttl-mem-cache": "^4.0.0"
   },

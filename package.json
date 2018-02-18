@@ -1,6 +1,6 @@
 {
   "name": "@podium/podlet-client",
-  "version": "2.0.0-beta.4",
+  "version": "2.0.0-beta.5",
   "main": "lib/client.js",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -34,7 +34,7 @@
     "ttl-mem-cache": "^4.0.0"
   },
   "devDependencies": {
-    "eslint": "^4.17.0",
+    "eslint": "^4.18.0",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
     "memwatch-next": "^0.3.0",

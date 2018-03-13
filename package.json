@@ -22,14 +22,14 @@
   },
   "dependencies": {
     "@podium/metrics": "^2.0.0",
-    "@podium/schemas": "^2.1.0-beta.1",
+    "@podium/schemas": "^2.1.0-beta.3",
     "@podium/utils": "^2.0.0-beta.3",
     "abslog": "^2.0.0",
     "boom": "^7.2.0",
     "http-cache-semantics": "^3.8.1",
     "joi": "^13.1.2",
     "readable-stream": "^2.3.5",
-    "request": "^2.83.0",
+    "request": "^2.85.0",
     "ttl-mem-cache": "^4.0.0"
   },
   "devDependencies": {
@@ -39,7 +39,7 @@
     "eslint-config-finn-prettier": "^3.0.1",
     "memwatch-next": "^0.3.0",
     "benchmark": "^2.1.4",
-    "express": "^4.16.2",
+    "express": "^4.16.3",
     "get-stream": "^3.0.0",
     "http-proxy": "^1.16.2",
     "is-stream": "^1.1.0",

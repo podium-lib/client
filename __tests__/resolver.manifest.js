@@ -322,3 +322,97 @@ test('resolver.manifest() - "fallback" in manifest is absolute - "state.manifest
 
     await server.close();
 });
+
+test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is unset - "state.manifest.assets.css" should be relative', async () => {
+    const server = new Faker({ assets: { css: 'a.css' } });
+    const service = await server.listen();
+
+    const manifest = new Manifest();
+    const state = new State({
+        uri: service.manifest,
+    });
+
+    await manifest.resolve(state);
+    expect(state.manifest.assets.css).toEqual(server.assets.css);
+
+    await server.close();
+});
+
+test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true" - "state.manifest.assets.css" should be absolute to podlet', async () => {
+    const server = new Faker({ assets: { css: 'a.css' } });
+    const service = await server.listen();
+
+    const manifest = new Manifest();
+    const state = new State({
+        uri: service.manifest,
+        resolveCss: true,
+    });
+
+    await manifest.resolve(state);
+    expect(state.manifest.assets.css).toEqual(`${service.address}/${server.assets.css}`);
+
+    await server.close();
+});
+
+test('resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true" - "state.manifest.assets.css" should be absolute to whats in manifest', async () => {
+    const server = new Faker({ assets: { css: 'http://does.not.mather.com/a.css' } });
+    const service = await server.listen();
+
+    const manifest = new Manifest();
+    const state = new State({
+        uri: service.manifest,
+        resolveCss: true,
+    });
+
+    await manifest.resolve(state);
+    expect(state.manifest.assets.css).toEqual('http://does.not.mather.com/a.css');
+
+    await server.close();
+});
+
+test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset - "state.manifest.assets.js" should be relative', async () => {
+    const server = new Faker({ assets: { js: 'a.js' } });
+    const service = await server.listen();
+
+    const manifest = new Manifest();
+    const state = new State({
+        uri: service.manifest,
+    });
+
+    await manifest.resolve(state);
+    expect(state.manifest.assets.js).toEqual(server.assets.js);
+
+    await server.close();
+});
+
+test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" - "state.manifest.assets.js" should be absolute to podlet', async () => {
+    const server = new Faker({ assets: { js: 'a.js' } });
+    const service = await server.listen();
+
+    const manifest = new Manifest();
+    const state = new State({
+        uri: service.manifest,
+        resolveJs: true,
+    });
+
+    await manifest.resolve(state);
+    expect(state.manifest.assets.js).toEqual(`${service.address}/${server.assets.js}`);
+
+    await server.close();
+});
+
+test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" - "state.manifest.assets.js" should be absolute to whats in manifest', async () => {
+    const server = new Faker({ assets: { js: 'http://does.not.mather.com/a.js' } });
+    const service = await server.listen();
+
+    const manifest = new Manifest();
+    const state = new State({
+        uri: service.manifest,
+        resolveJs: true,
+    });
+
+    await manifest.resolve(state);
+    expect(state.manifest.assets.js).toEqual('http://does.not.mather.com/a.js');
+
+    await server.close();
+});

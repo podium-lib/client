@@ -11,10 +11,6 @@ Client for fetching podium component fragments over http.
 $ npm i @podium/podlet-client --save
 ```
 
-## General overview
-
-TODO!
-
 
 ## Simple stream usage
 
@@ -130,6 +126,8 @@ The following values can be provided:
  * `name` - {String} - Name of the podlet. This is used to reference the podlet in your application, and does not have to match the name of the podlet itself - Required
  * `timeout` - {Number} - How long, in milliseconds, the request should wait before connection is terminated. Overrides the global default. Default: 1000 - Optional.
  * `throwable` - {Boolean} - If it should be thrown an error if something fails during the process of fetching a podium component. Defaults to `false` - Optional.
+ * `resolveJs` - {Boolean} - Resolve a relative js uri in the podlet to be absolute uri. Defaults to `false` - Optional.
+ * `resolveCss` - {Boolean} - Resolve a relative css uri in the podlet to be absolute uri. Defaults to `false` - Optional.
 
 ### .js()
 

@@ -181,6 +181,39 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
     try {
         await content.resolve(state);
     } catch (error) {
+        expect(error.output.statusCode).toBe(500);
+        expect(error.message).toMatch(/Could not read content/);
+        expect(state.success).toBeFalsy();
+    }
+
+    await server.close();
+});
+
+test('resolver.content() - throwable:true - remote responds with http 404 - should throw with error object reflecting status code podlet responded with', async () => {
+    expect.hasAssertions();
+
+    const server = new Faker();
+    const service = await server.listen();
+
+    const state = new State({
+        uri: service.options.uri,
+        throwable: true,
+    });
+
+    // See TODO I
+    state.reqOptions.podiumContext = {};
+
+    state.manifest = {
+        content: `${service.address}/404`
+    };
+    state.status = 'cached';
+
+    const content = new Content();
+
+    try {
+        await content.resolve(state);
+    } catch (error) {
+        expect(error.output.statusCode).toBe(404);
         expect(error.message).toMatch(/Could not read content/);
         expect(state.success).toBeFalsy();
     }

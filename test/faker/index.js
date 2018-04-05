@@ -198,6 +198,11 @@ class FakeServer extends EventEmitter {
             res.status(500).send('Internal server error');
         });
 
+        // 404 Not found status
+        this._app.use((req, res) => {
+            res.status(404).send('Not found');
+        });
+
         // Express config
         this._app.disable('x-powered-by');
         this._app.disable('etag');

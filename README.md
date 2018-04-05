@@ -360,3 +360,7 @@ If the same happens with `foo` the `catch` will NOT be triggered.
 When a resource is flagged as throwable and it throws an error the
 error will be an enriched [boom error object](https://github.com/hapijs/boom)
 with detailed information on what went wrong.
+
+The error object will reflect the http status code of the remote.
+In other words; if the remote responded with a 404, the `statusCode`
+in the error object will be 404.

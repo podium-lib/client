@@ -36,7 +36,7 @@ test('Client().on("dispose") - client is hot, manifest reaches timeout - should 
 
     const client = new Client({ maxAge: 24 * 60 * 60 * 1000 });
     client.on('dispose', key => {
-        expect(key).toEqual(service.options.uri);
+        expect(key).toEqual(service.options.name);
     });
 
     const podlet = client.register(service.options);

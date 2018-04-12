@@ -204,7 +204,7 @@ test('resolver.content() - throwable:true - remote responds with http 404 - shou
     state.reqOptions.podiumContext = {};
 
     state.manifest = {
-        content: `${service.address}/404`
+        content: `${service.address}/404`,
     };
     state.status = 'cached';
 

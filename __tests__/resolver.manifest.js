@@ -430,8 +430,8 @@ test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" 
 test('resolver.manifest() - a "proxy" target in manifest is relative - should convert it to be absolute', async () => {
     const server = new Faker({
         proxy: {
-            foo: '/api/foo'
-        }
+            foo: '/api/foo',
+        },
     });
     const service = await server.listen();
 
@@ -449,8 +449,8 @@ test('resolver.manifest() - a "proxy" target in manifest is relative - should co
 test('resolver.manifest() - a "proxy" target in manifest is absolute - should keep it absolute', async () => {
     const server = new Faker({
         proxy: {
-            bar: 'http://does.not.mather.com/api/bar'
-        }
+            bar: 'http://does.not.mather.com/api/bar',
+        },
     });
     const service = await server.listen();
 
@@ -460,7 +460,9 @@ test('resolver.manifest() - a "proxy" target in manifest is absolute - should ke
     });
 
     await manifest.resolve(state);
-    expect(state.manifest.proxy.bar).toEqual('http://does.not.mather.com/api/bar');
+    expect(state.manifest.proxy.bar).toEqual(
+        'http://does.not.mather.com/api/bar'
+    );
 
     await server.close();
 });
@@ -469,8 +471,8 @@ test('resolver.manifest() - "proxy" targets in manifest is both absolute and rel
     const server = new Faker({
         proxy: {
             bar: 'http://does.not.mather.com/api/bar',
-            foo: '/api/foo'
-        }
+            foo: '/api/foo',
+        },
     });
     const service = await server.listen();
 
@@ -480,7 +482,9 @@ test('resolver.manifest() - "proxy" targets in manifest is both absolute and rel
     });
 
     await manifest.resolve(state);
-    expect(state.manifest.proxy.bar).toEqual('http://does.not.mather.com/api/bar');
+    expect(state.manifest.proxy.bar).toEqual(
+        'http://does.not.mather.com/api/bar'
+    );
     expect(state.manifest.proxy.foo).toEqual(`${service.address}/api/foo`);
 
     await server.close();

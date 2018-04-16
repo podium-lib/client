@@ -1,6 +1,6 @@
 {
   "name": "@podium/podlet-client",
-  "version": "2.0.0-beta.12",
+  "version": "2.0.0-beta.13",
   "main": "lib/client.js",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -45,7 +45,7 @@
     "jest": "^22.4.3",
     "lolex": "^2.3.2",
     "memwatch-next": "^0.3.0",
-    "prettier": "1.11.1",
+    "prettier": "1.12.0",
     "server-destroy": "^1.0.1"
   },
   "jest": {

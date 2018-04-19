@@ -27,13 +27,13 @@
     "abslog": "^2.0.0",
     "boom": "^7.2.0",
     "http-cache-semantics": "^3.8.1",
-    "joi": "^13.1.2",
+    "joi": "^13.2.0",
     "readable-stream": "^2.3.6",
     "request": "^2.85.0",
     "ttl-mem-cache": "^4.0.0"
   },
   "devDependencies": {
-    "@podium/context": "^2.0.0-beta.6",
+    "@podium/context": "^2.0.0-beta.7",
     "benchmark": "^2.1.4",
     "eslint": "^4.19.1",
     "eslint-config-finn": "^3.0.0",

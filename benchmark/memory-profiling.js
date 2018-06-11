@@ -26,32 +26,30 @@ const component = client.register({
     uri: 'http://localhost:8100/manifest.json',
 });
 
-http
-    .createServer((req, res) => {
-        const u = url.parse(req.url, true);
+http.createServer((req, res) => {
+    const u = url.parse(req.url, true);
 
-        if (u.pathname === '/') {
-            component
-                .fetch({})
-                .then(content => {
-                    res.writeHead(200, {
-                        'Content-Type': 'text/html; charset=utf-8',
-                    });
-                    res.end(content);
-                })
-                .catch(() => {
-                    res.writeHead(500, {
-                        'Content-Type': 'text/plain',
-                    });
-                    res.end('Internal server error');
+    if (u.pathname === '/') {
+        component
+            .fetch({})
+            .then(content => {
+                res.writeHead(200, {
+                    'Content-Type': 'text/html; charset=utf-8',
                 });
-            return;
-        }
-
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('Not found');
+                res.end(content);
+            })
+            .catch(() => {
+                res.writeHead(500, {
+                    'Content-Type': 'text/plain',
+                });
+                res.end('Internal server error');
+            });
         return;
-    })
-    .listen(8000);
+    }
+
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not found');
+    return;
+}).listen(8000);
 
 console.log('Server listening on port 8000');

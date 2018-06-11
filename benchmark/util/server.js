@@ -25,38 +25,36 @@ const text = `
     Ea vis elit maluisset, est diceret lobortis ut. Te dolorem invidunt mea, quis veniam ius ex, persius invenire est te. Cum probo integre no, pri ea dicam deterruisset. Alii malorum ut sit. Facer laudem ius ad. No gubergren instructior mel, cu nec mundi referrentur, mei tollit apeirian ex.
 `;
 
-http
-    .createServer((req, res) => {
-        const u = url.parse(req.url, true);
+http.createServer((req, res) => {
+    const u = url.parse(req.url, true);
 
-        if (u.pathname === '/manifest.json') {
-            res.writeHead(200, {
-                'Content-Type': 'application/json; charset=utf-8',
-            });
-            res.end(
-                '{ "name": "component", "version": "1.0.0", "content": "/index.html", "fallback": "/fallback.html" }'
-            );
-            return;
-        }
-
-        if (u.pathname === '/index.html') {
-            res.writeHead(200, {
-                'Content-Type': 'text/html; charset=utf-8',
-            });
-            res.end(`<section>Content: ${text}</section>`);
-            return;
-        }
-
-        if (u.pathname === '/fallback.html') {
-            res.writeHead(200, {
-                'Content-Type': 'text/html; charset=utf-8',
-            });
-            res.end(`<section>Fallback: ${text}</section>`);
-            return;
-        }
-
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('Not found');
+    if (u.pathname === '/manifest.json') {
+        res.writeHead(200, {
+            'Content-Type': 'application/json; charset=utf-8',
+        });
+        res.end(
+            '{ "name": "component", "version": "1.0.0", "content": "/index.html", "fallback": "/fallback.html" }'
+        );
         return;
-    })
-    .listen(8100);
+    }
+
+    if (u.pathname === '/index.html') {
+        res.writeHead(200, {
+            'Content-Type': 'text/html; charset=utf-8',
+        });
+        res.end(`<section>Content: ${text}</section>`);
+        return;
+    }
+
+    if (u.pathname === '/fallback.html') {
+        res.writeHead(200, {
+            'Content-Type': 'text/html; charset=utf-8',
+        });
+        res.end(`<section>Fallback: ${text}</section>`);
+        return;
+    }
+
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not found');
+    return;
+}).listen(8100);

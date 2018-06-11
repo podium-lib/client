@@ -123,3 +123,31 @@ test('State() - "options.throwable" is defined to be true - "this.throwable" sho
     const state = new State(options, REQ_OPTIONS);
     expect(state.throwable).toBeTruthy();
 });
+
+test('State() - "options.resolveCss" is not defined - "this.resolveCss" should be "false"', () => {
+    const state = new State(RESOURCE_OPTIONS, REQ_OPTIONS);
+    expect(state.resolveCss).toBeFalsy();
+});
+
+test('State() - "options.resolveCss" is defined to be true - "this.resolveCss" should be "true"', () => {
+    const options = {
+        uri: 'http://example.org',
+        resolveCss: true,
+    };
+    const state = new State(options, REQ_OPTIONS);
+    expect(state.resolveCss).toBeTruthy();
+});
+
+test('State() - "options.resolveJs" is not defined - "this.resolveJs" should be "false"', () => {
+    const state = new State(RESOURCE_OPTIONS, REQ_OPTIONS);
+    expect(state.resolveJs).toBeFalsy();
+});
+
+test('State() - "options.resolveJs" is defined to be true - "this.resolveJs" should be "true"', () => {
+    const options = {
+        uri: 'http://example.org',
+        resolveJs: true,
+    };
+    const state = new State(options, REQ_OPTIONS);
+    expect(state.resolveJs).toBeTruthy();
+});

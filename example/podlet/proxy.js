@@ -20,20 +20,18 @@ const addresses = [
 
 const proxy = httpProxy.createServer();
 
-http
-    .createServer((req, res) => {
-        const target = {
-            target: addresses.shift(),
-        };
+http.createServer((req, res) => {
+    const target = {
+        target: addresses.shift(),
+    };
 
-        console.log(
-            'balancing request to:',
-            `http://${target.target.host}:${target.target.port}`
-        );
-        proxy.web(req, res, target);
+    console.log(
+        'balancing request to:',
+        `http://${target.target.host}:${target.target.port}`
+    );
+    proxy.web(req, res, target);
 
-        addresses.push(target.target);
-    })
-    .listen(process.argv[2], () => {
-        console.log('proxy running at port:', process.argv[2]);
-    });
+    addresses.push(target.target);
+}).listen(process.argv[2], () => {
+    console.log('proxy running at port:', process.argv[2]);
+});

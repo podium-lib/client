@@ -1,11 +1,11 @@
 {
-  "name": "@podium/podlet-client",
-  "version": "1.2.1",
+  "name": "@podium/client",
+  "version": "2.0.0",
   "main": "lib/client.js",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
-    "url": "git@github.schibsted.io:Podium/podlet-client.git"
+    "url": "git@github.schibsted.io:Podium/client.git"
   },
   "files": [
     "lib"
@@ -21,32 +21,30 @@
     "registry": "http://npm.finntech.no/"
   },
   "dependencies": {
-    "@podium/context": "^1.0.1",
-    "@podium/metrics": "^3.0.1",
-    "@podium/schemas": "^2.0.0",
-    "abslog": "^1.2.0",
-    "boom": "^7.1.1",
-    "http-cache-semantics": "^3.8.1",
-    "joi": "^13.0.2",
-    "readable-stream": "^2.3.4",
-    "request": "^2.83.0",
-    "ttl-mem-cache": "^3.1.0"
+    "@podium/metrics": "3.0.1",
+    "@podium/schemas": "2.1.0",
+    "@podium/utils": "2.0.0",
+    "abslog": "^2.0.0",
+    "boom": "^7.2.0",
+    "http-cache-semantics": "^4.0.0",
+    "joi": "^13.2.0",
+    "readable-stream": "^2.3.6",
+    "request": "^2.85.0",
+    "ttl-mem-cache": "^4.0.0"
   },
   "devDependencies": {
-    "@finn-no/fiaas-logger": "^1.4.8",
-    "eslint": "^4.14.0",
+    "@podium/context": "2.0.0",
+    "benchmark": "^2.1.4",
+    "eslint": "^4.19.1",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
-    "memwatch-next": "^0.3.0",
-    "benchmark": "^2.1.4",
-    "express": "^4.16.2",
+    "express": "^4.16.3",
     "get-stream": "^3.0.0",
     "http-proxy": "^1.16.2",
     "is-stream": "^1.1.0",
-    "lolex": "^2.3.1",
-    "jest": "^22.0.4",
-    "prettier": "1.9.2",
-    "prom-client": "^10.2.2",
+    "jest": "^23.1.0",
+    "lolex": "^2.3.2",
+    "prettier": "1.13.5",
     "server-destroy": "^1.0.1"
   },
   "jest": {

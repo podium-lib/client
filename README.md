@@ -1,4 +1,4 @@
-# podlet-client
+# @podium/client
 
 [![Build Status](https://travis.schibsted.io/Podium/podlet-client.svg?token=qt273uGfEz64UyWuNHJ1&branch=master)](https://travis.schibsted.io/Podium/podlet-client)
 
@@ -8,12 +8,8 @@ Client for fetching podium component fragments over http.
 ## Installation
 
 ```bash
-$ npm i @podium/podlet-client --save
+$ npm i @podium/client --save
 ```
-
-## General overview
-
-TODO!
 
 
 ## Simple stream usage
@@ -21,7 +17,7 @@ TODO!
 Connect to a podium component server and stream the html content:
 
 ```js
-const Client = require('@podium/podlet-client');
+const Client = require('@podium/client');
 const client = new Client();
 
 const component = client.register({
@@ -41,7 +37,7 @@ stream.pipe(process.stdout);
 Connect to a podium component server and fetch the html content:
 
 ```js
-const Client = require('@podium/podlet-client');
+const Client = require('@podium/client');
 const client = new Client();
 
 const component = client.register({
@@ -59,17 +55,17 @@ component.fetch().then((content) => {
 
 ## Constructor
 
-Create a new Podlet Client instance.
+Create a new Client instance.
 
 ```js
-const Client = require('@podium/podlet-client');
+const Client = require('@podium/client');
 const client = new Client(options);
 ```
 
 The client instance are iterable and hold each registered resource.
 
 ```js
-const Client = require('@podium/podlet-client');
+const Client = require('@podium/client');
 const client = new Client();
 
 client.register({uri: 'http://foo.site.com/manifest.json', name: 'fooBar'});
@@ -92,7 +88,7 @@ An options object containing configuration. The following values can be provided
 
 ## API
 
-The Podlet Client instance have the following API:
+The Client instance have the following API:
 
 ### .register(options)
 
@@ -101,21 +97,21 @@ Registers a podlet.
 Example:
 
 ```js
-const Client = require('@podium/podlet-client');
+const Client = require('@podium/client');
 const client = new Client();
 
 const component = client.register({uri: 'http://foo.site.com/manifest.json', name: 'fooBar'});
 ```
 
-Returns a Podium Resource Object.
+Returns a Resource Object.
 
-The created Podium Resource Object is also stored on the instance of the client.
+The created Resource Object is also stored on the instance of the client.
 It is stored with the `name` as property name.
 
 Example:
 
 ```js
-const Client = require('@podium/podlet-client');
+const Client = require('@podium/client');
 const client = new Client();
 
 client.register({uri: 'http://foo.site.com/manifest.json', name: 'fooBar'});
@@ -130,13 +126,15 @@ The following values can be provided:
  * `name` - {String} - Name of the podlet. This is used to reference the podlet in your application, and does not have to match the name of the podlet itself - Required
  * `timeout` - {Number} - How long, in milliseconds, the request should wait before connection is terminated. Overrides the global default. Default: 1000 - Optional.
  * `throwable` - {Boolean} - If it should be thrown an error if something fails during the process of fetching a podium component. Defaults to `false` - Optional.
+ * `resolveJs` - {Boolean} - Resolve a relative js uri in the podlet to be absolute uri. Defaults to `false` - Optional.
+ * `resolveCss` - {Boolean} - Resolve a relative css uri in the podlet to be absolute uri. Defaults to `false` - Optional.
 
 ### .js()
 
 Retrieve list of all js references from all registered and fetched podlets.
 
 ```js
-const Client = require('@podium/podlet-client');
+const Client = require('@podium/client');
 const client = new Client();
 
 const foo = client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
@@ -155,7 +153,7 @@ client.js(); // Array of js entries
 Retrieve list of all css references from all registered and fetched podlets.
 
 ```js
-const Client = require('@podium/podlet-client');
+const Client = require('@podium/client');
 const client = new Client();
 
 const foo = client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
@@ -174,7 +172,7 @@ client.css(); // Array of css entries
 Refreshes the manifests of all registered resources.
 
 ```js
-const Client = require('@podium/podlet-client');
+const Client = require('@podium/client');
 const client = new Client();
 
 client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
@@ -332,7 +330,7 @@ One can do so by setting the option `throwable` to `true` on the
 Example:
 
 ```js
-const Client = require('@podium/podlet-client');
+const Client = require('@podium/client');
 const client = new Client();
 
 const foo = client.register({
@@ -362,3 +360,7 @@ If the same happens with `foo` the `catch` will NOT be triggered.
 When a resource is flagged as throwable and it throws an error the
 error will be an enriched [boom error object](https://github.com/hapijs/boom)
 with detailed information on what went wrong.
+
+The error object will reflect the http status code of the remote.
+In other words; if the remote responded with a 404, the `statusCode`
+in the error object will be 404.

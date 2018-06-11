@@ -3,10 +3,8 @@
 const TtlMemCache = require('ttl-mem-cache');
 const Resolver = require('../lib/resolver.js');
 
-const REGISTRY = new TtlMemCache();
-
 test('resolver() - object tag - should be PodletClientResolver', () => {
-    const resolver = new Resolver(REGISTRY);
+    const resolver = new Resolver(new TtlMemCache());
     expect(Object.prototype.toString.call(resolver)).toEqual(
         '[object PodletClientResolver]'
     );

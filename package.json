@@ -21,19 +21,19 @@
     "registry": "http://npm.finntech.no/"
   },
   "dependencies": {
-    "@podium/metrics": "^3.0.1",
-    "@podium/schemas": "^2.1.0-beta.5",
-    "@podium/utils": "^2.0.0-beta.5",
+    "@podium/metrics": "3.0.1",
+    "@podium/schemas": "2.1.0",
+    "@podium/utils": "2.0.0",
     "abslog": "^2.0.0",
     "boom": "^7.2.0",
-    "http-cache-semantics": "^3.8.1",
+    "http-cache-semantics": "^4.0.0",
     "joi": "^13.2.0",
     "readable-stream": "^2.3.6",
     "request": "^2.85.0",
     "ttl-mem-cache": "^4.0.0"
   },
   "devDependencies": {
-    "@podium/context": "^2.0.0-beta.7",
+    "@podium/context": "2.0.0",
     "benchmark": "^2.1.4",
     "eslint": "^4.19.1",
     "eslint-config-finn": "^3.0.0",
@@ -42,10 +42,9 @@
     "get-stream": "^3.0.0",
     "http-proxy": "^1.16.2",
     "is-stream": "^1.1.0",
-    "jest": "^22.4.3",
+    "jest": "^23.1.0",
     "lolex": "^2.3.2",
-    "memwatch-next": "^0.3.0",
-    "prettier": "1.12.0",
+    "prettier": "1.13.5",
     "server-destroy": "^1.0.1"
   },
   "jest": {

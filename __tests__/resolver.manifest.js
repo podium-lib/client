@@ -135,10 +135,11 @@ test('resolver.manifest() - one remote has "expires" header second none - should
 
     // Set default expires four hours into future
     const client = new Client({ maxAge: 1000 * 60 * 60 * 4 });
-    client.register(serviceA.options);
-    client.register(serviceB.options);
+    const a = client.register(serviceA.options);
+    const b = client.register(serviceB.options);
 
-    await client.refreshManifests();
+    await a.fetch({});
+    await b.fetch({});
 
     expect(serverA.metrics.manifest).toEqual(1);
     expect(serverB.metrics.manifest).toEqual(1);
@@ -146,7 +147,8 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     // Tick clock three hours into future
     clock.tick(1000 * 60 * 60 * 3);
 
-    await client.refreshManifests();
+    await a.fetch({});
+    await b.fetch({});
 
     // Cache for server A should now have timed out
     expect(serverA.metrics.manifest).toEqual(2);

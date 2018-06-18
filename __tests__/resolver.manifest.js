@@ -157,66 +157,7 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     clock.uninstall();
 });
 
-test('resolver.manifest() - throwable:true - remote can not be resolved - should throw', async () => {
-    expect.hasAssertions();
-
-    const manifest = new Manifest();
-    const state = new State({
-        uri: 'http://does.not.exist.finn.no/manifest.json',
-        throwable: true,
-    });
-
-    try {
-        await manifest.resolve(state);
-    } catch (error) {
-        expect(error.message).toMatch(/Error reading manifest/);
-    }
-});
-
-test('resolver.manifest() - throwable:true - remote responds with http 500 - should throw', async () => {
-    expect.hasAssertions();
-
-    const server = new Faker();
-    const service = await server.listen();
-
-    const manifest = new Manifest();
-    const state = new State({
-        uri: service.error,
-        throwable: true,
-    });
-
-    try {
-        await manifest.resolve(state);
-    } catch (error) {
-        expect(error.message).toMatch(/Could not read manifest/);
-    }
-
-    await server.close();
-});
-
-test('resolver.manifest() - throwable:true - manifest is not valid - should throw', async () => {
-    expect.hasAssertions();
-
-    const server = new Faker();
-    server.manifestBody = { __id: 'component' };
-    const service = await server.listen();
-
-    const manifest = new Manifest();
-    const state = new State({
-        uri: service.manifest,
-        throwable: true,
-    });
-
-    try {
-        await manifest.resolve(state);
-    } catch (error) {
-        expect(error.message).toMatch(/is required/);
-    }
-
-    await server.close();
-});
-
-test('resolver.manifest() - throwable:false - remote can not be resolved - "state.manifest" should be {_fallback: ""}', async () => {
+test('resolver.manifest() - remote can not be resolved - "state.manifest" should be {_fallback: ""}', async () => {
     const manifest = new Manifest();
     const state = new State({
         uri: 'http://does.not.exist.finn.no/manifest.json',
@@ -227,7 +168,7 @@ test('resolver.manifest() - throwable:false - remote can not be resolved - "stat
     expect(state.manifest).toEqual({ _fallback: '' });
 });
 
-test('resolver.manifest() - throwable:false - remote responds with http 500 - "state.manifest" should be {_fallback: ""}', async () => {
+test('resolver.manifest() - remote responds with http 500 - "state.manifest" should be {_fallback: ""}', async () => {
     const server = new Faker();
     const service = await server.listen();
 
@@ -243,7 +184,7 @@ test('resolver.manifest() - throwable:false - remote responds with http 500 - "s
     await server.close();
 });
 
-test('resolver.manifest() - throwable:false - manifest is not valid - "state.manifest" should be {_fallback: ""}', async () => {
+test('resolver.manifest() - manifest is not valid - "state.manifest" should be {_fallback: ""}', async () => {
     const server = new Faker();
     server.manifestBody = { __id: 'component' };
     const service = await server.listen();

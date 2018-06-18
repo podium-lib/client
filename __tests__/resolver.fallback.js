@@ -55,52 +55,7 @@ test('resolver.fallback() - fallback field is a URI - should fetch fallback and 
     await server.close();
 });
 
-test('resolver.fallback() - throwable:true - remote can not be resolved - should throw', async () => {
-    expect.hasAssertions();
-
-    const state = new State({
-        uri: 'http://does.not.exist.finn.no/manifest.json',
-        throwable: true,
-    });
-
-    state.manifest = {
-        fallback: 'http://does.not.exist.finn.no/fallback.html',
-    };
-
-    try {
-        const fallback = new Fallback();
-        await fallback.resolve(state);
-    } catch (error) {
-        expect(error.message).toMatch(/Error reading fallback/);
-    }
-});
-
-test('resolver.fallback() - throwable:true - remote responds with http 500 - should throw', async () => {
-    expect.hasAssertions();
-
-    const server = new Faker();
-    const service = await server.listen();
-
-    const state = new State({
-        uri: service.options.uri,
-        throwable: true,
-    });
-
-    state.manifest = {
-        fallback: service.error,
-    };
-
-    try {
-        const fallback = new Fallback();
-        await fallback.resolve(state);
-    } catch (error) {
-        expect(error.message).toMatch(/Could not read fallback/);
-    }
-
-    await server.close();
-});
-
-test('resolver.fallback() - throwable:false - remote can not be resolved - "state.manifest" should be empty string', async () => {
+test('resolver.fallback() - remote can not be resolved - "state.manifest" should be empty string', async () => {
     const state = new State({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
@@ -115,7 +70,7 @@ test('resolver.fallback() - throwable:false - remote can not be resolved - "stat
     expect(state.fallback).toBe('');
 });
 
-test('resolver.fallback() - throwable:false - remote responds with http 500 - "state.manifest" should be empty string', async () => {
+test('resolver.fallback() - remote responds with http 500 - "state.manifest" should be empty string', async () => {
     const server = new Faker();
     const service = await server.listen();
 

@@ -7,6 +7,7 @@ const Faker = require('../test/faker');
 const stream = require('stream');
 const Cache = require('ttl-mem-cache');
 const getStream = require('get-stream');
+const Client = require('../');
 
 // const REGISTRY = new Cache();
 const URI = 'http://example.org';
@@ -97,6 +98,68 @@ test('resource.stream() - should return a stream', async () => {
     expect(strm).toBeInstanceOf(stream);
 
     await getStream(strm);
+
+    await server.close();
+});
+
+/**
+ * .refresh()
+ */
+
+test('resource.refresh() - should return a promise', async () => {
+    const server = new Faker({ version: '1.0.0' });
+    const service = await server.listen();
+
+    const resource = new Resource(new Cache(), service.options);
+    const refresh = resource.refresh();
+    expect(refresh).toBeInstanceOf(Promise);
+
+    await refresh;
+
+    await server.close();
+});
+
+test('resource.refresh() - manifest is available - should return "true"', async () => {
+    const server = new Faker({ version: '1.0.0' });
+    const service = await server.listen();
+
+    const client = new Client();
+    const component = client.register(service.options);
+
+    const result = await component.refresh();
+
+    expect(result).toBe(true);
+
+    await server.close();
+});
+
+test('resource.refresh() - manifest is NOT available - should return "false"', async () => {
+    const client = new Client();
+
+    const component = client.register({
+        name: 'component',
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+    });
+
+    const result = await component.refresh();
+
+    expect(result).toBe(false);
+});
+
+test('resource.refresh() - manifest with fallback is available - should get manifest and fallback, but not content', async () => {
+    const server = new Faker({ version: '1.0.0' });
+    const service = await server.listen();
+
+    server.fallback = `${service.address}/fallback.html`;
+
+    const client = new Client();
+    const component = client.register(service.options);
+
+    await component.refresh();
+
+    expect(server.metrics.manifest).toBe(1);
+    expect(server.metrics.fallback).toBe(1);
+    expect(server.metrics.content).toBe(0);
 
     await server.close();
 });

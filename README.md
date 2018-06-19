@@ -170,11 +170,13 @@ client.css(); // Array of css entries
 ### .refresh()
 
 This method will refresh a resource by reading its manifest and the fallback
-if defined in the manifes. The method will not call the URI to the content
+if defined in the manifest. The method will not call the URI to the content
 in a podlet.
 
 If the internal cache in the client already has a manifest cached, this will
-be thrown away and replaced with the new manfiest fetched.
+be thrown away and replaced if a new manfiest was successfully fetched. If a
+new manifest was not successfully fetched, the old manifest will be kept in
+cache.
 
 If a manifest is successfully fetched, this method will resolve with a `true`
 value. If a manifest is not successfully fetched, it will resolve with `false`.

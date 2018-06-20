@@ -34,7 +34,9 @@ test('integration - throwable:true - remote manifest can not be resolved - shoul
     try {
         await component.fetch({});
     } catch (error) {
-        expect(error.message).toMatch(/Error reading manifest/);
+        expect(error.message).toMatch(
+            /No manifest available - Cannot read content/
+        );
     }
 });
 
@@ -49,30 +51,6 @@ test('integration - throwable:false - remote manifest can not be resolved - shou
     expect(result).toBe('');
 });
 
-test('integration - throwable:true - remote fallback can not be resolved - should throw', async () => {
-    expect.hasAssertions();
-
-    const server = new Faker({
-        fallback: 'http://does.not.exist.finn.no/fallback.html',
-    });
-    const service = await server.listen();
-
-    const client = new Client();
-    const component = client.register({
-        throwable: true,
-        name: service.options.name,
-        uri: service.options.uri,
-    });
-
-    try {
-        await component.fetch({});
-    } catch (error) {
-        expect(error.message).toMatch(/Error reading fallback/);
-    }
-
-    await server.close();
-});
-
 test('integration - throwable:false - remote fallback can not be resolved - should resolve with empty string', async () => {
     const server = new Faker({
         fallback: 'http://does.not.exist.finn.no/fallback.html',
@@ -85,30 +63,6 @@ test('integration - throwable:false - remote fallback can not be resolved - shou
 
     const result = await component.fetch({});
     expect(result).toBe('');
-
-    await server.close();
-});
-
-test('integration - throwable:true - remote fallback responds with http 500 - should throw', async () => {
-    expect.hasAssertions();
-
-    const server = new Faker({
-        fallback: '/error',
-    });
-    const service = await server.listen();
-
-    const client = new Client();
-    const component = client.register({
-        throwable: true,
-        name: service.options.name,
-        uri: service.options.uri,
-    });
-
-    try {
-        await component.fetch({});
-    } catch (error) {
-        expect(error.message).toMatch(/Could not read fallback/);
-    }
 
     await server.close();
 });

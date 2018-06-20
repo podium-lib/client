@@ -167,9 +167,38 @@ await Promise.all([
 client.css(); // Array of css entries
 ```
 
+### .refresh()
+
+This method will refresh a resource by reading its manifest and the fallback
+if defined in the manifest. The method will not call the URI to the content
+in a podlet.
+
+If the internal cache in the client already has a manifest cached, this will
+be thrown away and replaced if a new manfiest was successfully fetched. If a
+new manifest was not successfully fetched, the old manifest will be kept in
+cache.
+
+If a manifest is successfully fetched, this method will resolve with a `true`
+value. If a manifest is not successfully fetched, it will resolve with `false`.
+
+```js
+const Client = require('@podium/client');
+const client = new Client();
+
+client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
+
+console.log(client.js()); // []
+
+const status = await client.refresh();
+
+console.log(status); // true
+console.log(client.js()); // ['foo.js', 'bar.js']
+```
+
 ### refreshManifests()
 
-Refreshes the manifests of all registered resources.
+Refreshes the manifests of all registered resources. Does so by calling the
+`.refresh()` method on all resources under the hood.
 
 ```js
 const Client = require('@podium/client');

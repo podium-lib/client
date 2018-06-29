@@ -15,7 +15,8 @@
     "lint:fix": "eslint --fix .",
     "test": "jest",
     "test:verbose": "jest --verbose",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:debug": "jest --detectOpenHandles"
   },
   "publishConfig": {
     "registry": "http://npm.finntech.no/"
@@ -28,6 +29,7 @@
     "boom": "^7.2.0",
     "http-cache-semantics": "^4.0.0",
     "joi": "^13.2.0",
+    "lodash.clonedeep": "^4.5.0",
     "readable-stream": "^2.3.6",
     "request": "^2.85.0",
     "ttl-mem-cache": "^4.0.0"
@@ -35,16 +37,16 @@
   "devDependencies": {
     "@podium/context": "2.0.0",
     "benchmark": "^2.1.4",
-    "eslint": "^4.19.1",
+    "eslint": "^5.0.1",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
     "express": "^4.16.3",
     "get-stream": "^3.0.0",
     "http-proxy": "^1.16.2",
     "is-stream": "^1.1.0",
-    "jest": "^23.1.0",
+    "jest": "^23.2.0",
     "lolex": "^2.3.2",
-    "prettier": "1.13.5",
+    "prettier": "1.13.6",
     "server-destroy": "^1.0.1"
   },
   "jest": {

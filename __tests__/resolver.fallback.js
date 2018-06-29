@@ -89,17 +89,3 @@ test('resolver.fallback() - remote responds with http 500 - "state.manifest" sho
 
     await server.close();
 });
-
-test('resolver.fallback() - manifest is an empty string - "state.status" should have the value "fresh"', async () => {
-    const state = new State({
-        uri: 'http://does.not.exist.finn.no/manifest.json',
-    });
-
-    state.manifest = {
-        fallback: '',
-    };
-
-    const fallback = new Fallback();
-    await fallback.resolve(state);
-    expect(state.status).toBe('fresh');
-});

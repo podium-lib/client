@@ -80,6 +80,7 @@ for (let resource of client) {
 
 An options object containing configuration. The following values can be provided:
 
+ * `retries` - {Number} - How many times the client should retry to settle a version number conflict before terminating.  Default: 4
  * `timeout` - {Number} - Default value, in milliseconds, for how long a request should wait before connection is terminated. Default: 1000
  * `maxAge` - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: Infinity
  * `agent` - {HTTPAgent} - Default HTTP Agent used for all requests.
@@ -124,6 +125,7 @@ The following values can be provided:
 
  * `uri` - {String} - Uri to the manifest of a podium component - Required
  * `name` - {String} - Name of the podlet. This is used to reference the podlet in your application, and does not have to match the name of the podlet itself - Required
+ * `retries` - {Number} - How many times the client should retry to settle a version number conflict before terminating.  Default: 4 - Optional.
  * `timeout` - {Number} - How long, in milliseconds, the request should wait before connection is terminated. Overrides the global default. Default: 1000 - Optional.
  * `throwable` - {Boolean} - If it should be thrown an error if something fails during the process of fetching a podium component. Defaults to `false` - Optional.
  * `resolveJs` - {Boolean} - Resolve a relative js uri in the podlet to be absolute uri. Defaults to `false` - Optional.
@@ -393,3 +395,26 @@ with detailed information on what went wrong.
 The error object will reflect the http status code of the remote.
 In other words; if the remote responded with a 404, the `statusCode`
 in the error object will be 404.
+
+## On retrying
+
+A podlet consist of a manifest which contain metadata about a podlet. This
+manifest is fetched and cached by the client together with fallback content
+if such is defined in the manifest.
+
+Detection of updates to a podlet is done by the content route in the podlet
+serving a http header with the same version number as in the podlets manifest
+and if the client detect a difference between the http header version number
+and the version in the manifest cached in the client, the podlet have changed.
+
+In the event of a update the client will have to do multiple http requests
+to refetch both the manifest, fallback and content. In a distributed
+system there can be windows where a podlet can exist with two versions at
+the same time during a rolling deploy. In such a scenario the client might
+go into a "update loop" due to hitting different versions of the podlet.
+
+In a rolling deploy this is not nessessery a bad thing. But to prevent both
+the application using the client and the podlet, the client will terminate
+the process of updating if such a "update loop" is detected. How many times
+the client will retry setling a update before terminated can be set by
+the `retry` argument to the client constructor and the `.register()` method.

@@ -109,7 +109,7 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
     await server.close();
 });
 
-test('resolver.content() - "podlet-version" header is different than manifest.version - should set state.manifest to {_fallback: ""}', async () => {
+test('resolver.content() - "podlet-version" header is different than manifest.version - should set state.status to "stale" and keep manifest', async () => {
     const server = new Faker();
     const service = await server.listen();
     server.headersContent = {
@@ -127,7 +127,8 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
     const content = new Content();
     await content.resolve(state);
 
-    expect(state.manifest).toEqual({ _fallback: '' });
+    expect(state.manifest).toEqual(server.manifest);
+    expect(state.status).toEqual('stale');
     await server.close();
 });
 

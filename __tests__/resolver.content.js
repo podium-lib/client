@@ -365,3 +365,55 @@ test('resolver.content() - throwable:false with fallback set - remote responds w
 
     await server.close();
 });
+
+test('resolver.content() - kill switch - throwable:true - recursions equals threshold - should throw', async () => {
+    expect.hasAssertions();
+
+    const state = new State({
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+        throwable: true,
+    });
+
+    // See TODO I
+    state.reqOptions.podiumContext = {};
+
+    state.manifest = {
+        content: 'http://does.not.exist.finn.no/index.html',
+    };
+    state.status = 'cached';
+    state.killRecursions = 4;
+
+    const content = new Content();
+
+    try {
+        await content.resolve(state);
+    } catch (error) {
+        expect(error.message).toMatch(
+            /Recursion detected - failed to resolve fetching of podlet 4 times/
+        );
+        expect(state.success).toBeFalsy();
+    }
+});
+
+test('resolver.content() - kill switch - throwable:false - recursions equals threshold - "state.success" should be true', async () => {
+    expect.hasAssertions();
+
+    const state = new State({
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+        throwable: false,
+    });
+
+    // See TODO I
+    state.reqOptions.podiumContext = {};
+
+    state.manifest = {
+        content: 'http://does.not.exist.finn.no/index.html',
+    };
+    state.status = 'cached';
+    state.killRecursions = 4;
+
+    const content = new Content();
+    await content.resolve(state);
+
+    expect(state.success).toBeTruthy();
+});

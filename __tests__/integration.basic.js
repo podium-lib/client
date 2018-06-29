@@ -165,3 +165,69 @@ test('integration - throwable:false - remote content responds with http 500 - sh
 
     await server.close();
 });
+
+test('integration - throwable:false - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and resolve with fallback', async () => {
+    const server = new Faker({
+        fallback: '/fallback.html',
+    });
+    const service = await server.listen();
+
+    const client = new Client();
+    const component = client.register(service.options);
+    await component.refresh();
+
+    // make http version number never match manifest version number
+    server.headersContent = {
+        'podlet-version': Date.now(),
+    };
+
+    const result = await component.fetch({});
+
+    expect(result).toBe(server.fallbackBody);
+
+    // manifest and fallback is one more than default
+    // due to initial refresh() call
+    expect(server.metrics.manifest).toBe(5);
+    expect(server.metrics.fallback).toBe(5);
+    expect(server.metrics.content).toBe(4);
+
+    await server.close();
+});
+
+test('integration - throwable:true - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and then throw', async () => {
+    expect.hasAssertions();
+
+    const server = new Faker({
+        fallback: '/fallback.html',
+    });
+    const service = await server.listen();
+
+    const client = new Client();
+    const component = client.register({
+        throwable: true,
+        name: service.options.name,
+        uri: service.options.uri,
+    });
+    await component.refresh();
+
+    // make http version number never match manifest version number
+    server.headersContent = {
+        'podlet-version': Date.now(),
+    };
+
+    try {
+        await component.fetch({});
+    } catch (error) {
+        expect(error.message).toMatch(
+            /Recursion detected - failed to resolve fetching of podlet 4 times/
+        );
+    }
+
+    // manifest and fallback is one more than default
+    // due to initial refresh() call
+    expect(server.metrics.manifest).toBe(5);
+    expect(server.metrics.fallback).toBe(5);
+    expect(server.metrics.content).toBe(4);
+
+    await server.close();
+});

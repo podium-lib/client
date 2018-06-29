@@ -417,4 +417,4 @@ In a rolling deploy this is not nessessery a bad thing. But to prevent both
 the application using the client and the podlet, the client will terminate
 the process of updating if such a "update loop" is detected. How many times
 the client will retry setling a update before terminated can be set by
-the `retry` argument to the client constructor and the `.register()` method.
+the `retries` argument to the client constructor and the `.register()` method.

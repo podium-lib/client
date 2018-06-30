@@ -398,23 +398,23 @@ in the error object will be 404.
 
 ## On retrying
 
-A podlet consist of a manifest which contain metadata about a podlet. This
-manifest is fetched and cached by the client together with fallback content
-if such is defined in the manifest.
+A podlet consists of a manifest which contains metadata about that podlet.
+This manifest is fetched and cached by the client together with it's fallback
+content if such content has been defined.
 
 Detection of updates to a podlet is done by the content route in the podlet
 serving a http header with the same version number as in the podlets manifest
 and if the client detect a difference between the http header version number
-and the version in the manifest cached in the client, the podlet have changed.
+and the version in the manifest cached in the client, the podlet has changed.
 
-In the event of a update the client will have to do multiple http requests
+In the event of an update the client will have to do multiple http requests
 to refetch both the manifest, fallback and content. In a distributed
 system there can be windows where a podlet can exist with two versions at
 the same time during a rolling deploy. In such a scenario the client might
-go into a "update loop" due to hitting different versions of the podlet.
+go into an "update loop" due to hitting different versions of the podlet.
 
 In a rolling deploy this is not nessessery a bad thing. But to prevent both
 the application using the client and the podlet, the client will terminate
-the process of updating if such a "update loop" is detected. How many times
-the client will retry setling a update before terminated can be set by
+the process of updating if such an "update loop" is detected. How many times
+the client will retry setling an update before termination can be set by
 the `retries` argument to the client constructor and the `.register()` method.

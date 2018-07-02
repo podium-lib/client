@@ -109,7 +109,7 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
     await server.close();
 });
 
-test('resolver.content() - "podlet-version" header is different than manifest.version - should set state.manifest to {_fallback: ""}', async () => {
+test('resolver.content() - "podlet-version" header is different than manifest.version - should set state.status to "stale" and keep manifest', async () => {
     const server = new Faker();
     const service = await server.listen();
     server.headersContent = {
@@ -127,7 +127,8 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
     const content = new Content();
     await content.resolve(state);
 
-    expect(state.manifest).toEqual({ _fallback: '' });
+    expect(state.manifest).toEqual(server.manifest);
+    expect(state.status).toEqual('stale');
     await server.close();
 });
 
@@ -363,4 +364,56 @@ test('resolver.content() - throwable:false with fallback set - remote responds w
     await content.resolve(state);
 
     await server.close();
+});
+
+test('resolver.content() - kill switch - throwable:true - recursions equals threshold - should throw', async () => {
+    expect.hasAssertions();
+
+    const state = new State({
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+        throwable: true,
+    });
+
+    // See TODO I
+    state.reqOptions.podiumContext = {};
+
+    state.manifest = {
+        content: 'http://does.not.exist.finn.no/index.html',
+    };
+    state.status = 'cached';
+    state.killRecursions = 4;
+
+    const content = new Content();
+
+    try {
+        await content.resolve(state);
+    } catch (error) {
+        expect(error.message).toMatch(
+            /Recursion detected - failed to resolve fetching of podlet 4 times/
+        );
+        expect(state.success).toBeFalsy();
+    }
+});
+
+test('resolver.content() - kill switch - throwable:false - recursions equals threshold - "state.success" should be true', async () => {
+    expect.hasAssertions();
+
+    const state = new State({
+        uri: 'http://does.not.exist.finn.no/manifest.json',
+        throwable: false,
+    });
+
+    // See TODO I
+    state.reqOptions.podiumContext = {};
+
+    state.manifest = {
+        content: 'http://does.not.exist.finn.no/index.html',
+    };
+    state.status = 'cached';
+    state.killRecursions = 4;
+
+    const content = new Content();
+    await content.resolve(state);
+
+    expect(state.success).toBeTruthy();
 });

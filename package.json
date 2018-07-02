@@ -1,6 +1,6 @@
 {
   "name": "@podium/client",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "lib/client.js",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {

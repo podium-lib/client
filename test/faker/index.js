@@ -1,40 +1,52 @@
 'use strict';
 
-const Context = require('@podium/context');
+const Podlet = require('@podium/podlet');
 const express = require('express');
 const EventEmitter = require('events');
 const enableDestroy = require('server-destroy');
+const url = require('url');
 
 class FakeServer extends EventEmitter {
-    constructor(manifest) {
+    constructor({
+        version = '1.0.0',
+        name = 'component',
+        assets = {},
+        proxy = {},
+    } = {}) {
         super();
 
         // Private
         this._app = express();
         this._server = undefined;
-        this._context = new Context({ name: 'faker' });
 
-        this._routeManifest = '/manifest.json';
-        this._routeContent = '/index.html';
-        this._routeFallback = '/fallback.html';
+        this._podlet = new Podlet({ name, version });
+
+        // TODO: Make it so that "assets" is not set through constructor
+        if (assets.js) {
+            this._podlet.js(assets.js);
+        }
+
+        if (assets.css) {
+            this._podlet.css(assets.css);
+        }
+
+        // TODO: Make it so that "proxy" is not set through constructor
+        Object.keys(proxy).forEach(key => {
+            this._podlet.proxy(proxy[key], key);
+        });
+
+        this._routeManifest = this._podlet.manifest('/manifest.json');
+        this._routeContent = this._podlet.content('/index.html');
+        this._routeFallback = this._podlet.fallback('/fallback.html');
         this._routeError = '/error';
 
         this._headersManifest = {};
         this._headersContent = {};
         this._headersFallback = {};
 
-        this._manifest = Object.assign(
-            {
-                content: this._routeContent,
-                version: this.constructor.makeVersion(),
-                name: 'component',
-            },
-            manifest
-        );
-
-        this._bodyManifest = this._manifest;
-        this._bodyContent = `<p>content ${this._manifest.name}</p>`;
-        this._bodyFallback = `<p>fallback ${this._manifest.name}</p>`;
+        this._bodyManifest = JSON.stringify(this._podlet);
+        this._bodyContent = `<p>content ${this._podlet.name}</p>`;
+        this._bodyFallback = `<p>fallback ${this._podlet.name}</p>`;
 
         this._metrics = {
             manifest: 0,
@@ -52,7 +64,7 @@ class FakeServer extends EventEmitter {
         });
 
         Object.defineProperty(this, 'manifest', {
-            get: () => this._manifest,
+            get: () => JSON.parse(JSON.stringify(this._podlet)),
             set: () => {
                 throw new Error('Cannot set read-only property.');
             },
@@ -61,7 +73,7 @@ class FakeServer extends EventEmitter {
         });
 
         Object.defineProperty(this, 'version', {
-            get: () => this._manifest.version,
+            get: () => this._podlet.version,
             set: value => {
                 this._manifest.version = value;
             },
@@ -70,26 +82,32 @@ class FakeServer extends EventEmitter {
         });
 
         Object.defineProperty(this, 'content', {
-            get: () => this._manifest.content,
+            get: () => this._podlet.content(),
             set: value => {
-                this._manifest.content = value;
+                this._podlet.content(value);
             },
             configurable: true,
             enumerable: true,
         });
 
         Object.defineProperty(this, 'fallback', {
-            get: () => this._manifest.fallback,
+            get: () => this._podlet.fallback(),
             set: value => {
-                this._manifest.fallback = value;
+                this._podlet.fallback(value);
             },
             configurable: true,
             enumerable: true,
         });
 
         Object.defineProperty(this, 'assets', {
-            get: () => this._manifest.assets,
+            get: () =>
+                // TODO: remove workaround
+                ({
+                    css: this._podlet.css(),
+                    js: this._podlet.js(),
+                }),
             set: value => {
+                // TODO: does probably not work as is (not in use since no tests break)
                 if (!this._manifest.assets) {
                     this._manifest.assets = {};
                 }
@@ -153,13 +171,7 @@ class FakeServer extends EventEmitter {
             enumerable: true,
         });
 
-        // Middleware
-        this._app.use((req, res, next) => {
-            res.setHeader('podlet-version', this._manifest.version);
-            next();
-        });
-
-        this._app.use(this._context.middleware());
+        this._app.use(this._podlet.middleware());
 
         // Manifest route
         this._app.get(this._routeManifest, (req, res) => {
@@ -168,7 +180,7 @@ class FakeServer extends EventEmitter {
                 res.setHeader(key, this._headersManifest[key]);
             });
             this.emit('req:manifest', this._metrics.manifest, req);
-            res.status(200).json(this._bodyManifest);
+            res.status(200).json(this._podlet);
         });
 
         // Content route
@@ -208,9 +220,11 @@ class FakeServer extends EventEmitter {
         this._app.disable('etag');
     }
 
-    listen() {
+    listen(host = 'http://localhost:0') {
+        const addr = url.parse(host);
+
         return new Promise(resolve => {
-            this._server = this._app.listen(0, 'localhost', () => {
+            this._server = this._app.listen(addr.port, addr.hostname, () => {
                 const address = `http://${this._server.address().address}:${
                     this._server.address().port
                 }`;
@@ -219,7 +233,7 @@ class FakeServer extends EventEmitter {
                 const error = `${address}${this._routeError}`;
                 const options = {
                     uri: manifest,
-                    name: this._manifest.name,
+                    name: this._podlet.name,
                 };
                 resolve({
                     manifest,

@@ -12,7 +12,7 @@ class FakeServer extends EventEmitter {
         // Private
         this._app = express();
         this._server = undefined;
-        this._context = new Context('faker');
+        this._context = new Context({ name: 'faker' });
 
         this._routeManifest = '/manifest.json';
         this._routeContent = '/index.html';

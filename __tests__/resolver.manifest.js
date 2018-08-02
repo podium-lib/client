@@ -65,7 +65,7 @@ test('resolver.manifest() - remote has "cache-control: public, max-age=10" heade
     await manifest.resolve(state);
 
     // See NOTE I for details
-    expect(state.maxAge < 10000 && state.maxAge > 9000).toBeTruthy();
+    expect(state.maxAge < 11000 && state.maxAge > 8500).toBeTruthy();
 
     await server.close();
 });

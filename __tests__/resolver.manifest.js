@@ -192,7 +192,7 @@ test('resolver.manifest() - manifest is not valid - "state.manifest" should be {
 
     const manifest = new Manifest();
     const state = new State({
-        uri: service.error,
+        uri: service.content,
         throwable: false,
     });
 

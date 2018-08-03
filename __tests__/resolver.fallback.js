@@ -11,12 +11,26 @@ test('resolver.fallback() - object tag - should be PodletClientFallbackResolver'
     );
 });
 
-test('resolver.fallback() - fallback field contains invalid value - should set value on "state.fallback" to empty String', async () => {
+test('resolver.fallback() - fallback field is empty - should set value on "state.fallback" to empty String', async () => {
     const server = new Faker();
-    server.fallback = 'ht++ps://blæ.finn.no/fallback.html';
+    const manifest = server.manifest;
+    manifest.fallback = '';
 
     const state = new State({ uri: 'http://example.com' });
-    state.manifest = server.manifest;
+    state.manifest = manifest;
+
+    const fallback = new Fallback();
+    const result = await fallback.resolve(state);
+    expect(result.fallback).toBe('');
+});
+
+test('resolver.fallback() - fallback field contains invalid value - should set value on "state.fallback" to empty String', async () => {
+    const server = new Faker();
+    const manifest = server.manifest;
+    manifest.fallback = 'ht++ps://blæ.finn.no/fallback.html';
+
+    const state = new State({ uri: 'http://example.com' });
+    state.manifest = manifest;
 
     const fallback = new Fallback();
     const result = await fallback.resolve(state);

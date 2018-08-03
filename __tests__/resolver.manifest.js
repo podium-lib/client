@@ -188,12 +188,11 @@ test('resolver.manifest() - remote responds with http 500 - "state.manifest" sho
 
 test('resolver.manifest() - manifest is not valid - "state.manifest" should be {_fallback: ""}', async () => {
     const server = new Faker();
-    server.manifestBody = { __id: 'component' };
     const service = await server.listen();
 
     const manifest = new Manifest();
     const state = new State({
-        uri: service.manifest,
+        uri: service.content,
         throwable: false,
     });
 

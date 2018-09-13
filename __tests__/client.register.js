@@ -43,9 +43,9 @@ test('client.register() - call with a invalid value for "options.name" - should 
     const client = new Client();
 
     expect(() => {
-        client.register({ uri: 'http://example-a.org', name: 'some-name' });
+        client.register({ uri: 'http://example-a.org', name: 'some name' });
     }).toThrowError(
-        'The value for "options.name", some-name, is not a valid name'
+        'The value for "options.name", some name, is not a valid name'
     );
 });
 

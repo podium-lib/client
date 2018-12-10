@@ -2,19 +2,17 @@
 
 [![Build Status](https://travis.schibsted.io/Podium/podlet-client.svg?token=qt273uGfEz64UyWuNHJ1&branch=master)](https://travis.schibsted.io/Podium/podlet-client)
 
-Client for fetching podium component fragments over http.
-
+Client for fetching podium component fragments over HTTP.
 
 ## Installation
 
 ```bash
-$ npm i @podium/client --save
+$ npm install @podium/client
 ```
-
 
 ## Simple stream usage
 
-Connect to a podium component server and stream the html content:
+Connect to a Podium component server and stream the HTML content:
 
 ```js
 const Client = require('@podium/client');
@@ -22,19 +20,19 @@ const client = new Client();
 
 const component = client.register({
     name: 'foo',
-    uri: 'http://foo.site.com/manifest.json'
+    uri: 'http://foo.site.com/manifest.json',
 });
 
 const stream = component.stream();
-stream.on('error', (error) => {
-    console.log(error)
+stream.on('error', error => {
+    console.log(error);
 });
 stream.pipe(process.stdout);
 ```
 
 ## Simple fetch usage
 
-Connect to a podium component server and fetch the html content:
+Connect to a podium component server and fetch the HTML content:
 
 ```js
 const Client = require('@podium/client');
@@ -42,16 +40,18 @@ const client = new Client();
 
 const component = client.register({
     name: 'foo',
-    uri: 'http://foo.site.com/manifest.json'
+    uri: 'http://foo.site.com/manifest.json',
 });
 
-component.fetch().then((content) => {
-    console.log(content);
-}).catch((error) => {
-    console.log(error);
-});
+component
+    .fetch()
+    .then(content => {
+        console.log(content);
+    })
+    .catch(error => {
+        console.log(error);
+    });
 ```
-
 
 ## Constructor
 
@@ -62,14 +62,14 @@ const Client = require('@podium/client');
 const client = new Client(options);
 ```
 
-The client instance are iterable and hold each registered resource.
+The client instance is iterable and holds a reference to each registered resource.
 
 ```js
 const Client = require('@podium/client');
 const client = new Client();
 
-client.register({uri: 'http://foo.site.com/manifest.json', name: 'fooBar'});
-client.register({uri: 'http://bar.site.com/manifest.json', name: 'barFoo'});
+client.register({ uri: 'http://foo.site.com/manifest.json', name: 'fooBar' });
+client.register({ uri: 'http://bar.site.com/manifest.json', name: 'barFoo' });
 
 for (let resource of client) {
     resource.fetch();
@@ -80,20 +80,19 @@ for (let resource of client) {
 
 An options object containing configuration. The following values can be provided:
 
- * `retries` - {Number} - How many times the client should retry to settle a version number conflict before terminating. See section "[on retrying](#on-retrying)" for more information. Default: 4
- * `timeout` - {Number} - Default value, in milliseconds, for how long a request should wait before connection is terminated. Default: 1000
- * `maxAge` - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: Infinity
- * `agent` - {HTTPAgent} - Default HTTP Agent used for all requests.
- * `logger` - {Object} - A logger which conform to a log4j interface. See the doc for the internal [abstract logger](https://www.npmjs.com/package/abslog) for more information.
-
+*   `retries` - {Number} - The number of times the client should retry to settle a version number conflict before terminating. See the section "[on retrying](#on-retrying)" for more information. Default: 4
+*   `timeout` - {Number} - Default value, in milliseconds, for how long a request should wait before the connection is terminated. Default: 1000
+*   `maxAge` - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: Infinity
+*   `agent` - {HTTPAgent} - Default HTTP Agent used for all requests.
+*   `logger` - {Object} - A logger which conforms to the log4j interface. See the docs for [abslog](https://www.npmjs.com/package/abslog) for more information.
 
 ## API
 
-The Client instance have the following API:
+The Client instance has the following API:
 
 ### .register(options)
 
-Registers a podlet.
+Registers a component.
 
 Example:
 
@@ -101,13 +100,16 @@ Example:
 const Client = require('@podium/client');
 const client = new Client();
 
-const component = client.register({uri: 'http://foo.site.com/manifest.json', name: 'fooBar'});
+const component = client.register({
+    uri: 'http://foo.site.com/manifest.json',
+    name: 'fooBar',
+});
 ```
 
 Returns a Resource Object.
 
 The created Resource Object is also stored on the instance of the client.
-It is stored with the `name` as property name.
+It is stored with the `name` as its property name.
 
 Example:
 
@@ -115,7 +117,7 @@ Example:
 const Client = require('@podium/client');
 const client = new Client();
 
-client.register({uri: 'http://foo.site.com/manifest.json', name: 'fooBar'});
+client.register({ uri: 'http://foo.site.com/manifest.json', name: 'fooBar' });
 client.fooBar.fetch();
 ```
 
@@ -123,17 +125,17 @@ client.fooBar.fetch();
 
 The following values can be provided:
 
- * `uri` - {String} - Uri to the manifest of a podium component - Required
- * `name` - {String} - Name of the podlet. This is used to reference the podlet in your application, and does not have to match the name of the podlet itself - Required
- * `retries` - {Number} - How many times the client should retry to settle a version number conflict before terminating. See section "[on retrying](#on-retrying)" for more information. Default: 4 - Optional.
- * `timeout` - {Number} - How long, in milliseconds, the request should wait before connection is terminated. Overrides the global default. Default: 1000 - Optional.
- * `throwable` - {Boolean} - If it should be thrown an error if something fails during the process of fetching a podium component. Defaults to `false` - Optional.
- * `resolveJs` - {Boolean} - Resolve a relative js uri in the podlet to be absolute uri. Defaults to `false` - Optional.
- * `resolveCss` - {Boolean} - Resolve a relative css uri in the podlet to be absolute uri. Defaults to `false` - Optional.
+*   `uri` - {String} - Uri to the manifest of a podium component - Required
+*   `name` - {String} - Name of the component. This is used to reference the component in your application, and does not have to match the name of the component itself - Required
+*   `retries` - {Number} - The number of times the client should retry to settle a version number conflict before terminating. See the section "[on retrying](#on-retrying)" for more information. Default: 4 - Optional.
+*   `timeout` - {Number} - Defines how long, in milliseconds, a request should wait before the connection is terminated. Overrides the global default. Default: 1000 - Optional.
+*   `throwable` - {Boolean} - Defines whether an error should be thrown if a failure occurs during the process of fetching a podium component. Defaults to `false` - Optional.
+*   `resolveJs` - {Boolean} - Defines whether to resolve a relative JS uri for a component to be an absolute uri. Defaults to `false` - Optional.
+*   `resolveCss` - {Boolean} - Defines whether to resolve a relative CSS uri for a component to be an absolute uri. Defaults to `false` - Optional.
 
 ### .js()
 
-Retrieve list of all js references from all registered and fetched podlets.
+Retrieve list of all JavaScript references from all registered and fetched components.
 
 ```js
 const Client = require('@podium/client');
@@ -152,7 +154,7 @@ client.js(); // Array of js entries
 
 ### .css()
 
-Retrieve list of all css references from all registered and fetched podlets.
+Retrieve a list of all CSS references from all registered and fetched components.
 
 ```js
 const Client = require('@podium/client');
@@ -171,13 +173,13 @@ client.css(); // Array of css entries
 
 ### .refresh()
 
-This method will refresh a resource by reading its manifest and the fallback
+This method will refresh a resource by reading its manifest and fallback
 if defined in the manifest. The method will not call the URI to the content
-in a podlet.
+of a component.
 
 If the internal cache in the client already has a manifest cached, this will
-be thrown away and replaced if a new manfiest was successfully fetched. If a
-new manifest was not successfully fetched, the old manifest will be kept in
+be thrown away and replaced when the new manifest is successfully fetched. If a
+new manifest cannot be successfully fetched, the old manifest will be kept in
 cache.
 
 If a manifest is successfully fetched, this method will resolve with a `true`
@@ -225,24 +227,24 @@ Returns an Array of all loaded manifests ready to be used by `.load()`.
 ### .load()
 
 Loads an Array of manifests, provided by `.dump()`, into the client. If any of
-the items in the loaded Array contains a key which already are in the cache
+the items in the loaded Array contains a key which is already in the cache
 the entry in the cache will be overwritten.
 
 If any of the entries in the loaded Array are not compatible with the format
 which `.dump()` exports, they will not be inserted into the cache.
 
-Returns and Array with the keys which was inserted into the cache.
+Returns an Array with the keys which were inserted into the cache.
 
 ## Events
 
-The client emit the following events:
+The client emits the following events:
 
 ### change
 
 When there is a change in version number between the cached manifest held
 by the client and the manifest on the remote source.
 
-The event will fire after the a new version of the manifest on the remote
+The event will fire after a new version of the manifest on the remote
 source is fetched.
 
 Emits the new manifest.
@@ -253,15 +255,17 @@ client.on('change', manifest => {
     console.log(manifest);
 });
 
-const resource = client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
+const resource = client.register({
+    uri: 'http://foo.site.com/manifest.json',
+    name: 'foo',
+});
 ```
-
 
 ## Podium Resource Object
 
 A registered Podium component is stored in a Podium Resource Object.
 
-The Podium Resource Object contain methods for retrieving the content of a
+The Podium Resource Object contains methods for retrieving the content of a
 Podium component. The URI to the content of a component is defined in the
 component's manifest. This is the content root of the component.
 
@@ -279,8 +283,8 @@ The Podium Context. See https://github.schibsted.io/finn/podium/tree/master/pack
 
 An options object containing configuration. The following values can be provided:
 
- * `pathname` - {String} - A path which will be appended to the content root of the component when requested.
- * `query` - {Object} - An Object which will be appended as query parameters to the request to the component content.
+*   `pathname` - {String} - A path which will be appended to the content root of the component when requested.
+*   `query` - {Object} - An Object which will be appended as query parameters to the request to fetch the component's content.
 
 ### .stream(podiumContext, options)
 
@@ -294,12 +298,10 @@ The Podium Context. See https://github.schibsted.io/finn/podium/tree/master/pack
 
 An options object containing configuration. The following values can be provided:
 
- * `pathname` - {String} - A path which will be appended to the content root of the component when requested.
- * `query` - {Object} - An Object which will be appended as query parameters to the request to the component content.
-
+*   `pathname` - {String} - A path which will be appended to the content root of the component when requested.
+*   `query` - {Object} - An Object which will be appended as query parameters to the request to fetch the component's content.
 
 ### .name
-
 
 A property returning the name of the podium resource.
 This is the name provided during the call to `register`.
@@ -308,27 +310,26 @@ This is the name provided during the call to `register`.
 
 A property returning the location of the podium resource.
 
-
 ## Controlling caching of the manifest
 
-The client has an internal cache where it keep a cached version of the
+The client has an internal cache where it keeps a cached version of the
 manifest for each registered Podium component.
 
-By default all manifest are cached 24 hours unless its detected a new
-version of the manifest by a change in the `podlet-version` http header
-on the content URI. Then the cache is thrown and fresh version of the
+By default all manifests are cached for 24 hours unless a new
+version of the manifest is detected by a change in the `podlet-version` HTTP header
+on the content URI. When this happens, the cache is thrown away and the fresh version of the
 manifest is cached.
 
-The default length of time the manifests is cached can be configured
-by setting `maxAge` on the constructor of the client.
+The default length of time the manifest is cached for can be configured
+by setting `maxAge` in the constructor of the client.
 
 ```js
-const client = new Client({ maxAge: (1000 * 60 * 60 * 4) });
+const client = new Client({ maxAge: 1000 * 60 * 60 * 4 });
 ```
 
 It is also possible to control how long a manifest should be cached in
 the client from a Podium component. This is done by setting a [RFC 7234](https://tools.ietf.org/html/rfc7234)
-compatible http header on the manifest on the server serving the
+compatible HTTP header on the manifest on the server serving the
 Podium component.
 
 Example: This will cache the manifest for 1 hour:
@@ -339,24 +340,21 @@ app.get('/manifest.json', (req, res) => {
     res.setHeader('cache-control', 'public, max-age=3600');
     res.status(200).json({
         name: 'foo',
-        content: '/index.html'
+        content: '/index.html',
     });
 });
 ```
 
-## On defining throwable
+## Defining a component as throwable
 
 By default the client will never throw if something fails in the process
 of retreiving the manifest, the fallback or the content itself. It will
 simply provide a fallback if it has one or an empty String for the
 resource in an error situation.
 
-Though; there are cases where one would like to throw an error one can
-act upon if there are errors in the process of retrieving the manifest,
-the fallback or the content.
-
-One can do so by setting the option `throwable` to `true` on the
-`.register()` method.
+There are however, cases where throwing an error is more appropriate.
+This can be achieved by setting the option `throwable` to `true` in the `.register()` method.
+If an error is thrown in the process of retrieving the manifest, the fallback or the content then it can then be acted upon.
 
 Example:
 
@@ -366,20 +364,20 @@ const client = new Client();
 
 const foo = client.register({
     name: 'foo',
-    uri: 'http://foo.site.com/manifest.json'
+    uri: 'http://foo.site.com/manifest.json',
 });
 
 const bar = client.register({
     name: 'bar',
     uri: 'http://bar.site.com/manifest.json',
-    throwable: true
+    throwable: true,
 });
 
-Promise
-    .all([foo.fetch(), bar.fetch()])
-    .then((content) => {
+Promise.all([foo.fetch(), bar.fetch()])
+    .then(content => {
         console.log(content);
-    }).catch((error) => {
+    })
+    .catch(error => {
         console.log(error);
     });
 ```
@@ -398,23 +396,23 @@ in the error object will be 404.
 
 ## On retrying
 
-A podlet consists of a manifest which contains metadata about that podlet.
+A component consists of a manifest which contains metadata about that component.
 This manifest is fetched and cached by the client together with it's fallback
 content if such content has been defined.
 
-Detection of updates to a podlet is done by the content route in the podlet
-serving a http header with the same version number as in the podlets manifest
-and if the client detect a difference between the http header version number
-and the version in the manifest cached in the client, the podlet has changed.
+Detection of updates to a component is done by the content route in the component
+serving an HTTP header with the same version number as in the component's manifest
+and if the client detects a difference between the HTTP header version number
+and the version in the manifest cached in the client, the component has changed.
 
-In the event of an update the client will have to do multiple http requests
-to refetch both the manifest, fallback and content. In a distributed
-system there can be windows where a podlet can exist with two versions at
+In the event of an update the client will have to do multiple HTTP requests
+to refetch the manifest, fallback and content. In a distributed
+system there can be windows where a component can exist with two versions at
 the same time during a rolling deploy. In such a scenario the client might
-go into an "update loop" due to hitting different versions of the podlet.
+go into an "update loop" due to hitting different versions of the component.
 
-In a rolling deploy this is not nessessery a bad thing. But to prevent both
-the application using the client and the podlet, the client will terminate
+In a rolling deploy this is not nessessery a bad thing. But to protect both
+the application using the client and the component itself, the client will terminate
 the process of updating if such an "update loop" is detected. How many times
-the client will retry setling an update before termination can be set by
-the `retries` argument to the client constructor and the `.register()` method.
+the client will retry settling an update before termination can be set by
+the `retries` argument in the client constructor and the `.register()` method.

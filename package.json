@@ -23,7 +23,7 @@
     "registry": "http://npm.finntech.no/"
   },
   "dependencies": {
-    "@podium/metrics": "3.0.1",
+    "@metrics/client": "^2.1.1",
     "@podium/schemas": "2.1.1",
     "@podium/utils": "2.0.3",
     "abslog": "^2.1.1",

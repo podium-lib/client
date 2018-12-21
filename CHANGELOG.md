@@ -8,6 +8,7 @@ The latest version of this document is always available in [releases][releases-u
 
 ## [2.2.2] - 2018-18-14
 
+-   Fixed metrics label for podlet name
 -   Replaced @podium/metrics with @metrics/client
 
 ## [2.2.1] - 2018-07-18

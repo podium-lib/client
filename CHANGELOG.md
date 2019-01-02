@@ -6,12 +6,16 @@ The latest version of this document is always available in [releases][releases-u
 
 ## [unreleased]
 
-## [2.2.2] - 2018-18-14
+## [2.2.3] - 2019-01-02
+
+-   Fixed metrics instrumentation of fallback requests
+
+## [2.2.2] - 2018-12-20
 
 -   Fixed metrics label for podlet name
 -   Replaced @podium/metrics with @metrics/client
 
-## [2.2.1] - 2018-07-18
+## [2.2.1] - 2018-09-13
 
 -   The name argument on .register() now follow the same naming rules as name in @podium/podlet and the manifest - #82
 -   Updated dependencies - #83
@@ -25,7 +29,8 @@ The latest version of this document is always available in [releases][releases-u
 -   Updated @podium/schema to version 2.1.1 - #75
 -   Added .refresh() method for loading / refreshing manifest and fallbacks without touching the content - #76
 
-[unreleased]: https://github.schibsted.io/Podium/client/compare/v2.2.2...HEAD
+[unreleased]: https://github.schibsted.io/Podium/client/compare/v2.2.3...HEAD
+[2.2.3]: https://github.schibsted.io/Podium/client/compare/v2.2.2...v2.2.3
 [2.2.2]: https://github.schibsted.io/Podium/client/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.schibsted.io/Podium/client/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.schibsted.io/Podium/client/compare/v2.1.0...v2.2.0

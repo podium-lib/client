@@ -1,5 +1,7 @@
 # @podium/client
 
+[![Build Status](https://travis-ci.org/podium-lib/client.svg?branch=master)](https://travis-ci.org/podium-lib/client)
+
 Client for fetching podium component fragments over HTTP.
 
 ## Installation

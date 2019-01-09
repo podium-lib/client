@@ -1,3 +1,5 @@
+/* eslint-disable import/order */
+
 'use strict';
 
 /* eslint no-unused-vars: "off" */
@@ -19,7 +21,7 @@ const URI = 'http://example.org';
 test('Resource() - object tag - should be PodletClientResource', () => {
     const resource = new Resource(new Cache(), { uri: URI });
     expect(Object.prototype.toString.call(resource)).toEqual(
-        '[object PodletClientResource]'
+        '[object PodletClientResource]',
     );
 });
 
@@ -28,7 +30,7 @@ test('Resource() - no "registry" - should throw', () => {
     expect(() => {
         const resource = new Resource();
     }).toThrowError(
-        'you must pass a "registry" object to the PodletClientResource constructor'
+        'you must pass a "registry" object to the PodletClientResource constructor',
     );
 });
 
@@ -72,7 +74,7 @@ test('resource.fetch(podiumContext) - should pass it on', async () => {
     server.on('req:content', (count, req) => {
         expect(req.headers['podium-locale']).toBe('nb-NO');
         expect(req.headers['podium-mount-origin']).toBe(
-            'http://www.example.org'
+            'http://www.example.org',
         );
     });
 

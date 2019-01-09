@@ -33,7 +33,7 @@ http.createServer((req, res) => {
             'Content-Type': 'application/json; charset=utf-8',
         });
         res.end(
-            '{ "name": "component", "version": "1.0.0", "content": "/index.html", "fallback": "/fallback.html" }'
+            '{ "name": "component", "version": "1.0.0", "content": "/index.html", "fallback": "/fallback.html" }',
         );
         return;
     }

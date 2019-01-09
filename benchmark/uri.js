@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable no-plusplus */
+
 'use strict';
 
 const utils = require('../lib/utils');

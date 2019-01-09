@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable import/no-extraneous-dependencies */
+
 'use strict';
 
 const http = require('http');
@@ -27,7 +30,7 @@ http.createServer((req, res) => {
 
     console.log(
         'balancing request to:',
-        `http://${target.target.host}:${target.target.port}`
+        `http://${target.target.host}:${target.target.port}`,
     );
     proxy.web(req, res, target);
 

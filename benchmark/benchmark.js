@@ -1,3 +1,7 @@
+/* eslint-disable no-console */
+/* eslint-disable no-plusplus */
+/* eslint-disable import/no-extraneous-dependencies */
+
 'use strict';
 
 const benchmark = require('benchmark');

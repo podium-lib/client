@@ -1,3 +1,6 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-param-reassign */
+
 'use strict';
 
 const Client = require('../');
@@ -121,7 +124,7 @@ test('client.css() - fetch content out of order - should return array where defi
             h.fetch({}),
             i.fetch({}),
             j.fetch({}),
-        ])
+        ]),
     );
 
     expect(client.css()).toEqual([

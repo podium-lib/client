@@ -1,3 +1,7 @@
+/* eslint-disable no-console */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-unresolved */
+
 'use strict';
 
 // https://www.nearform.com/blog/self-detect-memory-leak-node/
@@ -5,9 +9,9 @@
 // chrome://inspect/#devices
 
 const memwatch = require('memwatch-next');
-const Client = require('../');
 const http = require('http');
 const url = require('url');
+const Client = require('../');
 
 memwatch.on('leak', info => {
     console.error('Memory leak detected:', info);
@@ -49,7 +53,6 @@ http.createServer((req, res) => {
 
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Not found');
-    return;
 }).listen(8000);
 
 console.log('Server listening on port 8000');

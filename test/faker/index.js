@@ -1,3 +1,6 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-underscore-dangle */
+
 'use strict';
 
 const Podlet = require('@podium/podlet');

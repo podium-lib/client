@@ -29,10 +29,10 @@ The latest version of this document is always available in [releases][releases-u
 -   Updated @podium/schema to version 2.1.1 - #75
 -   Added .refresh() method for loading / refreshing manifest and fallbacks without touching the content - #76
 
-[unreleased]: https://github.schibsted.io/Podium/client/compare/v2.2.3...HEAD
-[2.2.3]: https://github.schibsted.io/Podium/client/compare/v2.2.2...v2.2.3
-[2.2.2]: https://github.schibsted.io/Podium/client/compare/v2.2.1...v2.2.2
-[2.2.1]: https://github.schibsted.io/Podium/client/compare/v2.2.0...v2.2.1
-[2.2.0]: https://github.schibsted.io/Podium/client/compare/v2.1.0...v2.2.0
-[2.1.0]: https://github.schibsted.io/Podium/client/compare/v2.0.0...v2.1.0
-[releases-url]: https://github.schibsted.io/Podium/client/blob/master/CHANGELOG.md
+[unreleased]: https://github.com/podium-lib/client/compare/v2.2.3...HEAD
+[2.2.3]: https://github.com/podium-lib/client/compare/v2.2.2...v2.2.3
+[2.2.2]: https://github.com/podium-lib/client/compare/v2.2.1...v2.2.2
+[2.2.1]: https://github.com/podium-lib/client/compare/v2.2.0...v2.2.1
+[2.2.0]: https://github.com/podium-lib/client/compare/v2.1.0...v2.2.0
+[2.1.0]: https://github.com/podium-lib/client/compare/v2.0.0...v2.1.0
+[releases-url]: https://github.com/podium-lib/client/blob/master/CHANGELOG.md

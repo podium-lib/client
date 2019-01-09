@@ -1,3 +1,6 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable prefer-destructuring */
+
 'use strict';
 
 const Fallback = require('../lib/resolver.fallback.js');
@@ -7,7 +10,7 @@ const Faker = require('../test/faker');
 test('resolver.fallback() - object tag - should be PodletClientFallbackResolver', () => {
     const fallback = new Fallback();
     expect(Object.prototype.toString.call(fallback)).toEqual(
-        '[object PodletClientFallbackResolver]'
+        '[object PodletClientFallbackResolver]',
     );
 });
 

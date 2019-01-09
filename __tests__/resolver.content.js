@@ -1,3 +1,5 @@
+/* eslint-disable import/order */
+
 'use strict';
 
 const Content = require('../lib/resolver.content.js');
@@ -15,7 +17,7 @@ const Faker = require('../test/faker');
 test('resolver.content() - object tag - should be PodletClientContentResolver', () => {
     const content = new Content();
     expect(Object.prototype.toString.call(content)).toEqual(
-        '[object PodletClientContentResolver]'
+        '[object PodletClientContentResolver]',
     );
 });
 
@@ -389,7 +391,7 @@ test('resolver.content() - kill switch - throwable:true - recursions equals thre
         await content.resolve(state);
     } catch (error) {
         expect(error.message).toMatch(
-            /Recursion detected - failed to resolve fetching of podlet 4 times/
+            /Recursion detected - failed to resolve fetching of podlet 4 times/,
         );
         expect(state.success).toBeFalsy();
     }

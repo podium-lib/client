@@ -1,7 +1,5 @@
 # @podium/client
 
-[![Build Status](https://travis.schibsted.io/Podium/podlet-client.svg?token=qt273uGfEz64UyWuNHJ1&branch=master)](https://travis.schibsted.io/Podium/podlet-client)
-
 Client for fetching podium component fragments over HTTP.
 
 ## Installation
@@ -80,11 +78,11 @@ for (let resource of client) {
 
 An options object containing configuration. The following values can be provided:
 
-*   `retries` - {Number} - The number of times the client should retry to settle a version number conflict before terminating. See the section "[on retrying](#on-retrying)" for more information. Default: 4
-*   `timeout` - {Number} - Default value, in milliseconds, for how long a request should wait before the connection is terminated. Default: 1000
-*   `maxAge` - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: Infinity
-*   `agent` - {HTTPAgent} - Default HTTP Agent used for all requests.
-*   `logger` - {Object} - A logger which conforms to the log4j interface. See the docs for [abslog](https://www.npmjs.com/package/abslog) for more information.
+-   `retries` - {Number} - The number of times the client should retry to settle a version number conflict before terminating. See the section "[on retrying](#on-retrying)" for more information. Default: 4
+-   `timeout` - {Number} - Default value, in milliseconds, for how long a request should wait before the connection is terminated. Default: 1000
+-   `maxAge` - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: Infinity
+-   `agent` - {HTTPAgent} - Default HTTP Agent used for all requests.
+-   `logger` - {Object} - A logger which conforms to the log4j interface. See the docs for [abslog](https://www.npmjs.com/package/abslog) for more information.
 
 ## API
 
@@ -125,13 +123,13 @@ client.fooBar.fetch();
 
 The following values can be provided:
 
-*   `uri` - {String} - Uri to the manifest of a podium component - Required
-*   `name` - {String} - Name of the component. This is used to reference the component in your application, and does not have to match the name of the component itself - Required
-*   `retries` - {Number} - The number of times the client should retry to settle a version number conflict before terminating. See the section "[on retrying](#on-retrying)" for more information. Default: 4 - Optional.
-*   `timeout` - {Number} - Defines how long, in milliseconds, a request should wait before the connection is terminated. Overrides the global default. Default: 1000 - Optional.
-*   `throwable` - {Boolean} - Defines whether an error should be thrown if a failure occurs during the process of fetching a podium component. Defaults to `false` - Optional.
-*   `resolveJs` - {Boolean} - Defines whether to resolve a relative JS uri for a component to be an absolute uri. Defaults to `false` - Optional.
-*   `resolveCss` - {Boolean} - Defines whether to resolve a relative CSS uri for a component to be an absolute uri. Defaults to `false` - Optional.
+-   `uri` - {String} - Uri to the manifest of a podium component - Required
+-   `name` - {String} - Name of the component. This is used to reference the component in your application, and does not have to match the name of the component itself - Required
+-   `retries` - {Number} - The number of times the client should retry to settle a version number conflict before terminating. See the section "[on retrying](#on-retrying)" for more information. Default: 4 - Optional.
+-   `timeout` - {Number} - Defines how long, in milliseconds, a request should wait before the connection is terminated. Overrides the global default. Default: 1000 - Optional.
+-   `throwable` - {Boolean} - Defines whether an error should be thrown if a failure occurs during the process of fetching a podium component. Defaults to `false` - Optional.
+-   `resolveJs` - {Boolean} - Defines whether to resolve a relative JS uri for a component to be an absolute uri. Defaults to `false` - Optional.
+-   `resolveCss` - {Boolean} - Defines whether to resolve a relative CSS uri for a component to be an absolute uri. Defaults to `false` - Optional.
 
 ### .js()
 
@@ -141,13 +139,16 @@ Retrieve list of all JavaScript references from all registered and fetched compo
 const Client = require('@podium/client');
 const client = new Client();
 
-const foo = client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
-const bar = client.register({uri: 'http://bar.site.com/manifest.json', name: 'bar'});
+const foo = client.register({
+    uri: 'http://foo.site.com/manifest.json',
+    name: 'foo',
+});
+const bar = client.register({
+    uri: 'http://bar.site.com/manifest.json',
+    name: 'bar',
+});
 
-await Promise.all([
-    foo.fetch(),
-    bar.fetch()
-]);
+await Promise.all([foo.fetch(), bar.fetch()]);
 
 client.js(); // Array of js entries
 ```
@@ -160,13 +161,16 @@ Retrieve a list of all CSS references from all registered and fetched components
 const Client = require('@podium/client');
 const client = new Client();
 
-const foo = client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
-const bar = client.register({uri: 'http://bar.site.com/manifest.json', name: 'bar'});
+const foo = client.register({
+    uri: 'http://foo.site.com/manifest.json',
+    name: 'foo',
+});
+const bar = client.register({
+    uri: 'http://bar.site.com/manifest.json',
+    name: 'bar',
+});
 
-await Promise.all([
-    foo.fetch(),
-    bar.fetch()
-]);
+await Promise.all([foo.fetch(), bar.fetch()]);
 
 client.css(); // Array of css entries
 ```
@@ -189,7 +193,7 @@ value. If a manifest is not successfully fetched, it will resolve with `false`.
 const Client = require('@podium/client');
 const client = new Client();
 
-client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
+client.register({ uri: 'http://foo.site.com/manifest.json', name: 'foo' });
 
 console.log(client.js()); // []
 
@@ -208,8 +212,8 @@ Refreshes the manifests of all registered resources. Does so by calling the
 const Client = require('@podium/client');
 const client = new Client();
 
-client.register({uri: 'http://foo.site.com/manifest.json', name: 'foo'});
-client.register({uri: 'http://bar.site.com/manifest.json', name: 'bar'});
+client.register({ uri: 'http://foo.site.com/manifest.json', name: 'foo' });
+client.register({ uri: 'http://bar.site.com/manifest.json', name: 'bar' });
 
 console.log(client.js()); // []
 console.log(client.css()); // []
@@ -277,14 +281,14 @@ Fetches the content of the component. Returns a `Promise`.
 
 #### podiumContext (required)
 
-The Podium Context. See https://github.schibsted.io/finn/podium/tree/master/packages/podium-context
+The Podium Context. See https://github.com/podium-lib/context
 
 #### options (optional)
 
 An options object containing configuration. The following values can be provided:
 
-*   `pathname` - {String} - A path which will be appended to the content root of the component when requested.
-*   `query` - {Object} - An Object which will be appended as query parameters to the request to fetch the component's content.
+-   `pathname` - {String} - A path which will be appended to the content root of the component when requested.
+-   `query` - {Object} - An Object which will be appended as query parameters to the request to fetch the component's content.
 
 ### .stream(podiumContext, options)
 
@@ -292,14 +296,14 @@ Streams the content of the component. Returns a `ReadStream`.
 
 #### podiumContext (required)
 
-The Podium Context. See https://github.schibsted.io/finn/podium/tree/master/packages/podium-context
+The Podium Context. See https://github.com/podium-lib/context
 
 #### options (optional)
 
 An options object containing configuration. The following values can be provided:
 
-*   `pathname` - {String} - A path which will be appended to the content root of the component when requested.
-*   `query` - {Object} - An Object which will be appended as query parameters to the request to fetch the component's content.
+-   `pathname` - {String} - A path which will be appended to the content root of the component when requested.
+-   `query` - {Object} - An Object which will be appended as query parameters to the request to fetch the component's content.
 
 ### .name
 

@@ -1,3 +1,5 @@
+/* eslint-disable import/order */
+
 'use strict';
 
 const Manifest = require('../lib/resolver.manifest.js');
@@ -16,7 +18,7 @@ const lolex = require('lolex');
 test('resolver.manifest() - object tag - should be PodletClientManifestResolver', () => {
     const manifest = new Manifest();
     expect(Object.prototype.toString.call(manifest)).toEqual(
-        '[object PodletClientManifestResolver]'
+        '[object PodletClientManifestResolver]',
     );
 });
 
@@ -292,7 +294,7 @@ test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true
 
     await manifest.resolve(state);
     expect(state.manifest.assets.css).toEqual(
-        `${service.address}/${server.assets.css}`
+        `${service.address}/${server.assets.css}`,
     );
 
     await server.close();
@@ -312,7 +314,7 @@ test('resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true
 
     await manifest.resolve(state);
     expect(state.manifest.assets.css).toEqual(
-        'http://does.not.mather.com/a.css'
+        'http://does.not.mather.com/a.css',
     );
 
     await server.close();
@@ -345,7 +347,7 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" 
 
     await manifest.resolve(state);
     expect(state.manifest.assets.js).toEqual(
-        `${service.address}/${server.assets.js}`
+        `${service.address}/${server.assets.js}`,
     );
 
     await server.close();
@@ -403,7 +405,7 @@ test('resolver.manifest() - a "proxy" target in manifest is absolute - should ke
 
     await manifest.resolve(state);
     expect(state.manifest.proxy.bar).toEqual(
-        'http://does.not.mather.com/api/bar'
+        'http://does.not.mather.com/api/bar',
     );
 
     await server.close();
@@ -425,7 +427,7 @@ test('resolver.manifest() - "proxy" targets in manifest is both absolute and rel
 
     await manifest.resolve(state);
     expect(state.manifest.proxy.bar).toEqual(
-        'http://does.not.mather.com/api/bar'
+        'http://does.not.mather.com/api/bar',
     );
     expect(state.manifest.proxy.foo).toEqual(`${service.address}/api/foo`);
 

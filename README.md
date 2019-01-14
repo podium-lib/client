@@ -1,6 +1,7 @@
 # @podium/client
 
 [![Build Status](https://travis-ci.org/podium-lib/client.svg?branch=master)](https://travis-ci.org/podium-lib/client) [![Greenkeeper badge](https://badges.greenkeeper.io/podium-lib/client.svg)](https://greenkeeper.io/)
+[![Known Vulnerabilities](https://snyk.io/test/github/podium-lib/client/badge.svg)](https://snyk.io/test/github/podium-lib/client)
 
 Client for fetching podium component fragments over HTTP.
 

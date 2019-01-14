@@ -1,0 +1,11 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "example/layout/package.json",
+        "example/podlet/package.json",
+        "package.json"
+      ]
+    }
+  }
+}

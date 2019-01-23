@@ -52,9 +52,10 @@ test('integration - throwable:false - remote manifest can not be resolved - shou
 });
 
 test('integration - throwable:false - remote fallback can not be resolved - should resolve with empty string', async () => {
-    const server = new Faker();
-    server.fallback = 'http://does.not.exist.finn.no/fallback.html';
-    server.content = '/error'; // set to trigger fallback senario
+    const server = new Faker({
+        fallback: 'http://does.not.exist.finn.no/fallback.html',
+        content: '/error', // set to trigger fallback senario
+    });
 
     const service = await server.listen();
 
@@ -68,9 +69,10 @@ test('integration - throwable:false - remote fallback can not be resolved - shou
 });
 
 test('integration - throwable:false - remote fallback responds with http 500 - should resolve with empty string', async () => {
-    const server = new Faker();
-    server.fallback = 'error';
-    server.content = '/error'; // set to trigger fallback senario
+    const server = new Faker({
+        fallback: 'error',
+        content: '/error', // set to trigger fallback senario
+    });
 
     const service = await server.listen();
 
@@ -86,9 +88,10 @@ test('integration - throwable:false - remote fallback responds with http 500 - s
 test('integration - throwable:true - remote content can not be resolved - should throw', async () => {
     expect.hasAssertions();
 
-    const server = new Faker();
-    server.fallback = '/fallback.html';
-    server.content = 'http://does.not.exist.finn.no/content.html';
+    const server = new Faker({
+        fallback: '/fallback.html',
+        content: 'http://does.not.exist.finn.no/content.html',
+    });
 
     const service = await server.listen();
 
@@ -109,9 +112,10 @@ test('integration - throwable:true - remote content can not be resolved - should
 });
 
 test('integration - throwable:false - remote content can not be resolved - should resolve with fallback', async () => {
-    const server = new Faker();
-    server.fallback = '/fallback.html';
-    server.content = 'http://does.not.exist.finn.no/content.html';
+    const server = new Faker({
+        fallback: '/fallback.html',
+        content: 'http://does.not.exist.finn.no/content.html',
+    });
 
     const service = await server.listen();
 
@@ -127,9 +131,10 @@ test('integration - throwable:false - remote content can not be resolved - shoul
 test('integration - throwable:true - remote content responds with http 500 - should throw', async () => {
     expect.hasAssertions();
 
-    const server = new Faker();
-    server.fallback = '/fallback.html';
-    server.content = '/error';
+    const server = new Faker({
+        fallback: '/fallback.html',
+        content: '/error',
+    });
 
     const service = await server.listen();
 
@@ -150,9 +155,10 @@ test('integration - throwable:true - remote content responds with http 500 - sho
 });
 
 test('integration - throwable:false - remote content responds with http 500 - should resolve with fallback', async () => {
-    const server = new Faker();
-    server.fallback = '/fallback.html';
-    server.content = '/error';
+    const server = new Faker({
+        fallback: '/fallback.html',
+        content: '/error',
+    });
 
     const service = await server.listen();
 
@@ -166,8 +172,9 @@ test('integration - throwable:false - remote content responds with http 500 - sh
 });
 
 test('integration - throwable:false - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and resolve with fallback', async () => {
-    const server = new Faker();
-    server.fallback = '/fallback.html';
+    const server = new Faker({
+        fallback: '/fallback.html',
+    });
 
     const service = await server.listen();
 
@@ -196,8 +203,9 @@ test('integration - throwable:false - manifest / content fetching goes into recu
 test('integration - throwable:true - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and then throw', async () => {
     expect.hasAssertions();
 
-    const server = new Faker();
-    server.fallback = '/fallback.html';
+    const server = new Faker({
+        fallback: '/fallback.html',
+    });
 
     const service = await server.listen();
 

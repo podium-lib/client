@@ -220,8 +220,9 @@ test('resolver.manifest() - "content" in manifest is relative - "state.manifest.
 });
 
 test('resolver.manifest() - "content" in manifest is absolute - "state.manifest.content" should be absolute', async () => {
-    const server = new Faker();
-    server.content = 'http://does.not.mather.com';
+    const server = new Faker({
+        content: 'http://does.not.mather.com',
+    });
     const service = await server.listen();
 
     const manifest = new Manifest();
@@ -236,8 +237,10 @@ test('resolver.manifest() - "content" in manifest is absolute - "state.manifest.
 });
 
 test('resolver.manifest() - "fallback" in manifest is relative - "state.manifest.fallback" should be absolute', async () => {
-    const server = new Faker();
-    server.fallback = '/fallback.html';
+    const server = new Faker({
+        fallback: '/fallback.html',
+    });
+
     const service = await server.listen();
 
     const manifest = new Manifest();
@@ -252,8 +255,9 @@ test('resolver.manifest() - "fallback" in manifest is relative - "state.manifest
 });
 
 test('resolver.manifest() - "fallback" in manifest is absolute - "state.manifest.fallback" should be absolute', async () => {
-    const server = new Faker();
-    server.fallback = 'http://does.not.mather.com';
+    const server = new Faker({
+        fallback: 'http://does.not.mather.com',
+    });
     const service = await server.listen();
 
     const manifest = new Manifest();

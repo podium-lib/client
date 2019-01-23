@@ -44,10 +44,11 @@ test('resolver.fallback() - fallback field is a URI - should fetch fallback and 
     const server = new Faker();
     const service = await server.listen();
 
-    server.fallback = `${service.address}/fallback.html`;
+    const manifest = server.manifest;
+    manifest.fallback = `${service.address}/fallback.html`;
 
     const state = new State({ uri: service.options.uri });
-    state.manifest = server.manifest;
+    state.manifest = manifest;
 
     const fallback = new Fallback();
     const result = await fallback.resolve(state);
@@ -60,10 +61,11 @@ test('resolver.fallback() - fallback field is a URI - should fetch fallback and 
     const server = new Faker();
     const service = await server.listen();
 
-    server.fallback = `${service.address}/fallback.html`;
+    const manifest = server.manifest;
+    manifest.fallback = `${service.address}/fallback.html`;
 
     const state = new State({ uri: service.options.uri });
-    state.manifest = server.manifest;
+    state.manifest = manifest;
 
     const fallback = new Fallback();
     const result = await fallback.resolve(state);

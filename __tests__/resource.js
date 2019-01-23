@@ -152,8 +152,6 @@ test('resource.refresh() - manifest with fallback is available - should get mani
     const server = new Faker({ version: '1.0.0' });
     const service = await server.listen();
 
-    server.fallback = `${service.address}/fallback.html`;
-
     const client = new Client();
     const component = client.register(service.options);
 

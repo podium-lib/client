@@ -11,7 +11,11 @@ const url = require('url');
 
 class FakeServer extends EventEmitter {
     constructor({
+        manifest = '/manifest.json',
+        fallback = '/fallback.html',
+        content = '/index.html',
         version = '1.0.0',
+        pathname = '/',
         name = 'component',
         assets = {},
         proxy = {},
@@ -22,25 +26,32 @@ class FakeServer extends EventEmitter {
         this._app = express();
         this._server = undefined;
 
-        this._podlet = new Podlet({ name, version });
+        this._podlet = new Podlet({
+            manifest,
+            fallback,
+            content,
+            pathname,
+            version,
+            name,
+        });
 
         // TODO: Make it so that "assets" is not set through constructor
         if (assets.js) {
-            this._podlet.js(assets.js);
+            this._podlet.js({ value: assets.js });
         }
 
         if (assets.css) {
-            this._podlet.css(assets.css);
+            this._podlet.css({ value: assets.css });
         }
 
         // TODO: Make it so that "proxy" is not set through constructor
         Object.keys(proxy).forEach(key => {
-            this._podlet.proxy(proxy[key], key);
+            this._podlet.proxy({ target: proxy[key], name: key });
         });
 
-        this._routeManifest = this._podlet.manifest('/manifest.json');
-        this._routeContent = this._podlet.content('/index.html');
-        this._routeFallback = this._podlet.fallback('/fallback.html');
+        this._routeManifest = this._podlet.manifest();
+        this._routeContent = this._podlet.content();
+        this._routeFallback = this._podlet.fallback();
         this._routeError = '/error';
 
         this._headersManifest = {};
@@ -86,8 +97,8 @@ class FakeServer extends EventEmitter {
 
         Object.defineProperty(this, 'content', {
             get: () => this._podlet.content(),
-            set: value => {
-                this._podlet.content(value);
+            set: () => {
+                throw new Error('Cannot set read-only property.');
             },
             configurable: true,
             enumerable: true,
@@ -95,8 +106,8 @@ class FakeServer extends EventEmitter {
 
         Object.defineProperty(this, 'fallback', {
             get: () => this._podlet.fallback(),
-            set: value => {
-                this._podlet.fallback(value);
+            set: () => {
+                throw new Error('Cannot set read-only property.');
             },
             configurable: true,
             enumerable: true,
@@ -176,6 +187,13 @@ class FakeServer extends EventEmitter {
 
         this._app.use(this._podlet.middleware());
 
+        // Error route
+        this._app.get(this._routeError, (req, res) => {
+            this._metrics.error++;
+            this.emit('req:error', this._metrics.error, req);
+            res.status(500).send('Internal server error');
+        });
+
         // Manifest route
         this._app.get(this._routeManifest, (req, res) => {
             this._metrics.manifest++;
@@ -204,13 +222,6 @@ class FakeServer extends EventEmitter {
             });
             this.emit('req:fallback', this._metrics.fallback, req);
             res.status(200).send(this._bodyFallback);
-        });
-
-        // Error route
-        this._app.get(this._routeError, (req, res) => {
-            this._metrics.error++;
-            this.emit('req:error', this._metrics.error, req);
-            res.status(500).send('Internal server error');
         });
 
         // 404 Not found status

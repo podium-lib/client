@@ -5,6 +5,7 @@
 const Content = require('../lib/resolver.content.js');
 const stream = require('stream');
 const State = require('../lib/state.js');
+const utils = require('@podium/utils');
 const Faker = require('../test/faker');
 
 /**
@@ -12,6 +13,9 @@ const Faker = require('../test/faker');
  * If "state.reqOptions.podiumContext" does not exist the content resolver throws a
  * "Cannot read property 'resourceMountPath' of undefined" error.
  * This is britle in the implementation. Harden.
+ *
+ * TODO II:
+ * Resolving URI's should happen in state object and not in manifest resolver.
  */
 
 test('resolver.content() - object tag - should be PodletClientContentResolver', () => {
@@ -27,8 +31,15 @@ test('resolver.content() - state "streamThrough" is true - should stream content
     const server = new Faker();
     const service = await server.listen();
     const state = new State({ uri: service.options.uri }, {}, true);
-    server.content = service.content;
-    state.manifest = server.manifest;
+
+    // See TODO II
+    const { manifest } = server;
+    manifest.content = utils.uriRelativeToAbsolute(
+        server.manifest.content,
+        state.manifestUri
+    );
+
+    state.manifest = manifest;
     state.status = 'fresh';
 
     // See TODO I
@@ -54,10 +65,16 @@ test('resolver.content() - state "streamThrough" is true - should stream content
 test('resolver.content() - state "streamThrough" is false - should buffer content into state.content', async () => {
     const server = new Faker();
     const service = await server.listen();
-
     const state = new State({ uri: service.options.uri }, {}, false);
-    server.content = service.content;
-    state.manifest = server.manifest;
+
+    // See TODO II
+    const { manifest } = server;
+    manifest.content = utils.uriRelativeToAbsolute(
+        server.manifest.content,
+        state.manifestUri
+    );
+
+    state.manifest = manifest;
     state.status = 'fresh';
 
     // See TODO I
@@ -73,10 +90,16 @@ test('resolver.content() - state "streamThrough" is false - should buffer conten
 test('resolver.content() - "podlet-version" header is same as manifest.version - should keep manifest on state.manifest', async () => {
     const server = new Faker();
     const service = await server.listen();
-
     const state = new State({ uri: service.options.uri });
-    server.content = service.content;
-    state.manifest = server.manifest;
+
+    // See TODO II
+    const { manifest } = server;
+    manifest.content = utils.uriRelativeToAbsolute(
+        server.manifest.content,
+        state.manifestUri
+    );
+
+    state.manifest = manifest;
     state.status = 'cached';
 
     // See TODO I
@@ -97,8 +120,15 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
     };
 
     const state = new State({ uri: service.options.uri });
-    server.content = service.content;
-    state.manifest = server.manifest;
+
+    // See TODO II
+    const { manifest } = server;
+    manifest.content = utils.uriRelativeToAbsolute(
+        server.manifest.content,
+        state.manifestUri
+    );
+
+    state.manifest = manifest;
     state.status = 'cached';
 
     // See TODO I
@@ -119,8 +149,15 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
     };
 
     const state = new State({ uri: service.options.uri });
-    server.content = service.content;
-    state.manifest = server.manifest;
+
+    // See TODO II
+    const { manifest } = server;
+    manifest.content = utils.uriRelativeToAbsolute(
+        server.manifest.content,
+        state.manifestUri
+    );
+
+    state.manifest = manifest;
     state.status = 'cached';
 
     // See TODO I
@@ -129,7 +166,7 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
     const content = new Content();
     await content.resolve(state);
 
-    expect(state.manifest).toEqual(server.manifest);
+    expect(state.manifest.version).toEqual(server.manifest.version);
     expect(state.status).toEqual('stale');
     await server.close();
 });

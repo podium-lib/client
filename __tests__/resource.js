@@ -104,6 +104,26 @@ test('resource.stream() - should return a stream', async () => {
     await server.close();
 });
 
+test('resource.stream() - should emit header event', async () => {
+    expect.assertions(1);
+
+    const server = new Faker({ version: '1.0.0' });
+    const service = await server.listen();
+
+    const resource = new Resource(new Cache(), service.options);
+    const strm = resource.stream({});
+    strm.once('headers', (header) => {
+        expect(header['podlet-version']).toEqual(
+            '1.0.0',
+        );
+    });
+
+    await getStream(strm);
+
+    await server.close();
+});
+
+
 /**
  * .refresh()
  */

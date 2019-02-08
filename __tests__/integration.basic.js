@@ -238,3 +238,25 @@ test('integration - throwable:true - manifest / content fetching goes into recur
 
     await server.close();
 });
+
+test('integration basic - headers - should pass on headers', async () => {
+    expect.hasAssertions();
+
+    const serverA = new Faker({ name: 'podlet' });
+    const serviceA = await serverA.listen();
+    serverA.on('req:content', (content, req) => {
+        expect(req.headers.foo).toBe('bar');
+        expect(req.headers['podium-ctx']).toBe('custom');
+    });
+
+    const client = new Client();
+    const a = client.register(serviceA.options);
+
+    await a.fetch({'podium-ctx': 'custom'}, {
+        headers: {
+            foo: 'bar'
+        }
+    });
+
+    await serverA.close();
+});

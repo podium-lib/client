@@ -291,6 +291,7 @@ The Podium Context. See https://github.com/podium-lib/context
 An options object containing configuration. The following values can be provided:
 
 -   `pathname` - {String} - A path which will be appended to the content root of the component when requested.
+-   `headers` - {Object} - An Object which will be appended as http headers to the request to fetch the component's content.
 -   `query` - {Object} - An Object which will be appended as query parameters to the request to fetch the component's content.
 
 ### .stream(podiumContext, options)
@@ -306,6 +307,7 @@ The Podium Context. See https://github.com/podium-lib/context
 An options object containing configuration. The following values can be provided:
 
 -   `pathname` - {String} - A path which will be appended to the content root of the component when requested.
+-   `headers` - {Object} - An Object which will be appended as http headers to the request to fetch the component's content.
 -   `query` - {Object} - An Object which will be appended as query parameters to the request to fetch the component's content.
 
 ### .name

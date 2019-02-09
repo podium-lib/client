@@ -242,46 +242,46 @@ test('integration - throwable:true - manifest / content fetching goes into recur
 test('integration basic - set headers argument - should pass on headers to request', async () => {
     expect.hasAssertions();
 
-    const serverA = new Faker({ name: 'podlet' });
-    const serviceA = await serverA.listen();
-    serverA.on('req:content', (content, req) => {
+    const server = new Faker({ name: 'podlet' });
+    const service = await server.listen();
+    server.on('req:content', async (content, req) => {
         expect(req.headers.foo).toBe('bar');
         expect(req.headers['podium-ctx']).toBe('foo');
+
+        // Server must be closed here, unless Jest just passes
+        // the test even if it fail. Silly jest...
+        await server.close();
     });
 
     const client = new Client();
-    const a = client.register(serviceA.options);
+    const a = client.register(service.options);
 
     await a.fetch({'podium-ctx': 'foo'}, {
         headers: {
             foo: 'bar'
         }
     });
-
-    await serverA.close();
 });
 
 test('integration basic - set headers argument - header has a "user-agent" - should override "user-agent" with podium agent', async () => {
     expect.hasAssertions();
 
-    const serverA = new Faker({ name: 'podlet' });
-    const serviceA = await serverA.listen();
-    serverA.on('req:content', (content, req) => {
-        console.log(req.headers['user-agent']);
-        // the above line prints '@podium/client 3.0.0-beta.3' which is correct
-        // Iow; the below comparison is '@podium/client 3.0.0-beta.3' === 'foo'
-        // Which should be a failed test
-        expect(req.headers['user-agent']).toBe('foo');
+    const server = new Faker({ name: 'podlet' });
+    const service = await server.listen();
+    server.on('req:content', async (content, req) => {
+        expect(req.headers['user-agent'].startsWith('@podium/client')).toBeTruthy();
+
+        // Server must be closed here, unless Jest just passes
+        // the test even if it fail. Silly jest...
+        await server.close();
     });
 
     const client = new Client();
-    const a = client.register(serviceA.options);
+    const a = client.register(service.options);
 
     await a.fetch({'podium-ctx': 'foo'}, {
         headers: {
             "User-Agent": 'bar'
         }
     });
-
-    await serverA.close();
 });

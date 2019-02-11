@@ -238,3 +238,50 @@ test('integration - throwable:true - manifest / content fetching goes into recur
 
     await server.close();
 });
+
+test('integration basic - set headers argument - should pass on headers to request', async () => {
+    expect.hasAssertions();
+
+    const server = new Faker({ name: 'podlet' });
+    const service = await server.listen();
+    server.on('req:content', async (content, req) => {
+        expect(req.headers.foo).toBe('bar');
+        expect(req.headers['podium-ctx']).toBe('foo');
+
+        // Server must be closed here, unless Jest just passes
+        // the test even if it fail. Silly jest...
+        await server.close();
+    });
+
+    const client = new Client();
+    const a = client.register(service.options);
+
+    await a.fetch({'podium-ctx': 'foo'}, {
+        headers: {
+            foo: 'bar'
+        }
+    });
+});
+
+test('integration basic - set headers argument - header has a "user-agent" - should override "user-agent" with podium agent', async () => {
+    expect.hasAssertions();
+
+    const server = new Faker({ name: 'podlet' });
+    const service = await server.listen();
+    server.on('req:content', async (content, req) => {
+        expect(req.headers['user-agent'].startsWith('@podium/client')).toBeTruthy();
+
+        // Server must be closed here, unless Jest just passes
+        // the test even if it fail. Silly jest...
+        await server.close();
+    });
+
+    const client = new Client();
+    const a = client.register(service.options);
+
+    await a.fetch({'podium-ctx': 'foo'}, {
+        headers: {
+            "User-Agent": 'bar'
+        }
+    });
+});

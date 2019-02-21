@@ -2,11 +2,22 @@
   "name": "@podium/client",
   "version": "3.0.0",
   "main": "lib/client.js",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
+  "keywords": [
+    "micro services",
+    "micro frontend",
+    "components",
+    "podium",
+    "http"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:podium-lib/client.git"
   },
+  "bugs": {
+    "url": "https://github.com/podium-lib/issues"
+  },
+  "homepage": "https://podium-lib.io/",
   "files": [
     "lib"
   ],
@@ -25,14 +36,14 @@
     "@metrics/client": "2.3.1",
     "@podium/schemas": "3.0.0",
     "@podium/utils": "3.1.1",
-    "abslog": "^2.1.1",
-    "boom": "^7.2.0",
-    "http-cache-semantics": "^4.0.0",
+    "abslog": "2.4.0",
+    "boom": "^7.3.0",
+    "http-cache-semantics": "^4.0.3",
     "joi": "^14.3.1",
     "lodash.clonedeep": "^4.5.0",
-    "readable-stream": "^3.0.3",
-    "request": "^2.85.0",
-    "ttl-mem-cache": "^4.0.0"
+    "readable-stream": "^3.1.1",
+    "request": "^2.88.0",
+    "ttl-mem-cache": "4.0.2"
   },
   "devDependencies": {
     "@podium/podlet": "3.0.0-beta.1",

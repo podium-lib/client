@@ -1,9 +1,13 @@
 # @podium/client
 
+Client for fetching podium component fragments over HTTP.
+
 [![Build Status](https://travis-ci.org/podium-lib/client.svg?branch=master)](https://travis-ci.org/podium-lib/client) [![Greenkeeper badge](https://badges.greenkeeper.io/podium-lib/client.svg)](https://greenkeeper.io/)
 [![Known Vulnerabilities](https://snyk.io/test/github/podium-lib/client/badge.svg)](https://snyk.io/test/github/podium-lib/client)
 
-Client for fetching podium component fragments over HTTP.
+This module is intended for internal use in Podium and is not a module an end
+user would use directly. End users will typically interact with this module
+through higher level modules such as the [@podium/layout].
 
 ## Installation
 
@@ -63,7 +67,8 @@ const Client = require('@podium/client');
 const client = new Client(options);
 ```
 
-The client instance is iterable and holds a reference to each registered resource.
+The client instance is iterable and holds a reference to each registered
+resource.
 
 ```js
 const Client = require('@podium/client');
@@ -79,7 +84,8 @@ for (let resource of client) {
 
 ### options (optional)
 
-An options object containing configuration. The following values can be provided:
+An options object containing configuration. The following values can be
+provided:
 
 -   `retries` - {Number} - The number of times the client should retry to settle a version number conflict before terminating. See the section "[on retrying](#on-retrying)" for more information. Default: 4
 -   `timeout` - {Number} - Default value, in milliseconds, for how long a request should wait before the connection is terminated. Default: 1000
@@ -136,7 +142,8 @@ The following values can be provided:
 
 ### .js()
 
-Retrieve list of all JavaScript references from all registered and fetched components.
+Retrieve list of all JavaScript references from all registered and fetched
+components.
 
 ```js
 const Client = require('@podium/client');
@@ -158,7 +165,8 @@ client.js(); // Array of js entries
 
 ### .css()
 
-Retrieve a list of all CSS references from all registered and fetched components.
+Retrieve a list of all CSS references from all registered and fetched
+components.
 
 ```js
 const Client = require('@podium/client');
@@ -288,7 +296,8 @@ The Podium Context. See https://github.com/podium-lib/context
 
 #### options (optional)
 
-An options object containing configuration. The following values can be provided:
+An options object containing configuration. The following values can be
+provided:
 
 -   `pathname` - {String} - A path which will be appended to the content root of the component when requested.
 -   `headers` - {Object} - An Object which will be appended as http headers to the request to fetch the component's content.
@@ -304,7 +313,8 @@ The Podium Context. See https://github.com/podium-lib/context
 
 #### options (optional)
 
-An options object containing configuration. The following values can be provided:
+An options object containing configuration. The following values can be
+provided:
 
 -   `pathname` - {String} - A path which will be appended to the content root of the component when requested.
 -   `headers` - {Object} - An Object which will be appended as http headers to the request to fetch the component's content.
@@ -312,8 +322,8 @@ An options object containing configuration. The following values can be provided
 
 ### .name
 
-A property returning the name of the podium resource.
-This is the name provided during the call to `register`.
+A property returning the name of the podium resource. This is the name provided
+during the call to `register`.
 
 ### .uri
 
@@ -325,9 +335,9 @@ The client has an internal cache where it keeps a cached version of the
 manifest for each registered Podium component.
 
 By default all manifests are cached for 24 hours unless a new
-version of the manifest is detected by a change in the `podlet-version` HTTP header
-on the content URI. When this happens, the cache is thrown away and the fresh version of the
-manifest is cached.
+version of the manifest is detected by a change in the `podlet-version` HTTP
+header on the content URI. When this happens, the cache is thrown away and the
+fresh version of the manifest is cached.
 
 The default length of time the manifest is cached for can be configured
 by setting `maxAge` in the constructor of the client.
@@ -336,10 +346,9 @@ by setting `maxAge` in the constructor of the client.
 const client = new Client({ maxAge: 1000 * 60 * 60 * 4 });
 ```
 
-It is also possible to control how long a manifest should be cached in
-the client from a Podium component. This is done by setting a [RFC 7234](https://tools.ietf.org/html/rfc7234)
-compatible HTTP header on the manifest on the server serving the
-Podium component.
+It is also possible to control how long a manifest should be cached in the
+client from a Podium component. This is done by setting a [RFC 7234] compatible
+HTTP header on the manifest on the server serving the Podium component.
 
 Example: This will cache the manifest for 1 hour:
 
@@ -356,14 +365,15 @@ app.get('/manifest.json', (req, res) => {
 
 ## Defining a component as throwable
 
-By default the client will never throw if something fails in the process
-of retreiving the manifest, the fallback or the content itself. It will
-simply provide a fallback if it has one or an empty String for the
-resource in an error situation.
+By default the client will never throw if something fails in the process of
+retreiving the manifest, the fallback or the content itself. It will simply
+provide a fallback if it has one or an empty String for the resource in an error
+situation.
 
-There are however, cases where throwing an error is more appropriate.
-This can be achieved by setting the option `throwable` to `true` in the `.register()` method.
-If an error is thrown in the process of retrieving the manifest, the fallback or the content then it can then be acted upon.
+There are however, cases where throwing an error is more appropriate. This can
+be achieved by setting the option `throwable` to `true` in the `.register()`
+method. If an error is thrown in the process of retrieving the manifest, the
+fallback or the content then it can then be acted upon.
 
 Example:
 
@@ -391,17 +401,16 @@ Promise.all([foo.fetch(), bar.fetch()])
     });
 ```
 
-In this example, the `catch` will be triggered if `bar` encounters
-an error in the process of retrieving content from the remote.
-If the same happens with `foo` the `catch` will NOT be triggered.
+In this example, the `catch` will be triggered if `bar` encounters an error in
+the process of retrieving content from the remote. If the same happens with
+`foo` the `catch` will NOT be triggered.
 
-When a resource is flagged as throwable and it throws an error the
-error will be an enriched [boom error object](https://github.com/hapijs/boom)
-with detailed information on what went wrong.
+When a resource is flagged as throwable and it throws an error the error will be
+an enriched [boom] with detailed information on what went wrong.
 
-The error object will reflect the http status code of the remote.
-In other words; if the remote responded with a 404, the `statusCode`
-in the error object will be 404.
+The error object will reflect the http status code of the remote. In other
+words; if the remote responded with a 404, the `statusCode` in the error object
+will be 404.
 
 ## On retrying
 
@@ -409,19 +418,46 @@ A component consists of a manifest which contains metadata about that component.
 This manifest is fetched and cached by the client together with it's fallback
 content if such content has been defined.
 
-Detection of updates to a component is done by the content route in the component
-serving an HTTP header with the same version number as in the component's manifest
-and if the client detects a difference between the HTTP header version number
-and the version in the manifest cached in the client, the component has changed.
+Detection of updates to a component is done by the content route in the
+component serving an HTTP header with the same version number as in the
+component's manifest and if the client detects a difference between the HTTP
+header version number and the version in the manifest cached in the client, the
+component has changed.
 
-In the event of an update the client will have to do multiple HTTP requests
-to refetch the manifest, fallback and content. In a distributed
-system there can be windows where a component can exist with two versions at
-the same time during a rolling deploy. In such a scenario the client might
-go into an "update loop" due to hitting different versions of the component.
+In the event of an update the client will have to do multiple HTTP requests to
+refetch the manifest, fallback and content. In a distributed system there can be
+windows where a component can exist with two versions at the same time during a
+rolling deploy. In such a scenario the client might go into an "update loop" due
+to hitting different versions of the component.
 
-In a rolling deploy this is not nessessery a bad thing. But to protect both
-the application using the client and the component itself, the client will terminate
-the process of updating if such an "update loop" is detected. How many times
-the client will retry settling an update before termination can be set by
-the `retries` argument in the client constructor and the `.register()` method.
+In a rolling deploy this is not nessessery a bad thing. But to protect both the
+application using the client and the component itself, the client will terminate
+the process of updating if such an "update loop" is detected. How many times the
+client will retry settling an update before termination can be set by the
+`retries` argument in the client constructor and the `.register()` method.
+
+## License
+
+Copyright (c) 2019 FINN.no
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+[@podium/layout]: https://github.com/podium-lib/layout '@podium/layout'
+[rfc 7234]: https://tools.ietf.org/html/rfc7234 'RFC 7234'
+[boom]: https://github.com/hapijs/boom 'Boom'

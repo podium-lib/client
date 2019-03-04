@@ -24,7 +24,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "jest .",
+    "test": "node --trace-warnings node_modules/.bin/jest --no-cache .",
     "test:filter": "jest -t 'foofoo'",
     "test:verbose": "jest --verbose",
     "test:coverage": "jest --coverage",
@@ -41,12 +41,12 @@
     "http-cache-semantics": "^4.0.3",
     "joi": "^14.3.1",
     "lodash.clonedeep": "^4.5.0",
-    "readable-stream": "^3.1.1",
+    "readable-stream": "^3.2.0",
     "request": "^2.88.0",
     "ttl-mem-cache": "4.0.2"
   },
   "devDependencies": {
-    "@podium/podlet": "3.0.0-beta.1",
+    "@podium/podlet": "3.0.0",
     "benchmark": "^2.1.4",
     "eslint": "^5.13.0",
     "eslint-config-airbnb-base": "^13.1.0",

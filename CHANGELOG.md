@@ -6,6 +6,10 @@ The latest version of this document is always available in [releases][releases-u
 
 ## [unreleased]
 
+## [3.0.1] - 2019-02-21
+
+-   Updated dependencies.
+
 ## [3.0.0] - 2019-02-21
 
 -   Initial open source release.
@@ -33,7 +37,8 @@ The latest version of this document is always available in [releases][releases-u
 -   Updated @podium/schema to version 2.1.1 - #75
 -   Added .refresh() method for loading / refreshing manifest and fallbacks without touching the content - #76
 
-[unreleased]: https://github.com/podium-lib/client/compare/v3.0.0...HEAD
+[unreleased]: https://github.com/podium-lib/client/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/podium-lib/client/compare/v2.2.3...v3.0.1
 [3.0.0]: https://github.com/podium-lib/client/compare/v2.2.3...v3.0.0
 [2.2.3]: https://github.com/podium-lib/client/compare/v2.2.2...v2.2.3
 [2.2.2]: https://github.com/podium-lib/client/compare/v2.2.1...v2.2.2

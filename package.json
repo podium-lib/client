@@ -24,7 +24,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "node --trace-warnings node_modules/.bin/jest --no-cache .",
+    "test": "jest .",
     "test:filter": "jest -t 'foofoo'",
     "test:verbose": "jest --verbose",
     "test:coverage": "jest --coverage",

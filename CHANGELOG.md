@@ -6,6 +6,10 @@ The latest version of this document is always available in [releases][releases-u
 
 ## [unreleased]
 
+## [3.0.3] - 2019-03-10
+
+-   Updated @metrics/client to version 2.4.1 - [#15](https://github.com/podium-lib/context/pull/15)
+
 ## [3.0.2] - 2019-03-05
 
 -   Add error event listeners on all metric streams - [#12](https://github.com/podium-lib/client/pull/12)
@@ -41,7 +45,8 @@ The latest version of this document is always available in [releases][releases-u
 -   Updated @podium/schema to version 2.1.1 - #75
 -   Added .refresh() method for loading / refreshing manifest and fallbacks without touching the content - #76
 
-[unreleased]: https://github.com/podium-lib/client/compare/v3.0.2...HEAD
+[unreleased]: https://github.com/podium-lib/client/compare/v3.0.3...HEAD
+[3.0.3]: https://github.com/podium-lib/client/compare/v3.0.2...v3.0.3
 [3.0.2]: https://github.com/podium-lib/client/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/podium-lib/client/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/podium-lib/client/compare/v2.2.3...v3.0.0

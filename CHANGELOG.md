@@ -8,7 +8,7 @@ The latest version of this document is always available in [releases][releases-u
 
 ## [3.0.3] - 2019-03-10
 
--   Updated @metrics/client to version 2.4.1 - [#15](https://github.com/podium-lib/context/pull/15)
+-   Updated @metrics/client to version 2.4.1 - [#15](https://github.com/podium-lib/client/pull/15)
 
 ## [3.0.2] - 2019-03-05
 

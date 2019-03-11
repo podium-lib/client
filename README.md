@@ -2,8 +2,10 @@
 
 Client for fetching podium component fragments over HTTP.
 
-[![Build Status](https://travis-ci.org/podium-lib/client.svg?branch=master)](https://travis-ci.org/podium-lib/client) [![Greenkeeper badge](https://badges.greenkeeper.io/podium-lib/client.svg)](https://greenkeeper.io/)
-[![Known Vulnerabilities](https://snyk.io/test/github/podium-lib/client/badge.svg)](https://snyk.io/test/github/podium-lib/client)
+[![Dependencies](https://img.shields.io/david/podium-lib/client.svg?style=flat-square)](https://david-dm.org/podium-lib/client)
+[![Build Status](http://img.shields.io/travis/podium-lib/client/master.svg?style=flat-square)](https://travis-ci.org/podium-lib/client)
+[![Greenkeeper badge](https://badges.greenkeeper.io/podium-lib/client.svg?style=flat-square)](https://greenkeeper.io/)
+[![Known Vulnerabilities](https://snyk.io/test/github/podium-lib/client/badge.svg?targetFile=package.json&style=flat-square)](https://snyk.io/test/github/podium-lib/client?targetFile=package.json)
 
 This module is intended for internal use in Podium and is not a module an end
 user would use directly. End users will typically interact with this module

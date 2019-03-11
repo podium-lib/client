@@ -6,6 +6,11 @@ The latest version of this document is always available in [releases][releases-u
 
 ## [unreleased]
 
+## [3.0.4] - 2019-03-11
+
+-   Listen for error events on the internal cache - [#17](https://github.com/podium-lib/client/pull/17)
+-   Remove the metric max listeners setting - [#16](https://github.com/podium-lib/client/pull/16)
+
 ## [3.0.3] - 2019-03-10
 
 -   Updated @metrics/client to version 2.4.1 - [#15](https://github.com/podium-lib/client/pull/15)
@@ -45,7 +50,8 @@ The latest version of this document is always available in [releases][releases-u
 -   Updated @podium/schema to version 2.1.1 - #75
 -   Added .refresh() method for loading / refreshing manifest and fallbacks without touching the content - #76
 
-[unreleased]: https://github.com/podium-lib/client/compare/v3.0.3...HEAD
+[unreleased]: https://github.com/podium-lib/client/compare/v3.0.4...HEAD
+[3.0.4]: https://github.com/podium-lib/client/compare/v3.0.3...v3.0.4
 [3.0.3]: https://github.com/podium-lib/client/compare/v3.0.2...v3.0.3
 [3.0.2]: https://github.com/podium-lib/client/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/podium-lib/client/compare/v3.0.0...v3.0.1

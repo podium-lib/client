@@ -6,6 +6,10 @@ The latest version of this document is always available in [releases][releases-u
 
 ## [unreleased]
 
+## [3.0.5] - 2019-03-15
+
+-   Use pipeline to stream content - [#20](https://github.com/podium-lib/client/pull/20)
+
 ## [3.0.4] - 2019-03-11
 
 -   Listen for error events on the internal cache - [#17](https://github.com/podium-lib/client/pull/17)
@@ -50,7 +54,8 @@ The latest version of this document is always available in [releases][releases-u
 -   Updated @podium/schema to version 2.1.1 - #75
 -   Added .refresh() method for loading / refreshing manifest and fallbacks without touching the content - #76
 
-[unreleased]: https://github.com/podium-lib/client/compare/v3.0.4...HEAD
+[unreleased]: https://github.com/podium-lib/client/compare/v3.0.5...HEAD
+[3.0.5]: https://github.com/podium-lib/client/compare/v3.0.4...v3.0.5
 [3.0.4]: https://github.com/podium-lib/client/compare/v3.0.3...v3.0.4
 [3.0.3]: https://github.com/podium-lib/client/compare/v3.0.2...v3.0.3
 [3.0.2]: https://github.com/podium-lib/client/compare/v3.0.1...v3.0.2

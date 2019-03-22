@@ -6,7 +6,7 @@
 
 const Resource = require('../lib/resource');
 const Faker = require('../test/faker');
-const stream = require('stream');
+const stream = require('readable-stream');
 const Cache = require('ttl-mem-cache');
 const getStream = require('get-stream');
 const Client = require('../');

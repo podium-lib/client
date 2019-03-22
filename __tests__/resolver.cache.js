@@ -2,7 +2,7 @@
 
 'use strict';
 
-const Cache = require('../lib/resolver.cache.js');
+const Cache = require('../lib/resolver.cache');
 const TtlMemCache = require('ttl-mem-cache');
 
 test('resolver.cache() - object tag - should be PodletClientCacheResolver', () => {

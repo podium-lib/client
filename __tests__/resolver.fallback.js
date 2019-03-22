@@ -3,8 +3,8 @@
 
 'use strict';
 
-const Fallback = require('../lib/resolver.fallback.js');
-const State = require('../lib/state.js');
+const HttpOutgoing = require('../lib/http-outgoing');
+const Fallback = require('../lib/resolver.fallback');
 const Faker = require('../test/faker');
 
 test('resolver.fallback() - object tag - should be PodletClientFallbackResolver', () => {
@@ -14,97 +14,97 @@ test('resolver.fallback() - object tag - should be PodletClientFallbackResolver'
     );
 });
 
-test('resolver.fallback() - fallback field is empty - should set value on "state.fallback" to empty String', async () => {
+test('resolver.fallback() - fallback field is empty - should set value on "outgoing.fallback" to empty String', async () => {
     const server = new Faker();
     const manifest = server.manifest;
     manifest.fallback = '';
 
-    const state = new State({ uri: 'http://example.com' });
-    state.manifest = manifest;
+    const outgoing = new HttpOutgoing({ uri: 'http://example.com' });
+    outgoing.manifest = manifest;
 
     const fallback = new Fallback();
-    const result = await fallback.resolve(state);
+    const result = await fallback.resolve(outgoing);
     expect(result.fallback).toBe('');
 });
 
-test('resolver.fallback() - fallback field contains invalid value - should set value on "state.fallback" to empty String', async () => {
+test('resolver.fallback() - fallback field contains invalid value - should set value on "outgoing.fallback" to empty String', async () => {
     const server = new Faker();
     const manifest = server.manifest;
     manifest.fallback = 'ht++ps://blæ.finn.no/fallback.html';
 
-    const state = new State({ uri: 'http://example.com' });
-    state.manifest = manifest;
+    const outgoing = new HttpOutgoing({ uri: 'http://example.com' });
+    outgoing.manifest = manifest;
 
     const fallback = new Fallback();
-    const result = await fallback.resolve(state);
+    const result = await fallback.resolve(outgoing);
     expect(result.fallback).toBe('');
 });
 
-test('resolver.fallback() - fallback field is a URI - should fetch fallback and set content on "state.fallback"', async () => {
+test('resolver.fallback() - fallback field is a URI - should fetch fallback and set content on "outgoing.fallback"', async () => {
     const server = new Faker();
     const service = await server.listen();
 
     const manifest = server.manifest;
     manifest.fallback = `${service.address}/fallback.html`;
 
-    const state = new State({ uri: service.options.uri });
-    state.manifest = manifest;
+    const outgoing = new HttpOutgoing({ uri: service.options.uri });
+    outgoing.manifest = manifest;
 
     const fallback = new Fallback();
-    const result = await fallback.resolve(state);
+    const result = await fallback.resolve(outgoing);
     expect(result.fallback).toBe(server.fallbackBody);
 
     await server.close();
 });
 
-test('resolver.fallback() - fallback field is a URI - should fetch fallback and set content on "state.manifest._fallback"', async () => {
+test('resolver.fallback() - fallback field is a URI - should fetch fallback and set content on "outgoing.manifest._fallback"', async () => {
     const server = new Faker();
     const service = await server.listen();
 
     const manifest = server.manifest;
     manifest.fallback = `${service.address}/fallback.html`;
 
-    const state = new State({ uri: service.options.uri });
-    state.manifest = manifest;
+    const outgoing = new HttpOutgoing({ uri: service.options.uri });
+    outgoing.manifest = manifest;
 
     const fallback = new Fallback();
-    const result = await fallback.resolve(state);
+    const result = await fallback.resolve(outgoing);
     expect(result.manifest._fallback).toBe(server.fallbackBody);
 
     await server.close();
 });
 
-test('resolver.fallback() - remote can not be resolved - "state.manifest" should be empty string', async () => {
-    const state = new State({
+test('resolver.fallback() - remote can not be resolved - "outgoing.manifest" should be empty string', async () => {
+    const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
     });
 
-    state.manifest = {
+    outgoing.manifest = {
         fallback: 'http://does.not.exist.finn.no/fallback.html',
     };
 
     const fallback = new Fallback();
-    await fallback.resolve(state);
-    expect(state.fallback).toBe('');
+    await fallback.resolve(outgoing);
+    expect(outgoing.fallback).toBe('');
 });
 
-test('resolver.fallback() - remote responds with http 500 - "state.manifest" should be empty string', async () => {
+test('resolver.fallback() - remote responds with http 500 - "outgoing.manifest" should be empty string', async () => {
     const server = new Faker();
     const service = await server.listen();
 
-    const state = new State({
+    const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         throwable: false,
     });
 
-    state.manifest = {
+    outgoing.manifest = {
         fallback: service.error,
     };
 
     const fallback = new Fallback();
-    await fallback.resolve(state);
-    expect(state.fallback).toBe('');
+    await fallback.resolve(outgoing);
+    expect(outgoing.fallback).toBe('');
 
     await server.close();
 });

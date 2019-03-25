@@ -15,8 +15,12 @@ test('integration basic - ', async () => {
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
-    expect(serverA.contentBody).toBe(await a.fetch({}));
-    expect(serverB.contentBody).toBe(await b.fetch({}));
+    expect({ content: serverA.contentBody, js: '', css: '' }).toEqual(
+        await a.fetch({}),
+    );
+    expect({ content: serverB.contentBody, js: '', css: '' }).toEqual(
+        await b.fetch({}),
+    );
 
     await Promise.all([serverA.close(), serverB.close()]);
 });
@@ -35,7 +39,7 @@ test('integration - throwable:true - remote manifest can not be resolved - shoul
         await component.fetch({});
     } catch (error) {
         expect(error.message).toMatch(
-            /No manifest available - Cannot read content/
+            /No manifest available - Cannot read content/,
         );
     }
 });
@@ -48,7 +52,7 @@ test('integration - throwable:false - remote manifest can not be resolved - shou
     });
 
     const result = await component.fetch({});
-    expect(result).toBe('');
+    expect(result.content).toBe('');
 });
 
 test('integration - throwable:false - remote fallback can not be resolved - should resolve with empty string', async () => {
@@ -63,7 +67,7 @@ test('integration - throwable:false - remote fallback can not be resolved - shou
     const component = client.register(service.options);
 
     const result = await component.fetch({});
-    expect(result).toBe('');
+    expect(result.content).toBe('');
 
     await server.close();
 });
@@ -80,7 +84,7 @@ test('integration - throwable:false - remote fallback responds with http 500 - s
     const component = client.register(service.options);
 
     const result = await component.fetch({});
-    expect(result).toBe('');
+    expect(result.content).toBe('');
 
     await server.close();
 });
@@ -123,7 +127,7 @@ test('integration - throwable:false - remote content can not be resolved - shoul
     const component = client.register(service.options);
 
     const result = await component.fetch({});
-    expect(result).toBe(server.fallbackBody);
+    expect(result).toEqual({ content: server.fallbackBody, js: '', css: '' });
 
     await server.close();
 });
@@ -166,7 +170,7 @@ test('integration - throwable:false - remote content responds with http 500 - sh
     const component = client.register(service.options);
 
     const result = await component.fetch({});
-    expect(result).toBe(server.fallbackBody);
+    expect(result).toEqual({ content: server.fallbackBody, js: '', css: '' });
 
     await server.close();
 });
@@ -189,7 +193,7 @@ test('integration - throwable:false - manifest / content fetching goes into recu
 
     const result = await component.fetch({});
 
-    expect(result).toBe(server.fallbackBody);
+    expect(result).toEqual({ content: server.fallbackBody, js: '', css: '' });
 
     // manifest and fallback is one more than default
     // due to initial refresh() call
@@ -226,7 +230,7 @@ test('integration - throwable:true - manifest / content fetching goes into recur
         await component.fetch({});
     } catch (error) {
         expect(error.message).toMatch(
-            /Recursion detected - failed to resolve fetching of podlet 4 times/
+            /Recursion detected - failed to resolve fetching of podlet 4 times/,
         );
     }
 
@@ -256,11 +260,14 @@ test('integration basic - set headers argument - should pass on headers to reque
     const client = new Client();
     const a = client.register(service.options);
 
-    await a.fetch({'podium-ctx': 'foo'}, {
-        headers: {
-            foo: 'bar'
-        }
-    });
+    await a.fetch(
+        { 'podium-ctx': 'foo' },
+        {
+            headers: {
+                foo: 'bar',
+            },
+        },
+    );
 });
 
 test('integration basic - set headers argument - header has a "user-agent" - should override "user-agent" with podium agent', async () => {
@@ -269,7 +276,9 @@ test('integration basic - set headers argument - header has a "user-agent" - sho
     const server = new Faker({ name: 'podlet' });
     const service = await server.listen();
     server.on('req:content', async (content, req) => {
-        expect(req.headers['user-agent'].startsWith('@podium/client')).toBeTruthy();
+        expect(
+            req.headers['user-agent'].startsWith('@podium/client'),
+        ).toBeTruthy();
 
         // Server must be closed here, unless Jest just passes
         // the test even if it fail. Silly jest...
@@ -279,9 +288,12 @@ test('integration basic - set headers argument - header has a "user-agent" - sho
     const client = new Client();
     const a = client.register(service.options);
 
-    await a.fetch({'podium-ctx': 'foo'}, {
-        headers: {
-            "User-Agent": 'bar'
-        }
-    });
+    await a.fetch(
+        { 'podium-ctx': 'foo' },
+        {
+            headers: {
+                'User-Agent': 'bar',
+            },
+        },
+    );
 });

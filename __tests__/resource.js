@@ -87,6 +87,26 @@ test('resource.fetch(podiumContext) - should pass it on', async () => {
     await server.close();
 });
 
+test('resource.fetch() - returns an object with content, js and css keys', async () => {
+    expect.assertions(1);
+
+    const server = new Faker({
+        assets: { js: 'http://fakejs.com', css: 'http://fakejs.com' },
+    });
+    const service = await server.listen();
+    const resource = new Resource(new Cache(), service.options);
+
+    const result = await resource.fetch({});
+
+    expect(result).toEqual({
+        content: '<p>content component</p>',
+        js: 'http://fakejs.com',
+        css: 'http://fakejs.com',
+    });
+
+    await server.close();
+});
+
 /**
  * .stream()
  */
@@ -112,8 +132,42 @@ test('resource.stream() - should emit header event', async () => {
 
     const resource = new Resource(new Cache(), service.options);
     const strm = resource.stream({});
-    strm.once('headers', (header) => {
-        expect(header['podlet-version']).toEqual(
+    strm.once('headers', header => {
+        expect(header['podlet-version']).toEqual('1.0.0');
+    });
+
+    await getStream(strm);
+
+    await server.close();
+});
+
+test('resource.stream() - should emit js event', async () => {
+    expect.assertions(1);
+
+    const server = new Faker({ assets: { js: 'http://fakejs.com' } });
+    const service = await server.listen();
+
+    const resource = new Resource(new Cache(), service.options);
+    const strm = resource.stream({});
+    strm.once('js', js => {
+        expect(js).toEqual('http://fakejs.com');
+    });
+
+    await getStream(strm);
+
+    await server.close();
+});
+test('resource.stream() - should emit css event', async () => {
+
+    expect.assertions(1);
+
+    const server = new Faker({ assets: { css: 'http://fakejs.com' } });
+    const service = await server.listen();
+
+    const resource = new Resource(new Cache(), service.options);
+    const strm = resource.stream({});
+    strm.once('css', css => {
+        expect(css).toEqual('http://fakejs.com');
             '1.0.0',
         );
     });
@@ -123,6 +177,36 @@ test('resource.stream() - should emit header event', async () => {
     await server.close();
 });
 
+test('resource.stream() - should emit css and js events before emitting data', async () => {
+    expect.assertions(3);
+
+    const server = new Faker({
+        assets: { js: 'http://fakejs.com/js', css: 'http://fakejs.com/css' },
+    });
+    const service = await server.listen();
+
+    const resource = new Resource(new Cache(), service.options);
+    const strm = resource.stream({});
+    const items = [];
+
+    strm.once('css', css => {
+        items.push(css);
+    });
+    strm.once('js', js => {
+        items.push(js);
+    });
+    strm.on('data', data => {
+        items.push(data.toString());
+    });
+
+    await getStream(strm);
+
+    expect(items[0]).toBe('http://fakejs.com/css');
+    expect(items[1]).toBe('http://fakejs.com/js');
+    expect(items[2]).toBe('<p>content component</p>');
+
+    await server.close();
+});
 
 /**
  * .refresh()

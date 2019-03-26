@@ -91,7 +91,7 @@ test('resource.fetch() - returns an object with content, js and css keys', async
     expect.assertions(1);
 
     const server = new Faker({
-        assets: { js: 'http://fakejs.com', css: 'http://fakejs.com' },
+        assets: { js: 'http://fakejs.com', css: 'http://fakecss.com' },
     });
     const service = await server.listen();
     const resource = new Resource(new Cache(), service.options);
@@ -101,7 +101,7 @@ test('resource.fetch() - returns an object with content, js and css keys', async
     expect(result).toEqual({
         content: '<p>content component</p>',
         js: 'http://fakejs.com',
-        css: 'http://fakejs.com',
+        css: 'http://fakecss.com',
     });
 
     await server.close();
@@ -179,13 +179,13 @@ test('resource.stream() - should emit css event', async () => {
 
     expect.assertions(1);
 
-    const server = new Faker({ assets: { css: 'http://fakejs.com' } });
+    const server = new Faker({ assets: { css: 'http://fakecss.com' } });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), service.options);
     const strm = resource.stream({});
     strm.once('css', css => {
-        expect(css).toEqual('http://fakejs.com');
+        expect(css).toEqual('http://fakecss.com');
             '1.0.0',
         );
     });
@@ -199,7 +199,7 @@ test('resource.stream() - should emit css and js events before emitting data', a
     expect.assertions(3);
 
     const server = new Faker({
-        assets: { js: 'http://fakejs.com/js', css: 'http://fakejs.com/css' },
+        assets: { js: 'http://fakejs.com', css: 'http://fakecss.com' },
     });
     const service = await server.listen();
 
@@ -219,8 +219,8 @@ test('resource.stream() - should emit css and js events before emitting data', a
 
     await getStream(strm);
 
-    expect(items[0]).toBe('http://fakejs.com/css');
-    expect(items[1]).toBe('http://fakejs.com/js');
+    expect(items[0]).toBe('http://fakecss.com');
+    expect(items[1]).toBe('http://fakejs.com');
     expect(items[2]).toBe('<p>content component</p>');
 
     await server.close();

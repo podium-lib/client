@@ -2,6 +2,7 @@
 
 'use strict';
 
+const Metrics = require('@metrics/client');
 const HttpOutgoing = require('../lib/http-outgoing');
 const Manifest = require('../lib/resolver.manifest');
 const Client = require('../');
@@ -16,14 +17,24 @@ const lolex = require('lolex');
  */
 
 test('resolver.manifest() - object tag - should be PodletClientManifestResolver', () => {
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     expect(Object.prototype.toString.call(manifest)).toEqual(
         '[object PodletClientManifestResolver]',
     );
 });
 
+test('resolver.manifest() - no @metrics/client - should throw', () => {
+    expect.hasAssertions();
+    expect(() => {
+        // eslint-disable-next-line no-unused-vars
+        const manifest = new Manifest();
+    }).toThrowError(
+        'you must pass a @metrics/client to the PodletClientManifestResolver constructor',
+    );
+});
+
 test('resolver.manifest() - "outgoing.manifest" holds a manifest - should resolve with same manifest', async () => {
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.mather.com',
     });
@@ -38,7 +49,7 @@ test('resolver.manifest() - remote has no cache header - should set outgoing.max
     const server = new Faker();
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         maxAge: 40000,
@@ -58,7 +69,7 @@ test('resolver.manifest() - remote has "cache-control: public, max-age=10" heade
         'cache-control': 'public, max-age=10',
     };
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         maxAge: 40000,
@@ -79,7 +90,7 @@ test('resolver.manifest() - remote has "cache-control: no-cache" header - should
         'cache-control': 'no-cache',
     };
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         maxAge: 40000,
@@ -103,7 +114,7 @@ test('resolver.manifest() - remote has "expires" header - should set outgoing.ma
         expires: new Date(Date.now() + 1000 * 60 * 60 * 2).toUTCString(),
     };
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         maxAge: 40000,
@@ -162,7 +173,7 @@ test('resolver.manifest() - one remote has "expires" header second none - should
 });
 
 test('resolver.manifest() - remote can not be resolved - "outgoing.manifest" should be {_fallback: ""}', async () => {
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
@@ -176,7 +187,7 @@ test('resolver.manifest() - remote responds with http 500 - "outgoing.manifest" 
     const server = new Faker();
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.error,
         throwable: false,
@@ -192,7 +203,7 @@ test('resolver.manifest() - manifest is not valid - "outgoing.manifest" should b
     const server = new Faker();
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.content,
         throwable: false,
@@ -208,7 +219,7 @@ test('resolver.manifest() - "content" in manifest is relative - "outgoing.manife
     const server = new Faker();
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
     });
@@ -225,7 +236,7 @@ test('resolver.manifest() - "content" in manifest is absolute - "outgoing.manife
     });
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
     });
@@ -243,13 +254,15 @@ test('resolver.manifest() - "fallback" in manifest is relative - "outgoing.manif
 
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.fallback).toEqual(`${service.address}/fallback.html`);
+    expect(outgoing.manifest.fallback).toEqual(
+        `${service.address}/fallback.html`,
+    );
 
     await server.close();
 });
@@ -260,7 +273,7 @@ test('resolver.manifest() - "fallback" in manifest is absolute - "outgoing.manif
     });
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
     });
@@ -275,7 +288,7 @@ test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is unset
     const server = new Faker({ assets: { css: 'a.css' } });
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
     });
@@ -290,7 +303,7 @@ test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true
     const server = new Faker({ assets: { css: 'a.css' } });
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
         resolveCss: true,
@@ -310,7 +323,7 @@ test('resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true
     });
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
         resolveCss: true,
@@ -328,7 +341,7 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset -
     const server = new Faker({ assets: { js: 'a.js' } });
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
     });
@@ -343,7 +356,7 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" 
     const server = new Faker({ assets: { js: 'a.js' } });
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
         resolveJs: true,
@@ -363,14 +376,16 @@ test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" 
     });
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
         resolveJs: true,
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.assets.js).toEqual('http://does.not.mather.com/a.js');
+    expect(outgoing.manifest.assets.js).toEqual(
+        'http://does.not.mather.com/a.js',
+    );
 
     await server.close();
 });
@@ -383,7 +398,7 @@ test('resolver.manifest() - a "proxy" target in manifest is relative - should co
     });
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
     });
@@ -402,7 +417,7 @@ test('resolver.manifest() - a "proxy" target in manifest is absolute - should ke
     });
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
     });
@@ -424,7 +439,7 @@ test('resolver.manifest() - "proxy" targets in manifest is both absolute and rel
     });
     const service = await server.listen();
 
-    const manifest = new Manifest();
+    const manifest = new Manifest(new Metrics());
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
     });

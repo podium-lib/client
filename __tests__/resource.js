@@ -107,6 +107,24 @@ test('resource.fetch() - returns an object with content, js and css keys', async
     await server.close();
 });
 
+test('resource.fetch() - returns empty strings for js and css when no assets are present in manifest', async () => {
+    expect.assertions(1);
+
+    const server = new Faker();
+    const service = await server.listen();
+
+    const resource = new Resource(new Cache(), service.options);
+    const result = await resource.fetch({});
+
+    expect(result).toEqual({
+        content: '<p>content component</p>',
+        js: '',
+        css: '',
+    });
+
+    await server.close();
+});
+
 /**
  * .stream()
  */

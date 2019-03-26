@@ -3,14 +3,25 @@
 
 'use strict';
 
+const Metrics = require('@metrics/client');
 const HttpOutgoing = require('../lib/http-outgoing');
 const Fallback = require('../lib/resolver.fallback');
 const Faker = require('../test/faker');
 
 test('resolver.fallback() - object tag - should be PodletClientFallbackResolver', () => {
-    const fallback = new Fallback();
+    const fallback = new Fallback(new Metrics());
     expect(Object.prototype.toString.call(fallback)).toEqual(
         '[object PodletClientFallbackResolver]',
+    );
+});
+
+test('resolver.fallback() - no @metrics/client - should throw', () => {
+    expect.hasAssertions();
+    expect(() => {
+        // eslint-disable-next-line no-unused-vars
+        const manifest = new Fallback();
+    }).toThrowError(
+        'you must pass a @metrics/client to the PodletClientFallbackResolver constructor',
     );
 });
 
@@ -22,7 +33,7 @@ test('resolver.fallback() - fallback field is empty - should set value on "outgo
     const outgoing = new HttpOutgoing({ uri: 'http://example.com' });
     outgoing.manifest = manifest;
 
-    const fallback = new Fallback();
+    const fallback = new Fallback(new Metrics());
     const result = await fallback.resolve(outgoing);
     expect(result.fallback).toBe('');
 });
@@ -35,7 +46,7 @@ test('resolver.fallback() - fallback field contains invalid value - should set v
     const outgoing = new HttpOutgoing({ uri: 'http://example.com' });
     outgoing.manifest = manifest;
 
-    const fallback = new Fallback();
+    const fallback = new Fallback(new Metrics());
     const result = await fallback.resolve(outgoing);
     expect(result.fallback).toBe('');
 });
@@ -50,7 +61,7 @@ test('resolver.fallback() - fallback field is a URI - should fetch fallback and 
     const outgoing = new HttpOutgoing({ uri: service.options.uri });
     outgoing.manifest = manifest;
 
-    const fallback = new Fallback();
+    const fallback = new Fallback(new Metrics());
     const result = await fallback.resolve(outgoing);
     expect(result.fallback).toBe(server.fallbackBody);
 
@@ -67,7 +78,7 @@ test('resolver.fallback() - fallback field is a URI - should fetch fallback and 
     const outgoing = new HttpOutgoing({ uri: service.options.uri });
     outgoing.manifest = manifest;
 
-    const fallback = new Fallback();
+    const fallback = new Fallback(new Metrics());
     const result = await fallback.resolve(outgoing);
     expect(result.manifest._fallback).toBe(server.fallbackBody);
 
@@ -84,7 +95,7 @@ test('resolver.fallback() - remote can not be resolved - "outgoing.manifest" sho
         fallback: 'http://does.not.exist.finn.no/fallback.html',
     };
 
-    const fallback = new Fallback();
+    const fallback = new Fallback(new Metrics());
     await fallback.resolve(outgoing);
     expect(outgoing.fallback).toBe('');
 });
@@ -102,7 +113,7 @@ test('resolver.fallback() - remote responds with http 500 - "outgoing.manifest" 
         fallback: service.error,
     };
 
-    const fallback = new Fallback();
+    const fallback = new Fallback(new Metrics());
     await fallback.resolve(outgoing);
     expect(outgoing.fallback).toBe('');
 

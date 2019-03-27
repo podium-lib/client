@@ -142,16 +142,18 @@ test('resource.stream() - should return a stream', async () => {
     await server.close();
 });
 
-test('resource.stream() - should emit header event', async () => {
-    expect.assertions(1);
+test('resource.stream() - should emit beforeStream event with no assets', async () => {
+    expect.assertions(3);
 
     const server = new Faker({ version: '1.0.0' });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), service.options);
     const strm = resource.stream({});
-    strm.once('headers', header => {
-        expect(header['podlet-version']).toEqual('1.0.0');
+    strm.once('beforeStream', ({ headers, js, css }) => {
+        expect(headers['podlet-version']).toEqual('1.0.0');
+        expect(js).toEqual('');
+        expect(css).toEqual('');
     });
 
     await getStream(strm);
@@ -159,7 +161,7 @@ test('resource.stream() - should emit header event', async () => {
     await server.close();
 });
 
-test('resource.stream() - should emit js event', async () => {
+test('resource.stream() - should emit js event when js assets defined', async () => {
     expect.assertions(1);
 
     const server = new Faker({ assets: { js: 'http://fakejs.com' } });
@@ -167,7 +169,7 @@ test('resource.stream() - should emit js event', async () => {
 
     const resource = new Resource(new Cache(), service.options);
     const strm = resource.stream({});
-    strm.once('js', js => {
+    strm.once('beforeStream', ({ js }) => {
         expect(js).toEqual('http://fakejs.com');
     });
 
@@ -175,8 +177,8 @@ test('resource.stream() - should emit js event', async () => {
 
     await server.close();
 });
-test('resource.stream() - should emit css event', async () => {
 
+test('resource.stream() - should emit css event when css assets defined', async () => {
     expect.assertions(1);
 
     const server = new Faker({ assets: { css: 'http://fakecss.com' } });
@@ -184,7 +186,7 @@ test('resource.stream() - should emit css event', async () => {
 
     const resource = new Resource(new Cache(), service.options);
     const strm = resource.stream({});
-    strm.once('css', css => {
+    strm.once('beforeStream', ({ css }) => {
         expect(css).toEqual('http://fakecss.com');
             '1.0.0',
         );
@@ -195,7 +197,7 @@ test('resource.stream() - should emit css event', async () => {
     await server.close();
 });
 
-test('resource.stream() - should emit css and js events before emitting data', async () => {
+test('resource.stream() - should emit beforeStream event before emitting data', async () => {
     expect.assertions(3);
 
     const server = new Faker({
@@ -207,11 +209,8 @@ test('resource.stream() - should emit css and js events before emitting data', a
     const strm = resource.stream({});
     const items = [];
 
-    strm.once('css', css => {
-        items.push(css);
-    });
-    strm.once('js', js => {
-        items.push(js);
+    strm.once('beforeStream', beforeStream => {
+        items.push(beforeStream);
     });
     strm.on('data', data => {
         items.push(data.toString());
@@ -219,9 +218,9 @@ test('resource.stream() - should emit css and js events before emitting data', a
 
     await getStream(strm);
 
-    expect(items[0]).toBe('http://fakecss.com');
-    expect(items[1]).toBe('http://fakejs.com');
-    expect(items[2]).toBe('<p>content component</p>');
+    expect(items[0].css).toBe('http://fakecss.com');
+    expect(items[0].js).toBe('http://fakejs.com');
+    expect(items[1]).toBe('<p>content component</p>');
 
     await server.close();
 });

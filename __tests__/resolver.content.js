@@ -431,7 +431,7 @@ test('resolver.content() - kill switch - throwable:true - recursions equals thre
         content: 'http://does.not.exist.finn.no/index.html',
     };
     outgoing.status = 'cached';
-    outgoing.killRecursions = 4;
+    outgoing.recursions = 4;
 
     const content = new Content(new Metrics());
 

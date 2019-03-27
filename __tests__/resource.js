@@ -11,6 +11,7 @@ const Cache = require('ttl-mem-cache');
 const getStream = require('get-stream');
 const Client = require('../');
 
+// const REGISTRY = new Cache();
 const URI = 'http://example.org';
 
 /**
@@ -111,14 +112,17 @@ test('resource.stream() - should emit header event', async () => {
 
     const resource = new Resource(new Cache(), service.options);
     const strm = resource.stream({});
-    strm.once('headers', header => {
-        expect(header['podlet-version']).toEqual('1.0.0');
+    strm.once('headers', (header) => {
+        expect(header['podlet-version']).toEqual(
+            '1.0.0',
+        );
     });
 
     await getStream(strm);
 
     await server.close();
 });
+
 
 /**
  * .refresh()
@@ -194,9 +198,6 @@ test('Resource().uri - instantiate new resource object - expose own uri', () => 
  */
 
 test('Resource().name - instantiate new resource object - expose own name', () => {
-    const resource = new Resource(new Cache(), {
-        uri: URI,
-        name: 'someName',
-    });
+    const resource = new Resource(new Cache(), { uri: URI, name: 'someName' });
     expect(resource.name).toBe('someName');
 });

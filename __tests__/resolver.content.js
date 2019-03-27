@@ -6,7 +6,6 @@ const HttpOutgoing = require('../lib/http-outgoing');
 const Content = require('../lib/resolver.content');
 const stream = require('readable-stream');
 const utils = require('@podium/utils');
-const Metrics = require('@metrics/client');
 const Faker = require('../test/faker');
 
 /**
@@ -20,19 +19,9 @@ const Faker = require('../test/faker');
  */
 
 test('resolver.content() - object tag - should be PodletClientContentResolver', () => {
-    const content = new Content(new Metrics());
+    const content = new Content();
     expect(Object.prototype.toString.call(content)).toEqual(
         '[object PodletClientContentResolver]',
-    );
-});
-
-test('resolver.content() - no @metrics/client - should throw', () => {
-    expect.hasAssertions();
-    expect(() => {
-        // eslint-disable-next-line no-unused-vars
-        const manifest = new Content();
-    }).toThrowError(
-        'you must pass a @metrics/client to the PodletClientContentResolver constructor',
     );
 });
 
@@ -47,7 +36,7 @@ test('resolver.content() - outgoing "streamThrough" is true - should stream cont
     const { manifest } = server;
     manifest.content = utils.uriRelativeToAbsolute(
         server.manifest.content,
-        outgoing.manifestUri,
+        outgoing.manifestUri
     );
 
     outgoing.manifest = manifest;
@@ -68,7 +57,7 @@ test('resolver.content() - outgoing "streamThrough" is true - should stream cont
 
     outgoing.stream.pipe(to);
 
-    const content = new Content(new Metrics());
+    const content = new Content();
     await content.resolve(outgoing);
     await server.close();
 });
@@ -82,7 +71,7 @@ test('resolver.content() - outgoing "streamThrough" is false - should buffer con
     const { manifest } = server;
     manifest.content = utils.uriRelativeToAbsolute(
         server.manifest.content,
-        outgoing.manifestUri,
+        outgoing.manifestUri
     );
 
     outgoing.manifest = manifest;
@@ -91,7 +80,7 @@ test('resolver.content() - outgoing "streamThrough" is false - should buffer con
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
 
-    const content = new Content(new Metrics());
+    const content = new Content();
     const result = await content.resolve(outgoing);
 
     expect(result.content).toBe(server.contentBody);
@@ -107,7 +96,7 @@ test('resolver.content() - "podlet-version" header is same as manifest.version -
     const { manifest } = server;
     manifest.content = utils.uriRelativeToAbsolute(
         server.manifest.content,
-        outgoing.manifestUri,
+        outgoing.manifestUri
     );
 
     outgoing.manifest = manifest;
@@ -116,7 +105,7 @@ test('resolver.content() - "podlet-version" header is same as manifest.version -
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
 
-    const content = new Content(new Metrics());
+    const content = new Content();
     await content.resolve(outgoing);
 
     expect(outgoing.manifest).toBeDefined();
@@ -136,7 +125,7 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
     const { manifest } = server;
     manifest.content = utils.uriRelativeToAbsolute(
         server.manifest.content,
-        outgoing.manifestUri,
+        outgoing.manifestUri
     );
 
     outgoing.manifest = manifest;
@@ -145,7 +134,7 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
 
-    const content = new Content(new Metrics());
+    const content = new Content();
     await content.resolve(outgoing);
 
     expect(outgoing.manifest).toBeDefined();
@@ -165,7 +154,7 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
     const { manifest } = server;
     manifest.content = utils.uriRelativeToAbsolute(
         server.manifest.content,
-        outgoing.manifestUri,
+        outgoing.manifestUri
     );
 
     outgoing.manifest = manifest;
@@ -174,7 +163,7 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
 
-    const content = new Content(new Metrics());
+    const content = new Content();
     await content.resolve(outgoing);
 
     expect(outgoing.manifest.version).toEqual(server.manifest.version);
@@ -198,7 +187,7 @@ test('resolver.content() - throwable:true - remote can not be resolved - should 
     };
     outgoing.status = 'cached';
 
-    const content = new Content(new Metrics());
+    const content = new Content();
 
     try {
         await content.resolve(outgoing);
@@ -227,7 +216,7 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
     };
     outgoing.status = 'cached';
 
-    const content = new Content(new Metrics());
+    const content = new Content();
 
     try {
         await content.resolve(outgoing);
@@ -259,7 +248,7 @@ test('resolver.content() - throwable:true - remote responds with http 404 - shou
     };
     outgoing.status = 'cached';
 
-    const content = new Content(new Metrics());
+    const content = new Content();
 
     try {
         await content.resolve(outgoing);
@@ -301,7 +290,7 @@ test('resolver.content() - throwable:false - remote can not be resolved - "outgo
 
     outgoing.stream.pipe(to);
 
-    const content = new Content(new Metrics());
+    const content = new Content();
     await content.resolve(outgoing);
 });
 
@@ -335,7 +324,7 @@ test('resolver.content() - throwable:false with fallback set - remote can not be
 
     outgoing.stream.pipe(to);
 
-    const content = new Content(new Metrics());
+    const content = new Content();
     await content.resolve(outgoing);
 });
 
@@ -371,7 +360,7 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "ou
 
     outgoing.stream.pipe(to);
 
-    const content = new Content(new Metrics());
+    const content = new Content();
     await content.resolve(outgoing);
 
     await server.close();
@@ -410,7 +399,7 @@ test('resolver.content() - throwable:false with fallback set - remote responds w
 
     outgoing.stream.pipe(to);
 
-    const content = new Content(new Metrics());
+    const content = new Content();
     await content.resolve(outgoing);
 
     await server.close();
@@ -433,7 +422,7 @@ test('resolver.content() - kill switch - throwable:true - recursions equals thre
     outgoing.status = 'cached';
     outgoing.recursions = 4;
 
-    const content = new Content(new Metrics());
+    const content = new Content();
 
     try {
         await content.resolve(outgoing);
@@ -462,7 +451,7 @@ test('resolver.content() - kill switch - throwable:false - recursions equals thr
     outgoing.status = 'cached';
     outgoing.killRecursions = 4;
 
-    const content = new Content(new Metrics());
+    const content = new Content();
     await content.resolve(outgoing);
 
     expect(outgoing.success).toBeTruthy();

@@ -188,8 +188,6 @@ test('resource.stream() - should emit css event when css assets defined', async 
     const strm = resource.stream({});
     strm.once('beforeStream', ({ css }) => {
         expect(css).toEqual('http://fakecss.com');
-            '1.0.0',
-        );
     });
 
     await getStream(strm);

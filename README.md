@@ -31,6 +31,12 @@ const component = client.register({
 });
 
 const stream = component.stream();
+stream.once('js', js => {
+    console.log(js);
+});
+stream.on('css', css => {
+    console.log(css);
+});
 stream.on('error', error => {
     console.log(error);
 });
@@ -52,8 +58,10 @@ const component = client.register({
 
 component
     .fetch()
-    .then(content => {
-        console.log(content);
+    .then(result => {
+        console.log(result.content);
+        console.log(result.js);
+        console.log(result.css);
     })
     .catch(error => {
         console.log(error);
@@ -290,7 +298,7 @@ A Podium Resource Object has the following API:
 
 ### .fetch(podiumContext, options)
 
-Fetches the content of the component. Returns a `Promise`.
+Fetches the content of the component. Returns a `Promise` which resolves to an object containing the keys `content`, `js` and `css`.
 
 #### podiumContext (required)
 
@@ -305,9 +313,18 @@ provided:
 -   `headers` - {Object} - An Object which will be appended as http headers to the request to fetch the component's content.
 -   `query` - {Object} - An Object which will be appended as query parameters to the request to fetch the component's content.
 
+#### return value
+
+```js
+const result = await component.fetch();
+console.log(result.content);
+console.log(result.js);
+console.log(result.css);
+```
+
 ### .stream(podiumContext, options)
 
-Streams the content of the component. Returns a `ReadStream`.
+Streams the content of the component. Returns a `ReadStream` which emits 2 additional custom events `js` and `css`. These events will fire before data events begin. The `js` and `css` values from the resources manifest file will be emitted.
 
 #### podiumContext (required)
 
@@ -330,6 +347,25 @@ during the call to `register`.
 ### .uri
 
 A property returning the location of the podium resource.
+
+### Custom events
+
+#### beforeStream
+
+A `beforeStream` event is emitted before the stream starts flowing. An object with keys `headers`, `js` and `css` is emitted with the event.
+
+`headers` will always contain the response headers from the podlet
+If the resource manifest defines JavaScript assets, `js` will contain the value from the manifest file otherwise `js` will be an empty string.
+If the resource manifest defines CSS assets, `css` will contain the value from the manifest file otherwise `css` will be an empty string.
+
+```js
+const stream = component.stream();
+stream.once('beforeStream', data => {
+    console.log(data.headers);
+    console.log(data.js);
+    console.log(data.css);
+});
+```
 
 ## Controlling caching of the manifest
 

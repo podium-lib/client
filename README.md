@@ -350,29 +350,20 @@ A property returning the location of the podium resource.
 
 ### Custom events
 
-Several custom events can be emitted above and beyond standard data and error events
+#### beforeStream
 
-#### js
+A `beforeStream` event is emitted before the stream starts flowing. An object with keys `headers`, `js` and `css` is emitted with the event.
 
-If the resource manifest defines JavaScript assets, a `js` event will be emitted before any `data` events.
-The JavaScript value from the manifest file will be emitted with the event.
-
-```js
-const stream = component.stream();
-stream.once('js', js => {
-    console.log(js);
-});
-```
-
-#### css
-
-If the resource manifest defines CSS assets, a `css` event will be emitted before any `data` events.
-The CSS value from the manifest file will be emitted with the event.
+`headers` will always contain the response headers from the podlet
+If the resource manifest defines JavaScript assets, `js` will contain the value from the manifest file otherwise `js` will be an empty string.
+If the resource manifest defines CSS assets, `css` will contain the value from the manifest file otherwise `css` will be an empty string.
 
 ```js
 const stream = component.stream();
-stream.once('css', css => {
-    console.log(css);
+stream.once('beforeStream', data => {
+    console.log(data.headers);
+    console.log(data.js);
+    console.log(data.css);
 });
 ```
 

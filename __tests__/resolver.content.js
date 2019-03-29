@@ -25,68 +25,6 @@ test('resolver.content() - object tag - should be PodletClientContentResolver', 
     );
 });
 
-test('resolver.content() - outgoing "streamThrough" is true - should stream content through on outgoing.stream', async () => {
-    expect.hasAssertions();
-
-    const server = new Faker();
-    const service = await server.listen();
-    const outgoing = new HttpOutgoing({ uri: service.options.uri }, {}, true);
-
-    // See TODO II
-    const { manifest } = server;
-    manifest.content = utils.uriRelativeToAbsolute(
-        server.manifest.content,
-        outgoing.manifestUri
-    );
-
-    outgoing.manifest = manifest;
-    outgoing.status = 'fresh';
-
-    // See TODO I
-    outgoing.reqOptions.podiumContext = {};
-
-    const buffer = [];
-    const to = new stream.Writable({
-        write: (chunk, enc, next) => {
-            buffer.push(chunk);
-            next();
-        },
-    }).on('finish', () => {
-        expect(buffer.join().toString()).toBe(server.contentBody);
-    });
-
-    outgoing.stream.pipe(to);
-
-    const content = new Content();
-    await content.resolve(outgoing);
-    await server.close();
-});
-
-test('resolver.content() - outgoing "streamThrough" is false - should buffer content into outgoing.content', async () => {
-    const server = new Faker();
-    const service = await server.listen();
-    const outgoing = new HttpOutgoing({ uri: service.options.uri }, {}, false);
-
-    // See TODO II
-    const { manifest } = server;
-    manifest.content = utils.uriRelativeToAbsolute(
-        server.manifest.content,
-        outgoing.manifestUri
-    );
-
-    outgoing.manifest = manifest;
-    outgoing.status = 'fresh';
-
-    // See TODO I
-    outgoing.reqOptions.podiumContext = {};
-
-    const content = new Content();
-    const result = await content.resolve(outgoing);
-
-    expect(result.content).toBe(server.contentBody);
-    await server.close();
-});
-
 test('resolver.content() - "podlet-version" header is same as manifest.version - should keep manifest on outgoing.manifest', async () => {
     const server = new Faker();
     const service = await server.listen();
@@ -261,7 +199,7 @@ test('resolver.content() - throwable:true - remote responds with http 404 - shou
     await server.close();
 });
 
-test('resolver.content() - throwable:false - remote can not be resolved - "outgoing.stream" should stream empty string', async () => {
+test('resolver.content() - throwable:false - remote can not be resolved - "outgoing" should stream empty string', async () => {
     expect.hasAssertions();
 
     const outgoing = new HttpOutgoing({
@@ -288,13 +226,13 @@ test('resolver.content() - throwable:false - remote can not be resolved - "outgo
         expect(outgoing.success).toBeTruthy();
     });
 
-    outgoing.stream.pipe(to);
+    outgoing.pipe(to);
 
     const content = new Content();
     await content.resolve(outgoing);
 });
 
-test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "outgoing.stream" should stream fallback', async () => {
+test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "outgoing" should stream fallback', async () => {
     expect.hasAssertions();
 
     const outgoing = new HttpOutgoing({
@@ -322,13 +260,13 @@ test('resolver.content() - throwable:false with fallback set - remote can not be
         expect(outgoing.success).toBeTruthy();
     });
 
-    outgoing.stream.pipe(to);
+    outgoing.pipe(to);
 
     const content = new Content();
     await content.resolve(outgoing);
 });
 
-test('resolver.content() - throwable:false - remote responds with http 500 - "outgoing.stream" should stream empty string', async () => {
+test('resolver.content() - throwable:false - remote responds with http 500 - "outgoing" should stream empty string', async () => {
     expect.hasAssertions();
 
     const server = new Faker();
@@ -358,7 +296,7 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "ou
         expect(outgoing.success).toBeTruthy();
     });
 
-    outgoing.stream.pipe(to);
+    outgoing.pipe(to);
 
     const content = new Content();
     await content.resolve(outgoing);
@@ -366,7 +304,7 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "ou
     await server.close();
 });
 
-test('resolver.content() - throwable:false with fallback set - remote responds with http 500 - "outgoing.stream" should stream fallback', async () => {
+test('resolver.content() - throwable:false with fallback set - remote responds with http 500 - "outgoing" should stream fallback', async () => {
     expect.hasAssertions();
 
     const server = new Faker();
@@ -397,7 +335,7 @@ test('resolver.content() - throwable:false with fallback set - remote responds w
         expect(outgoing.success).toBeTruthy();
     });
 
-    outgoing.stream.pipe(to);
+    outgoing.pipe(to);
 
     const content = new Content();
     await content.resolve(outgoing);

@@ -32,7 +32,7 @@ test('State.setInitializingState() - call method when object is in "registered" 
     expect(state.status).toBe('initializing');
 });
 
-test('State.setInitializingState() - call method when object is in "registered" state - should emit "initializing" event once', (done) => {
+test('State.setInitializingState() - call method when object is in "registered" state - should emit "initializing" event once', () => {
     expect.assertions(1);
 
     const state = new State();
@@ -42,9 +42,6 @@ test('State.setInitializingState() - call method when object is in "registered" 
 
     state.setInitializingState();
     state.setInitializingState();
-
-    // make sure we close test
-    setTimeout(done, 100);
 });
 
 test('State.setStableState() - call method - should set state to "stable"', () => {
@@ -55,7 +52,7 @@ test('State.setStableState() - call method - should set state to "stable"', () =
     expect(state.status).toBe('stable');
 });
 
-test('State.setStableState() - call method multiple times - should emit "stable" event once', (done) => {
+test('State.setStableState() - call method multiple times - should emit "stable" event once', () => {
     expect.assertions(1);
 
     const state = new State();
@@ -65,9 +62,6 @@ test('State.setStableState() - call method multiple times - should emit "stable"
 
     state.setStableState();
     state.setStableState();
-
-    // make sure we close test
-    setTimeout(done, 100);
 });
 
 test('State.setUnstableState() - call method when object is in "initializing" state - should set state to "unstable"', () => {
@@ -77,7 +71,7 @@ test('State.setUnstableState() - call method when object is in "initializing" st
     expect(state.status).toBe('unstable');
 });
 
-test('State.setUnstableState() - call method multiple times - should emit "unstable" event once', (done) => {
+test('State.setUnstableState() - call method multiple times - should emit "unstable" event once', () => {
     expect.assertions(1);
 
     const state = new State();
@@ -89,9 +83,6 @@ test('State.setUnstableState() - call method multiple times - should emit "unsta
     state.setUnstableState();
     state.setUnstableState();
     state.setUnstableState();
-
-    // make sure we close test
-    setTimeout(done, 100);
 });
 
 test('State() - threshold is 2 seconds - .setUnstableState() is called - should set state to "stable" after threshold is passed', () => {
@@ -121,7 +112,7 @@ test('State() - threshold is 2 seconds - .setUnstableState() is called - should 
     clock.uninstall();
 });
 
-test('State() - threshold is 2 seconds - .setUnstableState() is called - should emit "stable" event once when threshold is passed', (done) => {
+test('State() - threshold is 2 seconds - .setUnstableState() is called - should emit "stable" event once when threshold is passed', () => {
     expect.assertions(1);
 
     const clock = lolex.install();
@@ -144,9 +135,6 @@ test('State() - threshold is 2 seconds - .setUnstableState() is called - should 
     clock.tick(3000);
 
     clock.uninstall();
-
-    // make sure we close test
-    setTimeout(done, 100);
 });
 
 test('State() - exceed max value - should set state to "unhealthy" after max is passed', () => {
@@ -255,7 +243,7 @@ test('State() - exceed max value - then continue to call .setUnstableState() - t
     clock.uninstall();
 });
 
-test('State() - exceed max value - then continue to call .setUnstableState() within threshold - should emit "unhealthy" event once', (done) => {
+test('State() - exceed max value - then continue to call .setUnstableState() within threshold - should emit "unhealthy" event once', () => {
     expect.assertions(1);
 
     const clock = lolex.install();
@@ -292,12 +280,9 @@ test('State() - exceed max value - then continue to call .setUnstableState() wit
     clock.tick(550);
 
     clock.uninstall();
-
-    // make sure we close test
-    setTimeout(done, 100);
 });
 
-test('State() - exceed max value - then continue to call .setUnstableState() - then let threshold timeout - should emit state events only once', (done) => {
+test('State() - exceed max value - then continue to call .setUnstableState() - then let threshold timeout - should emit state events only once', () => {
     expect.assertions(3);
 
     const clock = lolex.install();
@@ -341,7 +326,4 @@ test('State() - exceed max value - then continue to call .setUnstableState() - t
     clock.tick(4000);
 
     clock.uninstall();
-
-    // make sure we close test
-    setTimeout(done, 100);
 });

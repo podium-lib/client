@@ -50,6 +50,7 @@ test('State.setStableState() - call method - should set state to "stable"', () =
     state.setUnstableState();
     state.setStableState();
     expect(state.status).toBe('stable');
+    state.reset();
 });
 
 test('State.setStableState() - call method multiple times - should emit "stable" event once', () => {
@@ -62,6 +63,7 @@ test('State.setStableState() - call method multiple times - should emit "stable"
 
     state.setStableState();
     state.setStableState();
+    state.reset();
 });
 
 test('State.setUnstableState() - call method when object is in "initializing" state - should set state to "unstable"', () => {
@@ -69,6 +71,7 @@ test('State.setUnstableState() - call method when object is in "initializing" st
     state.setInitializingState();
     state.setUnstableState();
     expect(state.status).toBe('unstable');
+    state.reset();
 });
 
 test('State.setUnstableState() - call method multiple times - should emit "unstable" event once', () => {
@@ -83,6 +86,7 @@ test('State.setUnstableState() - call method multiple times - should emit "unsta
     state.setUnstableState();
     state.setUnstableState();
     state.setUnstableState();
+    state.reset();
 });
 
 test('State() - threshold is 2 seconds - .setUnstableState() is called - should set state to "stable" after threshold is passed', () => {
@@ -108,6 +112,7 @@ test('State() - threshold is 2 seconds - .setUnstableState() is called - should 
     clock.tick(3000);
 
     expect(state.status).toBe('stable');
+    state.reset();
 
     clock.uninstall();
 });
@@ -133,6 +138,8 @@ test('State() - threshold is 2 seconds - .setUnstableState() is called - should 
     // Tick clock 3 seconds into future
     // Passed threshold. State should now emit "stable" event
     clock.tick(3000);
+
+    state.reset();
 
     clock.uninstall();
 });
@@ -160,6 +167,8 @@ test('State() - exceed max value - should set state to "unhealthy" after max is 
     state.setUnstableState();
     clock.tick(550);
     expect(state.status).toBe('unhealthy');
+
+    state.reset();
 
     clock.uninstall();
 });
@@ -199,6 +208,8 @@ test('State() - exceed max value - then continue to call .setUnstableState() wit
     state.setUnstableState();
     clock.tick(550);
     expect(state.status).toBe('unhealthy');
+
+    state.reset();
 
     clock.uninstall();
 });
@@ -240,6 +251,8 @@ test('State() - exceed max value - then continue to call .setUnstableState() - t
     clock.tick(4000);
     expect(state.status).toBe('stable');
 
+    state.reset();
+
     clock.uninstall();
 });
 
@@ -278,6 +291,8 @@ test('State() - exceed max value - then continue to call .setUnstableState() wit
 
     state.setUnstableState();
     clock.tick(550);
+
+    state.reset();
 
     clock.uninstall();
 });
@@ -324,6 +339,8 @@ test('State() - exceed max value - then continue to call .setUnstableState() - t
     // Clock passes threshold, state should be stable
     state.setUnstableState();
     clock.tick(4000);
+
+    state.reset();
 
     clock.uninstall();
 });

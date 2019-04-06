@@ -344,3 +344,30 @@ test('State() - exceed max value - then continue to call .setUnstableState() - t
 
     clock.uninstall();
 });
+
+test('State.reset() - call method - should clear timers and reset state to initial value', () => {
+    const clock = lolex.install();
+
+    const state = new State({ threshold: 2000 });
+
+    state.setInitializingState();
+    state.setUnstableState();
+    state.setUnstableState();
+
+    // Tick clock 1 seconds into future
+    // Not passed threshold yet. State is still "unstable"
+    clock.tick(1000);
+    expect(state.status).toBe('unstable');
+
+    state.reset();
+
+    expect(state.status).toBe('instantiated');
+
+    // Tick clock 3 seconds into future
+    // Passed threshold. Internal timers should not have executed
+    clock.tick(3000);
+
+    expect(state.status).toBe('instantiated');
+
+    clock.uninstall();
+});

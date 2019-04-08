@@ -87,7 +87,7 @@ test('resource.fetch(podiumContext) - should pass it on', async () => {
     await server.close();
 });
 
-test('resource.fetch() - returns an object with content, js and css keys', async () => {
+test('resource.fetch() - returns an object with content, headers, js and css keys', async () => {
     expect.assertions(1);
 
     const server = new Faker({
@@ -97,11 +97,19 @@ test('resource.fetch() - returns an object with content, js and css keys', async
     const resource = new Resource(new Cache(), service.options);
 
     const result = await resource.fetch({});
+    result.headers.date = '<replaced>';
 
     expect(result).toEqual({
         content: '<p>content component</p>',
         js: 'http://fakejs.com',
         css: 'http://fakecss.com',
+        headers: {
+            connection: 'close',
+            'content-length': '24',
+            'content-type': 'text/html; charset=utf-8',
+            date: '<replaced>',
+            'podlet-version': '1.0.0',
+        },
     });
 
     await server.close();
@@ -115,11 +123,19 @@ test('resource.fetch() - returns empty strings for js and css when no assets are
 
     const resource = new Resource(new Cache(), service.options);
     const result = await resource.fetch({});
+    result.headers.date = '<replaced>';
 
     expect(result).toEqual({
         content: '<p>content component</p>',
         js: '',
         css: '',
+        headers: {
+            connection: 'close',
+            'content-length': '24',
+            'content-type': 'text/html; charset=utf-8',
+            date: '<replaced>',
+            'podlet-version': '1.0.0',
+        },
     });
 
     await server.close();

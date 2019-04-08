@@ -102,6 +102,8 @@ provided:
 -   `maxAge` - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: Infinity
 -   `agent` - {HTTPAgent} - Default HTTP Agent used for all requests.
 -   `logger` - {Object} - A logger which conforms to the log4j interface. See the docs for [abslog](https://www.npmjs.com/package/abslog) for more information.
+-   `resolveThreshold` - {Number} - How long, in milliseconds, update resolving should wait before entering `stable` state. See the section "[Podlet update life cycle](#podlet-update-life-cycle)" for more information. Default: 10000 (10 seconds).
+-   `resolveMax` - {Number} - How long, in milliseconds, update resolving should wait before entering `unhealthy` state. See the section "[Podlet update life cycle](#podlet-update-life-cycle)" for more information. Default: 240000 (4 minutes).
 
 ## API
 
@@ -224,7 +226,7 @@ console.log(status); // true
 console.log(client.js()); // ['foo.js', 'bar.js']
 ```
 
-### refreshManifests()
+### .refreshManifests()
 
 Refreshes the manifests of all registered resources. Does so by calling the
 `.refresh()` method on all resources under the hood.
@@ -260,11 +262,62 @@ which `.dump()` exports, they will not be inserted into the cache.
 
 Returns an Array with the keys which were inserted into the cache.
 
+## Properties
+
+The Client instance has the following properties:
+
+### .metrics
+
+Property that exposes a metric stream. This stream joins all internal metrics
+streams into one stream resulting in all metrics from all sub modules being
+exposed here.
+
+Please see [@metrics/metric] for full documentation.
+
+### .state
+
+What state the client are in. See the section
+"[Podlet update life cycle](#podlet-update-life-cycle)" for more information.
+
+The event will fire with the following value:
+
+-   `instantiated` - When a `Client` has been instanciated but no requests to any podlets has been made.
+-   `initializing` - When one or multiple podlets is requested for the very first time.
+-   `unstable` - When an update of a podlet is detected and are in the process of refetching the manifest.
+-   `stable` - When all registered podlets is using its cached manifest and are only fetching content.
+-   `unhealthy` - When a update of a podlet did never settle.
+
 ## Events
 
-The client emits the following events:
+The Client instance emits the following events:
 
-### change
+### state
+
+When there is a change in state. See the section
+"[Podlet update life cycle](#podlet-update-life-cycle)" for more information.
+
+```js
+const client = new Client();
+client.on('state', state => {
+    console.log(state);
+});
+
+const resource = client.register({
+    uri: 'http://foo.site.com/manifest.json',
+    name: 'foo',
+});
+
+resource.fetch();
+```
+
+The event will fire with the following value:
+
+-   `initializing` - When one or multiple podlets is requested for the very first time.
+-   `unstable` - When an update of a podlet is detected and are in the process of refetching the manifest.
+-   `stable` - When all registered podlets is using its cached manifest and are only fetching content.
+-   `unhealthy` - When a update of a podlet did never settle.
+
+### change (deprecated)
 
 When there is a change in version number between the cached manifest held
 by the client and the manifest on the remote source.
@@ -348,7 +401,7 @@ during the call to `register`.
 
 A property returning the location of the podium resource.
 
-### Custom events
+### Events
 
 #### beforeStream
 
@@ -450,11 +503,14 @@ The error object will reflect the http status code of the remote. In other
 words; if the remote responded with a 404, the `statusCode` in the error object
 will be 404.
 
-## On retrying
+## Podlet update life cycle
 
-A component consists of a manifest which contains metadata about that component.
-This manifest is fetched and cached by the client together with it's fallback
-content if such content has been defined.
+A podlets main entry is a manifest which contains metadata about that component.
+This manifest is fetched on the first request for a podlet and cached by the
+client together with it's fallback content if a fallback has been defined in the
+manifest. On the second and further requests for a podlet the manifest is read
+from the internal cache in the client at the client goes straight to fetching
+the content.
 
 Detection of updates to a component is done by the content route in the
 component serving an HTTP header with the same version number as in the
@@ -462,17 +518,73 @@ component's manifest and if the client detects a difference between the HTTP
 header version number and the version in the manifest cached in the client, the
 component has changed.
 
-In the event of an update the client will have to do multiple HTTP requests to
-refetch the manifest, fallback and content. In a distributed system there can be
-windows where a component can exist with two versions at the same time during a
-rolling deploy. In such a scenario the client might go into an "update loop" due
-to hitting different versions of the component.
+In the event of an update the client will throw away the cached manifest and do
+multiple HTTP requests to refetch the manifest, fallback and content.
+
+### On retrying
+
+In a distributed system there can be windows where a component can exist with
+two versions at the same time during a rolling deploy. In such a scenario the
+client might go into an "update loop" due to hitting different versions of the
+component.
 
 In a rolling deploy this is not nessessery a bad thing. But to protect both the
 application using the client and the component itself, the client will terminate
-the process of updating if such an "update loop" is detected. How many times the
-client will retry settling an update before termination can be set by the
-`retries` argument in the client constructor and the `.register()` method.
+the process of updating if such an "update loop" is detected to happen multiple
+times in a row.
+
+This feature will also protect against cases where there might be a miss match
+between the version number in a manifest file and whats set as a header on the
+content route.
+
+How many times the client will retry settling an update before termination can
+be set by the `retries` argument in the client constructor and the `.register()`
+method.
+
+### Missing version header
+
+There might be error situations where a content route is missing the version
+header so the client does not have anything to compare the version in the
+manifest against. In such a situation the client will continue to fetch the
+content but the manifest and its fallback will never be re-evaluated for an
+update.
+
+### Health status
+
+During the life cycle of updating one or multiple podlets the client will be in
+different states. The state is a representation of all registered podlets in the
+client. In other words; if one of five podlets enters a given state, the state
+is representative for all five podlets.
+
+These states are:
+
+-   `instantiated` - When a `Client` has been instanciated but no requests to any podlets has been made.
+-   `initializing` - When one or multiple podlets is requested for the very first time. This state will only happen after `instantiated`.
+-   `unstable` - When an update of a podlet is detected and are in the process of refetching the manifest.
+-   `stable` - When all registered podlets is using its cached manifest and are only fetching content.
+-   `unhealthy` - When a update of a podlet did never settle. Ex; This will trigger if a podlet gets into a "update loop".
+
+The most common state is `stable`.
+
+When a podlet is updated and the client detect this the client will enter
+`unstable` state. This state will live for a given time and does depent on how
+the deployment of a podlet is done. Example; if one do a rolling deploy of a
+podlet, the `unstable` state will live as long as the podlet exist in two
+different version during deploy plus a small extra time after this to make sure
+everything has settled. How long this window to make sure everything is settled
+can be configured by the `resolveThreshold` argument on the `Client`
+constructor.
+
+When a podlet update is detected the client will also start to monitor if the
+new podlet gets into a stable state withing a given time. In other words; if a
+podlet enters a "update loop" as described above, the client will detect this
+and after a given time set the state to `unhealthy`. How long it should go
+before `unhealthy` state is entered can be configured by the `resolveMax`
+argument on the `Client` constructor.
+
+The state can be checked by the `.state` property on the `Client` object. The
+client will also emit a `state` event each time the client enters one of the
+above states.
 
 ## License
 
@@ -496,6 +608,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+[@metrics/metric]: https://github.com/metrics-js/metric '@metrics/metric'
 [@podium/layout]: https://github.com/podium-lib/layout '@podium/layout'
 [rfc 7234]: https://tools.ietf.org/html/rfc7234 'RFC 7234'
 [boom]: https://github.com/hapijs/boom 'Boom'

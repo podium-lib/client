@@ -15,9 +15,9 @@ test('State() - object tag - should be PodiumClientState', () => {
 test('State() - "threshold" is larger than "max" - should throw', () => {
     expect(() => {
         // eslint-disable-next-line no-unused-vars
-        const state = new State({ threshold: 6000, max: 4000 });
+        const state = new State({ resolveThreshold: 6000, resolveMax: 4000 });
     }).toThrowError(
-        'argument "max" must be larger than "threshold" argument'
+        'argument "resolveMax" must be larger than "resolveThreshold" argument'
     );
 });
 
@@ -92,7 +92,7 @@ test('State.setUnstableState() - call method multiple times - should emit "unsta
 test('State() - threshold is 2 seconds - .setUnstableState() is called - should set state to "stable" after threshold is passed', () => {
     const clock = lolex.install();
 
-    const state = new State({ threshold: 2000 });
+    const state = new State({ resolveThreshold: 2000 });
 
     state.setInitializingState();
     state.setUnstableState();
@@ -122,7 +122,7 @@ test('State() - threshold is 2 seconds - .setUnstableState() is called - should 
 
     const clock = lolex.install();
 
-    const state = new State({ threshold: 2000 });
+    const state = new State({ resolveThreshold: 2000 });
     state.on('state', event => {
         if (event === 'stable') {
             expect(event).toBe('stable');
@@ -147,7 +147,7 @@ test('State() - threshold is 2 seconds - .setUnstableState() is called - should 
 test('State() - exceed max value - should set state to "unhealthy" after max is passed', () => {
     const clock = lolex.install();
 
-    const state = new State({ threshold: 1000, max: 2000 });
+    const state = new State({ resolveThreshold: 1000, resolveMax: 2000 });
 
     state.setInitializingState();
 
@@ -176,7 +176,7 @@ test('State() - exceed max value - should set state to "unhealthy" after max is 
 test('State() - exceed max value - then continue to call .setUnstableState() within threshold - should keep state as "unhealthy"', () => {
     const clock = lolex.install();
 
-    const state = new State({ threshold: 1000, max: 2000 });
+    const state = new State({ resolveThreshold: 1000, resolveMax: 2000 });
 
     state.setInitializingState();
 
@@ -217,7 +217,7 @@ test('State() - exceed max value - then continue to call .setUnstableState() wit
 test('State() - exceed max value - then continue to call .setUnstableState() - then let threshold timeout - should set state to "stable"', () => {
     const clock = lolex.install();
 
-    const state = new State({ threshold: 1000, max: 2000 });
+    const state = new State({ resolveThreshold: 1000, resolveMax: 2000 });
 
     state.setInitializingState();
 
@@ -261,7 +261,7 @@ test('State() - exceed max value - then continue to call .setUnstableState() wit
 
     const clock = lolex.install();
 
-    const state = new State({ threshold: 1000, max: 2000 });
+    const state = new State({ resolveThreshold: 1000, resolveMax: 2000 });
     state.on('state', event => {
         if (event === 'unhealthy') {
             expect(event).toBe('unhealthy');
@@ -302,7 +302,7 @@ test('State() - exceed max value - then continue to call .setUnstableState() - t
 
     const clock = lolex.install();
 
-    const state = new State({ threshold: 1000, max: 2000 });
+    const state = new State({ resolveThreshold: 1000, resolveMax: 2000 });
     state.on('state', event => {
         if (event === 'unstable') {
             expect(event).toBe('unstable');
@@ -348,7 +348,7 @@ test('State() - exceed max value - then continue to call .setUnstableState() - t
 test('State.reset() - call method - should clear timers and reset state to initial value', () => {
     const clock = lolex.install();
 
-    const state = new State({ threshold: 2000 });
+    const state = new State({ resolveThreshold: 2000 });
 
     state.setInitializingState();
     state.setUnstableState();

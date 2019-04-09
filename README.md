@@ -567,7 +567,7 @@ These states are:
 The most common state is `stable`.
 
 When a podlet is updated and the client detect this the client will enter
-`unstable` state. This state will live for a given time and does depent on how
+`unstable` state. This state will live for a given time and depends on how
 the deployment of a podlet is done. Example; if one do a rolling deploy of a
 podlet, the `unstable` state will live as long as the podlet exist in two
 different version during deploy plus a small extra time after this to make sure

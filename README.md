@@ -562,7 +562,7 @@ These states are:
 -   `initializing` - When one or multiple podlets is requested for the very first time. This state will only happen after `instantiated`.
 -   `unstable` - When an update of a podlet is detected and are in the process of refetching the manifest.
 -   `stable` - When all registered podlets is using its cached manifest and are only fetching content.
--   `unhealthy` - When a update of a podlet did never settle. Ex; This will trigger if a podlet gets into a "update loop".
+-   `unhealthy` - When an update of a podlet never settled. For instance, if a podlet is stuck in an "update loop".
 
 The most common state is `stable`.
 

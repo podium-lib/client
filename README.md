@@ -577,7 +577,7 @@ constructor.
 
 When a podlet update is detected the client will also start to monitor if the
 new podlet gets into a stable state withing a given time. In other words; if a
-podlet enters a "update loop" as described above, the client will detect this
+podlet enters an "update loop" as described above, the client will detect this
 and after a given time set the state to `unhealthy`. How long it should go
 before `unhealthy` state is entered can be configured by the `resolveMax`
 argument on the `Client` constructor.

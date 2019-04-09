@@ -558,7 +558,7 @@ is representative for all five podlets.
 
 These states are:
 
--   `instantiated` - When a `Client` has been instanciated but no requests to any podlets has been made.
+-   `instantiated` - When a `Client` has been instantiated but no requests to any podlets has been made.
 -   `initializing` - When one or multiple podlets is requested for the very first time. This state will only happen after `instantiated`.
 -   `unstable` - When an update of a podlet is detected and are in the process of refetching the manifest.
 -   `stable` - When all registered podlets is using its cached manifest and are only fetching content.

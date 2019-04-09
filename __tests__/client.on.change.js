@@ -26,7 +26,7 @@ test('client.on("change") - resource is new - should emit "change" event on firs
 });
 
 test('client.on("change") - resource changes - should emit "change" event after update', async () => {
-    expect.hasAssertions();
+    expect.assertions(1);
 
     const serverVer1 = new Faker({ version: '1.0.0' });
     const service = await serverVer1.listen();
@@ -58,7 +58,7 @@ test('client.on("change") - resource changes - should emit "change" event after 
 });
 
 test('client.on("change") - resource changes - should be a change in the emitted manifest', async () => {
-    expect.hasAssertions();
+    expect.assertions(2);
 
     const serverVer1 = new Faker({ version: '1.0.0' });
     const service = await serverVer1.listen();

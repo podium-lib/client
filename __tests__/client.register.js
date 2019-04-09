@@ -36,7 +36,7 @@ test('client.register() - call with a invalid value for "options.uri" - should t
 
     expect(() => {
         client.register({ uri: '/wrong', name: 'someName' });
-    }).toThrowError('The value, "undefined", for the required argument "uri" on the .register() method is not defined or not valid.');
+    }).toThrowError('The value, "/wrong", for the required argument "uri" on the .register() method is not defined or not valid.');
 });
 
 test('client.register() - call with a invalid value for "options.name" - should throw', () => {

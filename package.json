@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@metrics/client": "2.4.1",
-    "@podium/schemas": "4.0.0-next.1",
+    "@podium/schemas": "4.0.0-next.2",
     "@podium/utils": "4.0.0-next",
     "abslog": "2.4.0",
     "boom": "^7.3.0",

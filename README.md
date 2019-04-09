@@ -546,7 +546,7 @@ method.
 There might be error situations where a content route is missing the version
 header so the client does not have anything to compare the version in the
 manifest against. In such a situation the client will continue to fetch the
-content but the manifest and its fallback will never be re-evaluated for an
+content, but the manifest and its fallback will never be re-evaluated for an
 update.
 
 ### Health status

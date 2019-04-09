@@ -507,7 +507,7 @@ will be 404.
 
 A podlets main entry is a manifest which contains metadata about that component.
 This manifest is fetched on the first request for a podlet and cached by the
-client together with it's fallback content if a fallback has been defined in the
+client together with its fallback content if a fallback has been defined in the
 manifest. On the second and further requests for a podlet the manifest is read
 from the internal cache in the client at the client goes straight to fetching
 the content.

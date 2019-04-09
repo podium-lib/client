@@ -533,7 +533,7 @@ application using the client and the component itself, the client will terminate
 the process of updating if such an "update loop" is detected to happen multiple
 times in a row.
 
-This feature will also protect against cases where there might be a miss match
+This feature will also protect against cases where there might be a mismatch
 between the version number in a manifest file and whats set as a header on the
 content route.
 

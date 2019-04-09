@@ -15,12 +15,37 @@ test('integration basic - ', async () => {
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
-    expect({ content: serverA.contentBody, js: '', css: '' }).toEqual(
-        await a.fetch({}),
-    );
-    expect({ content: serverB.contentBody, js: '', css: '' }).toEqual(
-        await b.fetch({}),
-    );
+    const actual1 = await a.fetch({});
+    actual1.headers.date = '<replaced>';
+
+    expect({
+        content: serverA.contentBody,
+        js: '',
+        css: '',
+        headers: {
+            connection: 'keep-alive',
+            'content-length': '17',
+            'content-type': 'text/html; charset=utf-8',
+            date: '<replaced>',
+            'podlet-version': '1.0.0',
+        },
+    }).toEqual(actual1);
+
+    const actual2 = await b.fetch({});
+    actual2.headers.date = '<replaced>';
+
+    expect({
+        content: serverB.contentBody,
+        js: '',
+        css: '',
+        headers: {
+            connection: 'keep-alive',
+            'content-length': '17',
+            'content-type': 'text/html; charset=utf-8',
+            date: '<replaced>',
+            'podlet-version': '1.0.0',
+        },
+    }).toEqual(actual2);
 
     await Promise.all([serverA.close(), serverB.close()]);
 });

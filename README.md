@@ -276,15 +276,15 @@ Please see [@metrics/metric] for full documentation.
 
 ### .state
 
-What state the client are in. See the section
+What state the client is in. See the section
 "[Podlet update life cycle](#podlet-update-life-cycle)" for more information.
 
 The event will fire with the following value:
 
 -   `instantiated` - When a `Client` has been instantiated but no requests to any podlets has been made.
--   `initializing` - When one or multiple podlets is requested for the very first time.
--   `unstable` - When an update of a podlet is detected and are in the process of refetching the manifest.
--   `stable` - When all registered podlets is using its cached manifest and are only fetching content.
+-   `initializing` - When one or multiple podlets are requested for the very first time.
+-   `unstable` - When an update of a podlet is detected and is in the process of refetching the manifest.
+-   `stable` - When all registered podlets are using cached manifests and only fetching content.
 -   `unhealthy` - When an update of a podlet never settled.
 
 ## Events
@@ -312,9 +312,9 @@ resource.fetch();
 
 The event will fire with the following value:
 
--   `initializing` - When one or multiple podlets is requested for the very first time.
--   `unstable` - When an update of a podlet is detected and are in the process of refetching the manifest.
--   `stable` - When all registered podlets is using its cached manifest and are only fetching content.
+-   `initializing` - When one or multiple podlets are requested for the very first time.
+-   `unstable` - When an update of a podlet is detected and is in the process of refetching the manifest.
+-   `stable` - When all registered podlets are using cached manifests and only fetching content.
 -   `unhealthy` - When an update of a podlet never settled.
 
 ### change (deprecated)
@@ -506,11 +506,11 @@ will be 404.
 ## Podlet update life cycle
 
 A podlets main entry is a manifest which contains metadata about that component.
-This manifest is fetched on the first request for a podlet and cached by the
+This manifest is fetched on the first request to the podlet and cached by the
 client together with its fallback content if a fallback has been defined in the
-manifest. On the second and further requests for a podlet the manifest is read
-from the internal cache in the client at the client goes straight to fetching
-the content.
+manifest. On the second and subsequent requests for a podlet the manifest is
+read from the internal cache in the client and the client goes straight to
+fetching the content.
 
 Detection of updates to a component is done by the content route in the
 component serving an HTTP header with the same version number as in the
@@ -518,8 +518,8 @@ component's manifest and if the client detects a difference between the HTTP
 header version number and the version in the manifest cached in the client, the
 component has changed.
 
-In the event of an update the client will throw away the cached manifest and do
-multiple HTTP requests to refetch the manifest, fallback and content.
+In the event of an update the client will throw away the cached manifest and
+make multiple HTTP requests to refetch the manifest, fallback and content.
 
 ### On retrying
 
@@ -530,11 +530,10 @@ component.
 
 In a rolling deploy this is not nessessery a bad thing. But to protect both the
 application using the client and the component itself, the client will terminate
-the process of updating if such an "update loop" is detected to happen multiple
-times in a row.
+the process of updating if such an "update loop" is detected.
 
 This feature will also protect against cases where there might be a mismatch
-between the version number in a manifest file and whats set as a header on the
+between the version number in a manifest file and what's set as a header on the
 content route.
 
 How many times the client will retry settling an update before termination can
@@ -551,7 +550,7 @@ update.
 
 ### Health status
 
-During the life cycle of updating one or multiple podlets the client will be in
+During the life cycle of updating one or more podlets the client will be in
 different states. The state is a representation of all registered podlets in the
 client. In other words; if one of five podlets enters a given state, the state
 is representative for all five podlets.
@@ -559,27 +558,26 @@ is representative for all five podlets.
 These states are:
 
 -   `instantiated` - When a `Client` has been instantiated but no requests to any podlets has been made.
--   `initializing` - When one or multiple podlets is requested for the very first time. This state will only happen after `instantiated`.
--   `unstable` - When an update of a podlet is detected and are in the process of refetching the manifest.
--   `stable` - When all registered podlets is using its cached manifest and are only fetching content.
+-   `initializing` - When one or multiple podlets are requested for the very first time. This state will only happen after `instantiated`.
+-   `unstable` - When an update of a podlet is detected and is in the process of refetching the manifest.
+-   `stable` - When all registered podlets are using cached manifests and only fetching content.
 -   `unhealthy` - When an update of a podlet never settled. For instance, if a podlet is stuck in an "update loop".
 
 The most common state is `stable`.
 
-When a podlet is updated and the client detect this the client will enter
+When a podlet is updated and the client detects this the client will enter
 `unstable` state. This state will live for a given time and depends on how
-the deployment of a podlet is done. Example; if one do a rolling deploy of a
-podlet, the `unstable` state will live as long as the podlet exist in two
-different version during deploy plus a small extra time after this to make sure
-everything has settled. How long this window to make sure everything is settled
-can be configured by the `resolveThreshold` argument on the `Client`
-constructor.
+the deployment of a podlet is done. For example, during a rolling deploy of a
+podlet, the `unstable` state will live as long as the podlet exists in two
+different versions during deployment plus some additional extra time afterward
+to ensure everything has settled. The duration of this window can be configured
+using the `resolveThreshold` argument in the `Client` constructor.
 
 When a podlet update is detected the client will also start to monitor if the
-new podlet gets into a stable state withing a given time. In other words; if a
+new podlet gets into a stable state within a given time. In other words; if a
 podlet enters an "update loop" as described above, the client will detect this
 and after a given time set the state to `unhealthy`. How long it should go
-before `unhealthy` state is entered can be configured by the `resolveMax`
+before the `unhealthy` state is entered can be configured by the `resolveMax`
 argument on the `Client` constructor.
 
 The state can be checked by the `.state` property on the `Client` object. The

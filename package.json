@@ -45,7 +45,7 @@
     "ttl-mem-cache": "4.0.2"
   },
   "devDependencies": {
-    "@podium/podlet": "3.0.2",
+    "@podium/podlet": "4.0.0-next",
     "benchmark": "^2.1.4",
     "eslint": "^5.13.0",
     "eslint-config-airbnb-base": "^13.1.0",

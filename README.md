@@ -315,7 +315,7 @@ The event will fire with the following value:
 -   `initializing` - When one or multiple podlets is requested for the very first time.
 -   `unstable` - When an update of a podlet is detected and are in the process of refetching the manifest.
 -   `stable` - When all registered podlets is using its cached manifest and are only fetching content.
--   `unhealthy` - When a update of a podlet did never settle.
+-   `unhealthy` - When an update of a podlet never settled.
 
 ### change (deprecated)
 

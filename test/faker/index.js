@@ -3,10 +3,11 @@
 
 'use strict';
 
-const Podlet = require('@podium/podlet');
-const express = require('express');
-const EventEmitter = require('events');
+const { HttpIncoming } = require('@podium/utils');
 const enableDestroy = require('server-destroy');
+const EventEmitter = require('events');
+const Podlet = require('@podium/podlet');
+const http = require('http');
 const url = require('url');
 
 class FakeServer extends EventEmitter {
@@ -23,7 +24,6 @@ class FakeServer extends EventEmitter {
         super();
 
         // Private
-        this._app = express();
         this._server = undefined;
 
         this._podlet = new Podlet({
@@ -185,60 +185,77 @@ class FakeServer extends EventEmitter {
             enumerable: true,
         });
 
-        this._app.use(this._podlet.middleware());
+        this._app = http.createServer(async (req, res) => {
+            const incoming = new HttpIncoming(req, res);
+            const inc = await this._podlet.process(incoming);
 
-        // Error route
-        this._app.get(this._routeError, (req, res) => {
-            this._metrics.error++;
-            this.emit('req:error', this._metrics.error, req);
-            res.status(500).send('Internal server error');
+            if (inc.url.pathname === this._routeError) {
+                this._metrics.error++;
+                this.emit('req:error', this._metrics.error, req);
+
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'text/html; charset=utf-8');
+                res.setHeader('podlet-version', this._podlet.version);
+                res.end('Internal server error');
+
+                return;
+            }
+
+            if (inc.url.pathname === this._podlet.content()) {
+                this._metrics.content++;
+                this.emit('req:content', this._metrics.content, req);
+
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'text/html; charset=utf-8');
+                res.setHeader('podlet-version', this._podlet.version);
+                Object.keys(this._headersContent).forEach(key => {
+                    res.setHeader(key, this._headersContent[key]);
+                });
+                res.end(this._podlet.render(inc, this._bodyContent));
+
+                return;
+            }
+
+            if (inc.url.pathname === this._podlet.fallback()) {
+                this._metrics.fallback++;
+                this.emit('req:fallback', this._metrics.fallback, req);
+
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'text/html; charset=utf-8');
+                res.setHeader('podlet-version', this._podlet.version);
+                Object.keys(this._headersFallback).forEach(key => {
+                    res.setHeader(key, this._headersFallback[key]);
+                });
+                res.end(this._podlet.render(inc, this._bodyFallback));
+
+                return;
+            }
+
+            if (inc.url.pathname === this._podlet.manifest()) {
+                this._metrics.manifest++;
+                this.emit('req:manifest', this._metrics.manifest, req);
+
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('podlet-version', this._podlet.version);
+                Object.keys(this._headersManifest).forEach(key => {
+                    res.setHeader(key, this._headersManifest[key]);
+                });
+                res.end(JSON.stringify(this._podlet));
+
+                return;
+            }
+
+            res.statusCode = 404;
+            res.setHeader('Content-Type', 'text/plain');
+            res.end('Not found');
         });
-
-        // Manifest route
-        this._app.get(this._routeManifest, (req, res) => {
-            this._metrics.manifest++;
-            Object.keys(this._headersManifest).forEach(key => {
-                res.setHeader(key, this._headersManifest[key]);
-            });
-            this.emit('req:manifest', this._metrics.manifest, req);
-            res.status(200).json(this._podlet);
-        });
-
-        // Content route
-        this._app.get(this._routeContent, (req, res) => {
-            this._metrics.content++;
-            Object.keys(this._headersContent).forEach(key => {
-                res.setHeader(key, this._headersContent[key]);
-            });
-            this.emit('req:content', this._metrics.content, req);
-            res.status(200).send(this._bodyContent);
-        });
-
-        // Fallback route
-        this._app.get(this._routeFallback, (req, res) => {
-            this._metrics.fallback++;
-            Object.keys(this._headersFallback).forEach(key => {
-                res.setHeader(key, this._headersFallback[key]);
-            });
-            this.emit('req:fallback', this._metrics.fallback, req);
-            res.status(200).send(this._bodyFallback);
-        });
-
-        // 404 Not found status
-        this._app.use((req, res) => {
-            res.status(404).send('Not found');
-        });
-
-        // Express config
-        this._app.disable('x-powered-by');
-        this._app.disable('etag');
     }
 
     listen(host = 'http://localhost:0') {
         const addr = url.parse(host);
-
         return new Promise(resolve => {
-            this._server = this._app.listen(addr.port, addr.hostname, () => {
+            this._server = this._app.listen({ host: addr.hostname, port: parseInt(addr.port, 10) }, () => {
                 const address = `http://${this._server.address().address}:${
                     this._server.address().port
                 }`;
@@ -257,7 +274,6 @@ class FakeServer extends EventEmitter {
                     options,
                 });
             });
-
             enableDestroy(this._server);
         });
     }

@@ -281,7 +281,7 @@ class FakeServer extends EventEmitter {
     close() {
         if (this._server) {
             return new Promise((resolve, reject) => {
-            this._server.destroy(err => {
+                this._server.destroy(err => {
                     if (err) {
                         reject(err);
                     } else {

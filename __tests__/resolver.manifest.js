@@ -297,8 +297,9 @@ test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.assets.css).toEqual(
-        `${service.address}/${server.assets.css}`,
+
+    expect(outgoing.manifest.css).toEqual(
+        [{ value: `${service.address}/${server.assets.css}`, type: 'module' }]
     );
 
     await server.close();
@@ -317,14 +318,14 @@ test('resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.assets.css).toEqual(
-        'http://does.not.mather.com/a.css',
+    expect(outgoing.manifest.css).toEqual(
+        [{ value: 'http://does.not.mather.com/a.css', type: 'module' }]
     );
 
     await server.close();
 });
 
-test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset - "outgoing.manifest.assets.js" should be relative', async () => {
+test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset - "outgoing.manifest.js" should be relative', async () => {
     const server = new Faker({ assets: { js: 'a.js' } });
     const service = await server.listen();
 
@@ -334,12 +335,12 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset -
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.assets.js).toEqual(server.assets.js);
+    expect(outgoing.manifest.js).toEqual([{ value: server.assets.js, type: 'module' }]);
 
     await server.close();
 });
 
-test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" - "outgoing.manifest.assets.js" should be absolute to podlet', async () => {
+test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" - "outgoing.manifest.js" should be absolute to podlet', async () => {
     const server = new Faker({ assets: { js: 'a.js' } });
     const service = await server.listen();
 
@@ -350,14 +351,14 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" 
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.assets.js).toEqual(
-        `${service.address}/${server.assets.js}`,
+    expect(outgoing.manifest.js).toEqual(
+        [{ value: `${service.address}/${server.assets.js}`, type: 'module' }]
     );
 
     await server.close();
 });
 
-test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" - "outgoing.manifest.assets.js" should be absolute to whats in manifest', async () => {
+test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" - "outgoing.manifest.js" should be absolute to whats in manifest', async () => {
     const server = new Faker({
         assets: { js: 'http://does.not.mather.com/a.js' },
     });
@@ -370,7 +371,7 @@ test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" 
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.assets.js).toEqual('http://does.not.mather.com/a.js');
+    expect(outgoing.manifest.js).toEqual([{ value: 'http://does.not.mather.com/a.js', type: 'module' }]);
 
     await server.close();
 });

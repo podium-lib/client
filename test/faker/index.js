@@ -10,7 +10,7 @@ const Podlet = require('@podium/podlet');
 const http = require('http');
 const url = require('url');
 
-class FakeServer extends EventEmitter {
+class PodletServer extends EventEmitter {
     constructor({
         manifest = '/manifest.json',
         fallback = '/fallback.html',
@@ -78,7 +78,7 @@ class FakeServer extends EventEmitter {
         });
 
         Object.defineProperty(this, 'manifest', {
-            get: () => JSON.parse(JSON.stringify(this._podlet)),
+            get: () => JSON.parse(this._bodyManifest),
             set: () => {
                 throw new Error('Cannot set read-only property.');
             },
@@ -241,7 +241,7 @@ class FakeServer extends EventEmitter {
                 Object.keys(this._headersManifest).forEach(key => {
                     res.setHeader(key, this._headersManifest[key]);
                 });
-                res.end(JSON.stringify(this._podlet));
+                res.end(this._bodyManifest);
 
                 return;
             }
@@ -298,4 +298,4 @@ class FakeServer extends EventEmitter {
     }
 }
 
-module.exports = FakeServer;
+module.exports = PodletServer;

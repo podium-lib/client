@@ -98,8 +98,14 @@ test('resource.fetch() - returns an object with content, headers, js and css key
 
     expect(result).toEqual({
         content: '<p>content component</p>',
-        js: 'http://fakejs.com',
-        css: 'http://fakecss.com',
+        js: [{
+            type: 'module',
+            value: 'http://fakejs.com',
+        }],
+        css: [{
+            type: 'module',
+            value: 'http://fakecss.com',
+        }],
         headers: {
             connection: 'close',
             'content-length': '24',
@@ -112,7 +118,7 @@ test('resource.fetch() - returns an object with content, headers, js and css key
     await server.close();
 });
 
-test('resource.fetch() - returns empty strings for js and css when no assets are present in manifest', async () => {
+test('resource.fetch() - returns empty array for js and css when no assets are present in manifest', async () => {
     expect.assertions(1);
 
     const server = new Faker();
@@ -124,8 +130,8 @@ test('resource.fetch() - returns empty strings for js and css when no assets are
 
     expect(result).toEqual({
         content: '<p>content component</p>',
-        js: '',
-        css: '',
+        js: [],
+        css: [],
         headers: {
             connection: 'close',
             'content-length': '24',
@@ -165,8 +171,8 @@ test('resource.stream() - should emit beforeStream event with no assets', async 
     const strm = resource.stream({});
     strm.once('beforeStream', ({ headers, js, css }) => {
         expect(headers['podlet-version']).toEqual('1.0.0');
-        expect(js).toEqual('');
-        expect(css).toEqual('');
+        expect(js).toEqual([]);
+        expect(css).toEqual([]);
     });
 
     await getStream(strm);
@@ -183,7 +189,7 @@ test('resource.stream() - should emit js event when js assets defined', async ()
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
     strm.once('beforeStream', ({ js }) => {
-        expect(js).toEqual('http://fakejs.com');
+        expect(js).toEqual([{ type: 'module', value: 'http://fakejs.com' }]);
     });
 
     await getStream(strm);
@@ -200,7 +206,7 @@ test('resource.stream() - should emit css event when css assets defined', async 
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
     strm.once('beforeStream', ({ css }) => {
-        expect(css).toEqual('http://fakecss.com');
+        expect(css).toEqual([{ type: 'module', value: 'http://fakecss.com' }]);
     });
 
     await getStream(strm);
@@ -209,8 +215,6 @@ test('resource.stream() - should emit css event when css assets defined', async 
 });
 
 test('resource.stream() - should emit beforeStream event before emitting data', async () => {
-    expect.assertions(3);
-
     const server = new Faker({
         assets: { js: 'http://fakejs.com', css: 'http://fakecss.com' },
     });
@@ -229,9 +233,9 @@ test('resource.stream() - should emit beforeStream event before emitting data', 
 
     await getStream(strm);
 
-    expect(items[0].css).toBe('http://fakecss.com');
-    expect(items[0].js).toBe('http://fakejs.com');
-    expect(items[1]).toBe('<p>content component</p>');
+    expect(items[0].css).toEqual([{ type: 'module', value: 'http://fakecss.com' }]);
+    expect(items[0].js).toEqual([{ type: 'module', value: 'http://fakejs.com' }]);
+    expect(items[1]).toEqual('<p>content component</p>');
 
     await server.close();
 });

@@ -3,7 +3,7 @@
 const Client = require('../');
 const Faker = require('../test/faker');
 
-test('integration basic - ', async () => {
+test('integration basic', async () => {
     const serverA = new Faker({ name: 'aa' });
     const serverB = new Faker({ name: 'bb' });
     const [serviceA, serviceB] = await Promise.all([
@@ -20,8 +20,8 @@ test('integration basic - ', async () => {
 
     expect({
         content: serverA.contentBody,
-        js: '',
-        css: '',
+        js: [],
+        css: [],
         headers: {
             connection: 'keep-alive',
             'content-length': '17',
@@ -36,8 +36,8 @@ test('integration basic - ', async () => {
 
     expect({
         content: serverB.contentBody,
-        js: '',
-        css: '',
+        js: [],
+        css: [],
         headers: {
             connection: 'keep-alive',
             'content-length': '17',
@@ -152,7 +152,7 @@ test('integration - throwable:false - remote content can not be resolved - shoul
     const component = client.register(service.options);
 
     const result = await component.fetch({});
-    expect(result).toEqual({ content: server.fallbackBody, js: '', css: '' });
+    expect(result).toEqual({ content: server.fallbackBody, js: [], css: [] });
 
     await server.close();
 });
@@ -195,7 +195,7 @@ test('integration - throwable:false - remote content responds with http 500 - sh
     const component = client.register(service.options);
 
     const result = await component.fetch({});
-    expect(result).toEqual({ content: server.fallbackBody, js: '', css: '' });
+    expect(result).toEqual({ content: server.fallbackBody, js: [], css: [] });
 
     await server.close();
 });
@@ -218,7 +218,7 @@ test('integration - throwable:false - manifest / content fetching goes into recu
 
     const result = await component.fetch({});
 
-    expect(result).toEqual({ content: server.fallbackBody, js: '', css: '' });
+    expect(result).toEqual({ content: server.fallbackBody, js: [], css: [] });
 
     // manifest and fallback is one more than default
     // due to initial refresh() call

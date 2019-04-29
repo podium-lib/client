@@ -13,7 +13,6 @@ const State = require('../lib/state');
 const Faker = require('../test/faker');
 const Client = require('../');
 
-// const REGISTRY = new Cache();
 const URI = 'http://example.org';
 
 /**
@@ -85,8 +84,6 @@ test('resource.fetch(podiumContext) - should pass it on', async () => {
 });
 
 test('resource.fetch() - returns an object with content, headers, js and css keys', async () => {
-    expect.assertions(1);
-
     const server = new Faker({
         assets: { js: 'http://fakejs.com', css: 'http://fakecss.com' },
     });
@@ -96,31 +93,27 @@ test('resource.fetch() - returns an object with content, headers, js and css key
     const result = await resource.fetch({});
     result.headers.date = '<replaced>';
 
-    expect(result).toEqual({
-        content: '<p>content component</p>',
-        js: [{
-            type: 'module',
-            value: 'http://fakejs.com',
-        }],
-        css: [{
-            type: 'module',
-            value: 'http://fakecss.com',
-        }],
-        headers: {
-            connection: 'close',
-            'content-length': '24',
-            'content-type': 'text/html; charset=utf-8',
-            date: '<replaced>',
-            'podlet-version': '1.0.0',
-        },
+    expect(result.content).toEqual('<p>content component</p>');
+    expect(result.headers).toEqual({
+        connection: 'close',
+        'content-length': '24',
+        'content-type': 'text/html; charset=utf-8',
+        date: '<replaced>',
+        'podlet-version': '1.0.0',
     });
+    expect(result.css).toEqual([{
+        type: 'module',
+        value: 'http://fakecss.com',
+    }]);
+    expect(result.js).toEqual([{
+        type: 'module',
+        value: 'http://fakejs.com',
+    }]);
 
     await server.close();
 });
 
 test('resource.fetch() - returns empty array for js and css when no assets are present in manifest', async () => {
-    expect.assertions(1);
-
     const server = new Faker();
     const service = await server.listen();
 
@@ -128,18 +121,16 @@ test('resource.fetch() - returns empty array for js and css when no assets are p
     const result = await resource.fetch({});
     result.headers.date = '<replaced>';
 
-    expect(result).toEqual({
-        content: '<p>content component</p>',
-        js: [],
-        css: [],
-        headers: {
-            connection: 'close',
-            'content-length': '24',
-            'content-type': 'text/html; charset=utf-8',
-            date: '<replaced>',
-            'podlet-version': '1.0.0',
-        },
+    expect(result.content).toEqual('<p>content component</p>');
+    expect(result.headers).toEqual({
+        connection: 'close',
+        'content-length': '24',
+        'content-type': 'text/html; charset=utf-8',
+        date: '<replaced>',
+        'podlet-version': '1.0.0',
     });
+    expect(result.css).toEqual([]);
+    expect(result.js).toEqual([]);
 
     await server.close();
 });

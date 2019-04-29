@@ -18,34 +18,30 @@ test('integration basic', async () => {
     const actual1 = await a.fetch({});
     actual1.headers.date = '<replaced>';
 
-    expect({
-        content: serverA.contentBody,
-        js: [],
-        css: [],
-        headers: {
-            connection: 'keep-alive',
-            'content-length': '17',
-            'content-type': 'text/html; charset=utf-8',
-            date: '<replaced>',
-            'podlet-version': '1.0.0',
-        },
-    }).toEqual(actual1);
+    expect(actual1.content).toEqual(serverA.contentBody);
+    expect(actual1.js).toEqual([]);
+    expect(actual1.css).toEqual([]);
+    expect(actual1.headers).toEqual({
+        connection: 'keep-alive',
+        'content-length': '17',
+        'content-type': 'text/html; charset=utf-8',
+        date: '<replaced>',
+        'podlet-version': '1.0.0',
+    });
 
     const actual2 = await b.fetch({});
     actual2.headers.date = '<replaced>';
 
-    expect({
-        content: serverB.contentBody,
-        js: [],
-        css: [],
-        headers: {
-            connection: 'keep-alive',
-            'content-length': '17',
-            'content-type': 'text/html; charset=utf-8',
-            date: '<replaced>',
-            'podlet-version': '1.0.0',
-        },
-    }).toEqual(actual2);
+    expect(actual2.content).toEqual(serverB.contentBody);
+    expect(actual2.js).toEqual([]);
+    expect(actual2.css).toEqual([]);
+    expect(actual2.headers).toEqual({
+        connection: 'keep-alive',
+        'content-length': '17',
+        'content-type': 'text/html; charset=utf-8',
+        date: '<replaced>',
+        'podlet-version': '1.0.0',
+    });
 
     await Promise.all([serverA.close(), serverB.close()]);
 });
@@ -152,7 +148,10 @@ test('integration - throwable:false - remote content can not be resolved - shoul
     const component = client.register(service.options);
 
     const result = await component.fetch({});
-    expect(result).toEqual({ content: server.fallbackBody, js: [], css: [] });
+    expect(result.content).toEqual(server.fallbackBody);
+    expect(result.headers).toEqual({});
+    expect(result.css).toEqual([]);
+    expect(result.js).toEqual([]);
 
     await server.close();
 });
@@ -195,7 +194,10 @@ test('integration - throwable:false - remote content responds with http 500 - sh
     const component = client.register(service.options);
 
     const result = await component.fetch({});
-    expect(result).toEqual({ content: server.fallbackBody, js: [], css: [] });
+    expect(result.content).toEqual(server.fallbackBody);
+    expect(result.headers).toEqual({});
+    expect(result.css).toEqual([]);
+    expect(result.js).toEqual([]);
 
     await server.close();
 });
@@ -217,8 +219,10 @@ test('integration - throwable:false - manifest / content fetching goes into recu
     };
 
     const result = await component.fetch({});
-
-    expect(result).toEqual({ content: server.fallbackBody, js: [], css: [] });
+    expect(result.content).toEqual(server.fallbackBody);
+    expect(result.headers).toEqual({});
+    expect(result.css).toEqual([]);
+    expect(result.js).toEqual([]);
 
     // manifest and fallback is one more than default
     // due to initial refresh() call

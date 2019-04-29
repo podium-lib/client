@@ -31,11 +31,10 @@ const component = client.register({
 });
 
 const stream = component.stream();
-stream.once('js', js => {
-    console.log(js);
-});
-stream.on('css', css => {
-    console.log(css);
+stream.once('beforeStream', res => {
+    console.log(res.headers);
+    console.log(res.css);
+    console.log(res.js);
 });
 stream.on('error', error => {
     console.log(error);
@@ -58,10 +57,11 @@ const component = client.register({
 
 component
     .fetch()
-    .then(result => {
-        console.log(result.content);
-        console.log(result.js);
-        console.log(result.css);
+    .then(res => {
+        console.log(res.content);
+        console.log(res.headers);
+        console.log(res.css);
+        console.log(res.js);
     })
     .catch(error => {
         console.log(error);
@@ -351,7 +351,8 @@ A Podium Resource Object has the following API:
 
 ### .fetch(podiumContext, options)
 
-Fetches the content of the component. Returns a `Promise` which resolves to an object containing the keys `content`, `js` and `css`.
+Fetches the content of the component. Returns a `Promise` which resolves with a
+Response object containing the keys `content`, `headers`, `css` and `js`.
 
 #### podiumContext (required)
 
@@ -377,7 +378,10 @@ console.log(result.css);
 
 ### .stream(podiumContext, options)
 
-Streams the content of the component. Returns a `ReadStream` which emits 2 additional custom events `js` and `css`. These events will fire before data events begin. The `js` and `css` values from the resources manifest file will be emitted.
+Streams the content of the component. Returns a `ReadableStream` which streams
+the content of the component. Before the stream starts flowing a `beforeStream`
+with a Response object, containing `headers`, `css` and `js` references is
+emitted.
 
 #### podiumContext (required)
 
@@ -405,33 +409,36 @@ A property returning the location of the podium resource.
 
 #### beforeStream
 
-A `beforeStream` event is emitted before the stream starts flowing. An object with keys `headers`, `js` and `css` is emitted with the event.
+A `beforeStream` event is emitted before the stream starts flowing. An response
+object with keys `headers`, `js` and `css` is emitted with the event.
 
-`headers` will always contain the response headers from the podlet
-If the resource manifest defines JavaScript assets, `js` will contain the value from the manifest file otherwise `js` will be an empty string.
-If the resource manifest defines CSS assets, `css` will contain the value from the manifest file otherwise `css` will be an empty string.
+`headers` will always contain the response headers from the podlet. If the
+resource manifest defines JavaScript assets, `js` will contain the value from
+the manifest file otherwise `js` will be an empty string. If the resource
+manifest defines CSS assets, `css` will contain the value from the manifest file
+otherwise `css` will be an empty string.
 
 ```js
 const stream = component.stream();
 stream.once('beforeStream', data => {
     console.log(data.headers);
-    console.log(data.js);
     console.log(data.css);
+    console.log(data.js);
 });
 ```
 
 ## Controlling caching of the manifest
 
-The client has an internal cache where it keeps a cached version of the
-manifest for each registered Podium component.
+The client has an internal cache where it keeps a cached version of the manifest
+for each registered Podium component.
 
-By default all manifests are cached for 24 hours unless a new
-version of the manifest is detected by a change in the `podlet-version` HTTP
-header on the content URI. When this happens, the cache is thrown away and the
-fresh version of the manifest is cached.
+By default all manifests are cached for 24 hours unless a new version of the
+manifest is detected by a change in the `podlet-version` HTTP header on the
+content URI. When this happens, the cache is thrown away and the fresh version
+of the manifest is cached.
 
-The default length of time the manifest is cached for can be configured
-by setting `maxAge` in the constructor of the client.
+The default length of time the manifest is cached for can be configured by
+setting `maxAge` in the constructor of the client.
 
 ```js
 const client = new Client({ maxAge: 1000 * 60 * 60 * 4 });
@@ -484,8 +491,8 @@ const bar = client.register({
 });
 
 Promise.all([foo.fetch(), bar.fetch()])
-    .then(content => {
-        console.log(content);
+    .then(res => {
+        console.log(res.content);
     })
     .catch(error => {
         console.log(error);

@@ -101,14 +101,18 @@ test('resource.fetch() - returns an object with content, headers, js and css key
         date: '<replaced>',
         'podlet-version': '1.0.0',
     });
-    expect(result.css).toEqual([{
-        type: 'module',
-        value: 'http://fakecss.com',
-    }]);
-    expect(result.js).toEqual([{
-        type: 'module',
-        value: 'http://fakejs.com',
-    }]);
+    expect(result.css).toEqual([
+        {
+            type: 'module',
+            value: 'http://fakecss.com',
+        },
+    ]);
+    expect(result.js).toEqual([
+        {
+            type: 'module',
+            value: 'http://fakejs.com',
+        },
+    ]);
 
     await server.close();
 });
@@ -224,8 +228,12 @@ test('resource.stream() - should emit beforeStream event before emitting data', 
 
     await getStream(strm);
 
-    expect(items[0].css).toEqual([{ type: 'module', value: 'http://fakecss.com' }]);
-    expect(items[0].js).toEqual([{ type: 'module', value: 'http://fakejs.com' }]);
+    expect(items[0].css).toEqual([
+        { type: 'module', value: 'http://fakecss.com' },
+    ]);
+    expect(items[0].js).toEqual([
+        { type: 'module', value: 'http://fakejs.com' },
+    ]);
     expect(items[1]).toEqual('<p>content component</p>');
 
     await server.close();
@@ -305,6 +313,9 @@ test('Resource().uri - instantiate new resource object - expose own uri', () => 
  */
 
 test('Resource().name - instantiate new resource object - expose own name', () => {
-    const resource = new Resource(new Cache(), new State(), { uri: URI, name: 'someName' });
+    const resource = new Resource(new Cache(), new State(), {
+        uri: URI,
+        name: 'someName',
+    });
     expect(resource.name).toBe('someName');
 });

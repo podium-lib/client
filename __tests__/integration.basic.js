@@ -15,7 +15,7 @@ test('integration basic', async () => {
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
-    const actual1 = await a.fetch({});
+    const actual1 = await a.fetch({'podium-locale': 'en-NZ'});
     actual1.headers.date = '<replaced>';
 
     expect(actual1.content).toEqual(serverA.contentBody);

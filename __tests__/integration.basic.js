@@ -326,3 +326,30 @@ test('integration basic - set headers argument - header has a "user-agent" - sho
         },
     );
 });
+
+test('integration basic - metrics stream objects created', async done => {
+    expect.hasAssertions();
+
+    const server = new Faker({ name: 'podlet' });
+    const service = await server.listen();
+
+    const client = new Client();
+
+    const metrics = [];
+    client.metrics.on('data', metric => metrics.push(metric));
+    client.metrics.on('end', async () => {
+        expect(metrics[0].name).toBe('podium_client_resolver_manifest_resolve');
+        expect(metrics[0].type).toBe(5);
+        expect(metrics[1].name).toBe('podium_client_resolver_fallback_resolve');
+        expect(metrics[1].type).toBe(5);
+        expect(metrics[2].name).toBe('podium_client_resolver_content_resolve');
+        expect(metrics[2].type).toBe(5);
+        await server.close();
+        done();
+    });
+
+    const a = client.register(service.options);
+
+    await a.fetch({ 'podium-ctx': 'foo' });
+    client.metrics.push(null);
+});

@@ -30,7 +30,7 @@ test('client.css() - get all registered css assets - should return array with al
         serverB.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
@@ -51,7 +51,7 @@ test('client.css() - one manifest does not hold css asset - should return array 
         serverC.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
     const c = client.register(serviceC.options);
@@ -99,7 +99,7 @@ test('client.css() - fetch content out of order - should return array where defi
         serverJ.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
     const c = client.register(serviceC.options);

@@ -136,7 +136,10 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     };
 
     // Set default expires four hours into future
-    const client = new Client({ maxAge: 1000 * 60 * 60 * 4 });
+    const client = new Client({
+        name: 'podiumClient',
+        maxAge: 1000 * 60 * 60 * 4,
+    });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
@@ -249,7 +252,9 @@ test('resolver.manifest() - "fallback" in manifest is relative - "outgoing.manif
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.fallback).toEqual(`${service.address}/fallback.html`);
+    expect(outgoing.manifest.fallback).toEqual(
+        `${service.address}/fallback.html`,
+    );
 
     await server.close();
 });
@@ -298,9 +303,9 @@ test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true
 
     await manifest.resolve(outgoing);
 
-    expect(outgoing.manifest.css).toEqual(
-        [{ value: `${service.address}/${server.assets.css}`, type: 'module' }]
-    );
+    expect(outgoing.manifest.css).toEqual([
+        { value: `${service.address}/${server.assets.css}`, type: 'module' },
+    ]);
 
     await server.close();
 });
@@ -318,9 +323,9 @@ test('resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.css).toEqual(
-        [{ value: 'http://does.not.mather.com/a.css', type: 'module' }]
-    );
+    expect(outgoing.manifest.css).toEqual([
+        { value: 'http://does.not.mather.com/a.css', type: 'module' },
+    ]);
 
     await server.close();
 });
@@ -335,7 +340,9 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset -
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.js).toEqual([{ value: server.assets.js, type: 'module' }]);
+    expect(outgoing.manifest.js).toEqual([
+        { value: server.assets.js, type: 'module' },
+    ]);
 
     await server.close();
 });
@@ -351,9 +358,9 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" 
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.js).toEqual(
-        [{ value: `${service.address}/${server.assets.js}`, type: 'module' }]
-    );
+    expect(outgoing.manifest.js).toEqual([
+        { value: `${service.address}/${server.assets.js}`, type: 'module' },
+    ]);
 
     await server.close();
 });
@@ -371,7 +378,9 @@ test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" 
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.js).toEqual([{ value: 'http://does.not.mather.com/a.js', type: 'module' }]);
+    expect(outgoing.manifest.js).toEqual([
+        { value: 'http://does.not.mather.com/a.js', type: 'module' },
+    ]);
 
     await server.close();
 });

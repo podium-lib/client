@@ -22,6 +22,7 @@ $ npm install @podium/client
 Connect to a Podium component server and stream the HTML content:
 
 ```js
+const { HttpIncoming } = require('@podium/utils');
 const Client = require('@podium/client');
 const client = new Client();
 
@@ -30,7 +31,7 @@ const component = client.register({
     uri: 'http://foo.site.com/manifest.json',
 });
 
-const stream = component.stream();
+const stream = component.stream(new HttpIncoming());
 stream.once('beforeStream', res => {
     console.log(res.headers);
     console.log(res.css);
@@ -47,6 +48,7 @@ stream.pipe(process.stdout);
 Connect to a podium component server and fetch the HTML content:
 
 ```js
+const { HttpIncoming } = require('@podium/utils');
 const Client = require('@podium/client');
 const client = new Client();
 
@@ -56,7 +58,7 @@ const component = client.register({
 });
 
 component
-    .fetch()
+    .fetch(new HttpIncoming())
     .then(res => {
         console.log(res.content);
         console.log(res.headers);
@@ -349,14 +351,14 @@ component's manifest. This is the content root of the component.
 
 A Podium Resource Object has the following API:
 
-### .fetch(podiumContext, options)
+### .fetch(incoming, options)
 
 Fetches the content of the component. Returns a `Promise` which resolves with a
 Response object containing the keys `content`, `headers`, `css` and `js`.
 
-#### podiumContext (required)
+#### incoming (required)
 
-The Podium Context. See https://github.com/podium-lib/context
+A HttpIncoming object. See https://github.com/podium-lib/utils/blob/master/lib/http-incoming.js
 
 #### options (optional)
 
@@ -376,16 +378,16 @@ console.log(result.js);
 console.log(result.css);
 ```
 
-### .stream(podiumContext, options)
+### .stream(incoming, options)
 
 Streams the content of the component. Returns a `ReadableStream` which streams
 the content of the component. Before the stream starts flowing a `beforeStream`
 with a Response object, containing `headers`, `css` and `js` references is
 emitted.
 
-#### podiumContext (required)
+#### incoming (required)
 
-The Podium Context. See https://github.com/podium-lib/context
+A HttpIncoming object. See https://github.com/podium-lib/utils/blob/master/lib/http-incoming.js
 
 #### options (optional)
 

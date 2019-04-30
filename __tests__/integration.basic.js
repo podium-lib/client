@@ -15,7 +15,7 @@ test('integration basic', async () => {
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
-    const actual1 = await a.fetch({'podium-locale': 'en-NZ'});
+    const actual1 = await a.fetch({ 'podium-locale': 'en-NZ' });
     actual1.headers.date = '<replaced>';
 
     expect(actual1.content).toEqual(serverA.contentBody);
@@ -333,17 +333,30 @@ test('integration basic - metrics stream objects created', async done => {
     const server = new Faker({ name: 'podlet' });
     const service = await server.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'client name' });
 
     const metrics = [];
     client.metrics.on('data', metric => metrics.push(metric));
     client.metrics.on('end', async () => {
+        expect(metrics).toHaveLength(3);
         expect(metrics[0].name).toBe('podium_client_resolver_manifest_resolve');
         expect(metrics[0].type).toBe(5);
+        expect(metrics[0].labels[0]).toEqual({
+            name: 'name',
+            value: 'client name',
+        });
         expect(metrics[1].name).toBe('podium_client_resolver_fallback_resolve');
         expect(metrics[1].type).toBe(5);
+        expect(metrics[1].labels[0]).toEqual({
+            name: 'name',
+            value: 'client name',
+        });
         expect(metrics[2].name).toBe('podium_client_resolver_content_resolve');
         expect(metrics[2].type).toBe(5);
+        expect(metrics[2].labels[0]).toEqual({
+            name: 'name',
+            value: 'client name',
+        });
         await server.close();
         done();
     });

@@ -30,7 +30,7 @@ test('client.js() - get all registered js assets - should return array with all 
         serverB.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podium client' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
@@ -51,7 +51,7 @@ test('client.js() - one manifest does not hold js asset - should return array wh
         serverC.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podium client' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
     const c = client.register(serviceC.options);
@@ -99,7 +99,7 @@ test('client.js() - fetch content out of order - should return array where defin
         serverJ.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podium client' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
     const c = client.register(serviceC.options);

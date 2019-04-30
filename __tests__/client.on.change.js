@@ -9,7 +9,7 @@ test('client.on("change") - resource is new - should emit "change" event on firs
     const server = new Faker({ version: '1.0.0' });
     const service = await server.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'podium client' });
     const changePromise = new Promise(resolve => {
         client.on('change', manifest => {
             expect(manifest.version === '1.0.0').toBe(true);
@@ -31,7 +31,7 @@ test('client.on("change") - resource changes - should emit "change" event after 
     const serverVer1 = new Faker({ version: '1.0.0' });
     const service = await serverVer1.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'podium client' });
     let count = 0;
     client.on('change', manifest => {
         if (count > 0) {
@@ -63,7 +63,7 @@ test('client.on("change") - resource changes - should be a change in the emitted
     const serverVer1 = new Faker({ version: '1.0.0' });
     const service = await serverVer1.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'podium client' });
     let count = 0;
     client.on('change', manifest => {
         // Initial request to manifest

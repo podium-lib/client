@@ -137,7 +137,7 @@ test('resolver.manifest() - one remote has "expires" header second none - should
 
     // Set default expires four hours into future
     const client = new Client({
-        name: 'podium client',
+        name: 'podiumClient',
         maxAge: 1000 * 60 * 60 * 4,
     });
     const a = client.register(serviceA.options);

@@ -260,7 +260,7 @@ test('resource.refresh() - manifest is available - should return "true"', async 
     const server = new Faker({ version: '1.0.0' });
     const service = await server.listen();
 
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
     const component = client.register(service.options);
 
     const result = await component.refresh();
@@ -271,7 +271,7 @@ test('resource.refresh() - manifest is available - should return "true"', async 
 });
 
 test('resource.refresh() - manifest is NOT available - should return "false"', async () => {
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
 
     const component = client.register({
         name: 'component',
@@ -287,7 +287,7 @@ test('resource.refresh() - manifest with fallback is available - should get mani
     const server = new Faker({ version: '1.0.0' });
     const service = await server.listen();
 
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
     const component = client.register(service.options);
 
     await component.refresh();

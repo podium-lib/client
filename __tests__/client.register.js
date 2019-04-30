@@ -8,7 +8,7 @@ const Client = require('../');
  */
 
 test('client.register() - call with a valid value for "options.uri" - should return a "Resources" object', () => {
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
     const resource = client.register({
         uri: 'http://example-a.org',
         name: 'example',
@@ -17,7 +17,7 @@ test('client.register() - call with a valid value for "options.uri" - should ret
 });
 
 test('client.register() - call with no options - should throw', () => {
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
     expect(() => {
         client.register();
     }).toThrowError(
@@ -26,7 +26,7 @@ test('client.register() - call with no options - should throw', () => {
 });
 
 test('client.register() - call with missing value for "options.uri" - should throw', () => {
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
 
     expect(() => {
         client.register({ name: 'example' });
@@ -36,7 +36,7 @@ test('client.register() - call with missing value for "options.uri" - should thr
 });
 
 test('client.register() - call with a invalid value for "options.uri" - should throw', () => {
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
 
     expect(() => {
         client.register({ uri: '/wrong', name: 'someName' });
@@ -46,7 +46,7 @@ test('client.register() - call with a invalid value for "options.uri" - should t
 });
 
 test('client.register() - call with a invalid value for "options.name" - should throw', () => {
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
 
     expect(() => {
         client.register({ uri: 'http://example-a.org', name: 'some name' });
@@ -56,7 +56,7 @@ test('client.register() - call with a invalid value for "options.name" - should 
 });
 
 test('client.register() - call with missing value for "options.name" - should throw', () => {
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
 
     expect(() => {
         client.register({ uri: 'http://example-a.org' });
@@ -66,7 +66,7 @@ test('client.register() - call with missing value for "options.name" - should th
 });
 
 test('client.register() - call duplicate names - should throw', () => {
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
     client.register({ uri: 'http://example-a.org', name: 'someName' });
 
     expect(() => {
@@ -77,7 +77,7 @@ test('client.register() - call duplicate names - should throw', () => {
 });
 
 test('client.register() - register resources - should set resource as property of client object', () => {
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register({
         uri: 'http://example-a.org',
         name: 'exampleA',
@@ -93,7 +93,7 @@ test('client.register() - register resources - should set resource as property o
 });
 
 test('client.register() - register resources - should be possible to iterate over resources set on client object', () => {
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register({
         uri: 'http://example-a.org',
         name: 'exampleA',
@@ -107,7 +107,7 @@ test('client.register() - register resources - should be possible to iterate ove
 });
 
 test('client.register() - try to manually set register resource - should throw', () => {
-    const client = new Client({ name: 'podium client' });
+    const client = new Client({ name: 'podiumClient' });
     client.register({
         uri: 'http://example-a.org',
         name: 'exampleA',

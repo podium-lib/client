@@ -11,11 +11,11 @@ test('integration basic', async () => {
         serverB.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
-    const actual1 = await a.fetch({'podium-locale': 'en-NZ'});
+    const actual1 = await a.fetch({ 'podium-locale': 'en-NZ' });
     actual1.headers.date = '<replaced>';
 
     expect(actual1.content).toEqual(serverA.contentBody);
@@ -49,7 +49,7 @@ test('integration basic', async () => {
 test('integration - throwable:true - remote manifest can not be resolved - should throw', async () => {
     expect.hasAssertions();
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const component = client.register({
         throwable: true,
         name: 'component',
@@ -66,7 +66,7 @@ test('integration - throwable:true - remote manifest can not be resolved - shoul
 });
 
 test('integration - throwable:false - remote manifest can not be resolved - should resolve with empty string', async () => {
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const component = client.register({
         name: 'component',
         uri: 'http://does.not.exist.finn.no/manifest.json',
@@ -84,7 +84,7 @@ test('integration - throwable:false - remote fallback can not be resolved - shou
 
     const service = await server.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const component = client.register(service.options);
 
     const result = await component.fetch({});
@@ -101,7 +101,7 @@ test('integration - throwable:false - remote fallback responds with http 500 - s
 
     const service = await server.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const component = client.register(service.options);
 
     const result = await component.fetch({});
@@ -120,7 +120,7 @@ test('integration - throwable:true - remote content can not be resolved - should
 
     const service = await server.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const component = client.register({
         throwable: true,
         name: service.options.name,
@@ -144,7 +144,7 @@ test('integration - throwable:false - remote content can not be resolved - shoul
 
     const service = await server.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const component = client.register(service.options);
 
     const result = await component.fetch({});
@@ -166,7 +166,7 @@ test('integration - throwable:true - remote content responds with http 500 - sho
 
     const service = await server.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const component = client.register({
         throwable: true,
         name: service.options.name,
@@ -190,7 +190,7 @@ test('integration - throwable:false - remote content responds with http 500 - sh
 
     const service = await server.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const component = client.register(service.options);
 
     const result = await component.fetch({});
@@ -209,7 +209,7 @@ test('integration - throwable:false - manifest / content fetching goes into recu
 
     const service = await server.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const component = client.register(service.options);
     await component.refresh();
 
@@ -242,7 +242,7 @@ test('integration - throwable:true - manifest / content fetching goes into recur
 
     const service = await server.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const component = client.register({
         throwable: true,
         name: service.options.name,
@@ -286,7 +286,7 @@ test('integration basic - set headers argument - should pass on headers to reque
         await server.close();
     });
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(service.options);
 
     await a.fetch(
@@ -314,7 +314,7 @@ test('integration basic - set headers argument - header has a "user-agent" - sho
         await server.close();
     });
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(service.options);
 
     await a.fetch(
@@ -333,17 +333,30 @@ test('integration basic - metrics stream objects created', async done => {
     const server = new PodletServer({ name: 'podlet' });
     const service = await server.listen();
 
-    const client = new Client();
+    const client = new Client({ name: 'clientName' });
 
     const metrics = [];
     client.metrics.on('data', metric => metrics.push(metric));
     client.metrics.on('end', async () => {
+        expect(metrics).toHaveLength(3);
         expect(metrics[0].name).toBe('podium_client_resolver_manifest_resolve');
         expect(metrics[0].type).toBe(5);
+        expect(metrics[0].labels[0]).toEqual({
+            name: 'name',
+            value: 'clientName',
+        });
         expect(metrics[1].name).toBe('podium_client_resolver_fallback_resolve');
         expect(metrics[1].type).toBe(5);
+        expect(metrics[1].labels[0]).toEqual({
+            name: 'name',
+            value: 'clientName',
+        });
         expect(metrics[2].name).toBe('podium_client_resolver_content_resolve');
         expect(metrics[2].type).toBe(5);
+        expect(metrics[2].labels[0]).toEqual({
+            name: 'name',
+            value: 'clientName',
+        });
         await server.close();
         done();
     });

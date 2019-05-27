@@ -12,12 +12,12 @@ const Client = require('../');
  */
 
 test('Client() - instantiate new client object - should have register method', () => {
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     expect(client.register).toBeInstanceOf(Function);
 });
 
 test('Client() - object tag - should be PodiumClient', () => {
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     expect(Object.prototype.toString.call(client)).toEqual(
         '[object PodiumClient]',
     );
@@ -37,7 +37,10 @@ test('Client().on("dispose") - client is hot, manifest reaches timeout - should 
     });
     const service = await server.listen();
 
-    const client = new Client({ maxAge: 24 * 60 * 60 * 1000 });
+    const client = new Client({
+        name: 'podiumClient',
+        maxAge: 24 * 60 * 60 * 1000,
+    });
     client.on('dispose', key => {
         expect(key).toEqual(service.options.name);
     });
@@ -72,7 +75,7 @@ test("client.refreshManifests() - should populate all resources' manifests", asy
         serverB.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     client.register(serviceA.options);
     client.register(serviceB.options);
 
@@ -106,7 +109,7 @@ test("client.dump() - should dump resources' manifests", async () => {
         serverB.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
@@ -137,13 +140,13 @@ test("client.load() - should load dumped resources' manifests", async () => {
         serverB.listen(),
     ]);
 
-    const clientA = new Client();
+    const clientA = new Client({ name: 'podiumClient' });
     const aa = clientA.register(serviceA.options);
     const ab = clientA.register(serviceB.options);
 
     await Promise.all([aa.fetch({}), ab.fetch({})]);
 
-    const clientB = new Client();
+    const clientB = new Client({ name: 'podiumClient' });
     clientB.register(serviceA.options);
     clientB.register(serviceB.options);
 

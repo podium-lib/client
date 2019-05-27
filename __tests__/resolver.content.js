@@ -6,7 +6,7 @@ const HttpOutgoing = require('../lib/http-outgoing');
 const Content = require('../lib/resolver.content');
 const stream = require('readable-stream');
 const utils = require('@podium/utils');
-const Faker = require('../test/faker');
+const { PodletServer } = require('@podium/test-utils');
 
 /**
  * TODO I:
@@ -26,7 +26,7 @@ test('resolver.content() - object tag - should be PodletClientContentResolver', 
 });
 
 test('resolver.content() - "podlet-version" header is same as manifest.version - should keep manifest on outgoing.manifest', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
     const outgoing = new HttpOutgoing({ uri: service.options.uri });
 
@@ -51,7 +51,7 @@ test('resolver.content() - "podlet-version" header is same as manifest.version -
 });
 
 test('resolver.content() - "podlet-version" header is empty - should keep manifest on outgoing.manifest', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
     server.headersContent = {
         'podlet-version': '',
@@ -80,7 +80,7 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
 });
 
 test('resolver.content() - "podlet-version" header is different than manifest.version - should set outgoing.status to "stale" and keep manifest', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
     server.headersContent = {
         'podlet-version': '2.0.0',
@@ -138,7 +138,7 @@ test('resolver.content() - throwable:true - remote can not be resolved - should 
 test('resolver.content() - throwable:true - remote responds with http 500 - should throw', async () => {
     expect.hasAssertions();
 
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     const outgoing = new HttpOutgoing({
@@ -170,7 +170,7 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
 test('resolver.content() - throwable:true - remote responds with http 404 - should throw with error object reflecting status code podlet responded with', async () => {
     expect.hasAssertions();
 
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     const outgoing = new HttpOutgoing({
@@ -269,7 +269,7 @@ test('resolver.content() - throwable:false with fallback set - remote can not be
 test('resolver.content() - throwable:false - remote responds with http 500 - "outgoing" should stream empty string', async () => {
     expect.hasAssertions();
 
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     const outgoing = new HttpOutgoing({
@@ -307,7 +307,7 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "ou
 test('resolver.content() - throwable:false with fallback set - remote responds with http 500 - "outgoing" should stream fallback', async () => {
     expect.hasAssertions();
 
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     const outgoing = new HttpOutgoing({

@@ -2,9 +2,10 @@
 
 'use strict';
 
-const Client = require('../');
-const Faker = require('../test/faker');
+const { PodletServer } = require('@podium/test-utils');
 const lolex = require('lolex');
+const Client = require('../');
+
 
 /**
  * Constructor
@@ -31,7 +32,7 @@ test('Client().on("dispose") - client is hot, manifest reaches timeout - should 
 
     const clock = lolex.install();
 
-    const server = new Faker({
+    const server = new PodletServer({
         name: 'aa',
     });
     const service = await server.listen();
@@ -61,11 +62,11 @@ test('Client().on("dispose") - client is hot, manifest reaches timeout - should 
  */
 
 test("client.refreshManifests() - should populate all resources' manifests", async () => {
-    const serverA = new Faker({
+    const serverA = new PodletServer({
         name: 'aa',
         assets: { js: 'a.js', css: 'a.css' },
     });
-    const serverB = new Faker({
+    const serverB = new PodletServer({
         name: 'bb',
         assets: { js: 'b.js', css: 'b.css' },
     });
@@ -95,11 +96,11 @@ test("client.refreshManifests() - should populate all resources' manifests", asy
  */
 
 test("client.dump() - should dump resources' manifests", async () => {
-    const serverA = new Faker({
+    const serverA = new PodletServer({
         name: 'aa',
         assets: { js: 'a.js', css: 'a.css' },
     });
-    const serverB = new Faker({
+    const serverB = new PodletServer({
         name: 'bb',
         assets: { js: 'b.js', css: 'b.css' },
     });
@@ -126,11 +127,11 @@ test("client.dump() - should dump resources' manifests", async () => {
  */
 
 test("client.load() - should load dumped resources' manifests", async () => {
-    const serverA = new Faker({
+    const serverA = new PodletServer({
         name: 'aa',
         assets: { js: 'a.js', css: 'a.css' },
     });
-    const serverB = new Faker({
+    const serverB = new PodletServer({
         name: 'bb',
         assets: { js: 'b.js', css: 'b.css' },
     });

@@ -1,6 +1,6 @@
 'use strict';
 
-const PodletServer = require('../test/faker');
+const { PodletServer } = require('@podium/test-utils');
 const HttpOutgoing = require('../lib/http-outgoing');
 const Manifest = require('../lib/resolver.manifest');
 const Client = require('../');
@@ -25,8 +25,8 @@ test('compabillity - default manifest from V4 podlet - v4 + v3 compabillity mani
     const podlet = client.register(service.options);
     const content = await podlet.fetch({});
 
-    expect(content.css).toEqual([{ type: 'module', value: 'bar.css' }]);
-    expect(content.js).toEqual([{ type: 'module', value: 'foo.js' }]);
+    expect(content.css).toEqual([{ type: 'default', value: 'bar.css' }]);
+    expect(content.js).toEqual([{ type: 'default', value: 'foo.js' }]);
 
     expect(client.css()).toEqual(['bar.css']);
     expect(client.js()).toEqual(['foo.js']);

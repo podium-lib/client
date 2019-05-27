@@ -10,7 +10,7 @@ const Cache = require('ttl-mem-cache');
 
 const Resource = require('../lib/resource');
 const State = require('../lib/state');
-const Faker = require('../test/faker');
+const { PodletServer } = require('@podium/test-utils');
 const Client = require('../');
 
 const URI = 'http://example.org';
@@ -50,7 +50,7 @@ test('Resource() - instantiate new resource object - should have "stream" method
  */
 
 test('resource.fetch() - should return a promise', async () => {
-    const server = new Faker({ version: '1.0.0' });
+    const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
@@ -65,7 +65,7 @@ test('resource.fetch() - should return a promise', async () => {
 test('resource.fetch(podiumContext) - should pass it on', async () => {
     expect.assertions(2);
 
-    const server = new Faker({ version: '1.0.0' });
+    const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
     server.on('req:content', (count, req) => {
         expect(req.headers['podium-locale']).toBe('nb-NO');
@@ -84,7 +84,7 @@ test('resource.fetch(podiumContext) - should pass it on', async () => {
 });
 
 test('resource.fetch() - returns an object with content, headers, js and css keys', async () => {
-    const server = new Faker({
+    const server = new PodletServer({
         assets: { js: 'http://fakejs.com', css: 'http://fakecss.com' },
     });
     const service = await server.listen();
@@ -103,13 +103,13 @@ test('resource.fetch() - returns an object with content, headers, js and css key
     });
     expect(result.css).toEqual([
         {
-            type: 'module',
+            type: 'default',
             value: 'http://fakecss.com',
         },
     ]);
     expect(result.js).toEqual([
         {
-            type: 'module',
+            type: 'default',
             value: 'http://fakejs.com',
         },
     ]);
@@ -118,7 +118,7 @@ test('resource.fetch() - returns an object with content, headers, js and css key
 });
 
 test('resource.fetch() - returns empty array for js and css when no assets are present in manifest', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
@@ -144,7 +144,7 @@ test('resource.fetch() - returns empty array for js and css when no assets are p
  */
 
 test('resource.stream() - should return a stream', async () => {
-    const server = new Faker({ version: '1.0.0' });
+    const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
@@ -159,7 +159,7 @@ test('resource.stream() - should return a stream', async () => {
 test('resource.stream() - should emit beforeStream event with no assets', async () => {
     expect.assertions(3);
 
-    const server = new Faker({ version: '1.0.0' });
+    const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
@@ -178,13 +178,13 @@ test('resource.stream() - should emit beforeStream event with no assets', async 
 test('resource.stream() - should emit js event when js assets defined', async () => {
     expect.assertions(1);
 
-    const server = new Faker({ assets: { js: 'http://fakejs.com' } });
+    const server = new PodletServer({ assets: { js: 'http://fakejs.com' } });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
     strm.once('beforeStream', ({ js }) => {
-        expect(js).toEqual([{ type: 'module', value: 'http://fakejs.com' }]);
+        expect(js).toEqual([{ type: 'default', value: 'http://fakejs.com' }]);
     });
 
     await getStream(strm);
@@ -195,13 +195,13 @@ test('resource.stream() - should emit js event when js assets defined', async ()
 test('resource.stream() - should emit css event when css assets defined', async () => {
     expect.assertions(1);
 
-    const server = new Faker({ assets: { css: 'http://fakecss.com' } });
+    const server = new PodletServer({ assets: { css: 'http://fakecss.com' } });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
     strm.once('beforeStream', ({ css }) => {
-        expect(css).toEqual([{ type: 'module', value: 'http://fakecss.com' }]);
+        expect(css).toEqual([{ type: 'default', value: 'http://fakecss.com' }]);
     });
 
     await getStream(strm);
@@ -210,7 +210,7 @@ test('resource.stream() - should emit css event when css assets defined', async 
 });
 
 test('resource.stream() - should emit beforeStream event before emitting data', async () => {
-    const server = new Faker({
+    const server = new PodletServer({
         assets: { js: 'http://fakejs.com', css: 'http://fakecss.com' },
     });
     const service = await server.listen();
@@ -229,10 +229,10 @@ test('resource.stream() - should emit beforeStream event before emitting data', 
     await getStream(strm);
 
     expect(items[0].css).toEqual([
-        { type: 'module', value: 'http://fakecss.com' },
+        { type: 'default', value: 'http://fakecss.com' },
     ]);
     expect(items[0].js).toEqual([
-        { type: 'module', value: 'http://fakejs.com' },
+        { type: 'default', value: 'http://fakejs.com' },
     ]);
     expect(items[1]).toEqual('<p>content component</p>');
 
@@ -244,7 +244,7 @@ test('resource.stream() - should emit beforeStream event before emitting data', 
  */
 
 test('resource.refresh() - should return a promise', async () => {
-    const server = new Faker({ version: '1.0.0' });
+    const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
@@ -257,7 +257,7 @@ test('resource.refresh() - should return a promise', async () => {
 });
 
 test('resource.refresh() - manifest is available - should return "true"', async () => {
-    const server = new Faker({ version: '1.0.0' });
+    const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const client = new Client();
@@ -284,7 +284,7 @@ test('resource.refresh() - manifest is NOT available - should return "false"', a
 });
 
 test('resource.refresh() - manifest with fallback is available - should get manifest and fallback, but not content', async () => {
-    const server = new Faker({ version: '1.0.0' });
+    const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const client = new Client();

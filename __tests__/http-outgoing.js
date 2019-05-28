@@ -1,7 +1,7 @@
 'use strict';
 
+const { destinationBufferStream } = require('@podium/test-utils');
 const isStream = require('is-stream');
-const stream = require('readable-stream');
 const HttpOutgoing = require('../lib/http-outgoing');
 
 const REQ_OPTIONS = {
@@ -64,20 +64,11 @@ test('HttpOutgoing() - call .pushFallback() - should push the fallback content o
     outgoing.manifest = {};
     outgoing.fallback = '<p>haz fallback</p>';
 
-    const buffer = [];
-    const to = new stream.Writable({
-        write: (chunk, enc, next) => {
-            buffer.push(chunk);
-            next();
-        },
+    const to = destinationBufferStream(result => {
+        expect(result).toBe('<p>haz fallback</p>');
     });
 
-    stream.pipeline(outgoing, to, error => {
-        if (error) {
-            return;
-        }
-        expect(buffer.join().toString()).toBe('<p>haz fallback</p>');
-    });
+    outgoing.pipe(to);
 
     outgoing.pushFallback();
 });

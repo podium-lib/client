@@ -4,9 +4,11 @@
 
 const HttpOutgoing = require('../lib/http-outgoing');
 const Content = require('../lib/resolver.content');
-const stream = require('readable-stream');
 const utils = require('@podium/utils');
-const { PodletServer } = require('@podium/test-utils');
+const {
+    destinationBufferStream,
+    PodletServer
+} = require('@podium/test-utils');
 
 /**
  * TODO I:
@@ -215,14 +217,8 @@ test('resolver.content() - throwable:false - remote can not be resolved - "outgo
     };
     outgoing.status = 'cached';
 
-    const buffer = [];
-    const to = new stream.Writable({
-        write: (chunk, enc, next) => {
-            buffer.push(chunk);
-            next();
-        },
-    }).on('finish', () => {
-        expect(buffer.join().toString()).toBe('');
+    const to = destinationBufferStream(result => {
+        expect(result).toBe('');
         expect(outgoing.success).toBeTruthy();
     });
 
@@ -249,14 +245,8 @@ test('resolver.content() - throwable:false with fallback set - remote can not be
     outgoing.status = 'cached';
     outgoing.fallback = '<p>haz fallback</p>';
 
-    const buffer = [];
-    const to = new stream.Writable({
-        write: (chunk, enc, next) => {
-            buffer.push(chunk);
-            next();
-        },
-    }).on('finish', () => {
-        expect(buffer.join().toString()).toBe('<p>haz fallback</p>');
+    const to = destinationBufferStream(result => {
+        expect(result).toBe('<p>haz fallback</p>');
         expect(outgoing.success).toBeTruthy();
     });
 
@@ -285,14 +275,8 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "ou
     };
     outgoing.status = 'cached';
 
-    const buffer = [];
-    const to = new stream.Writable({
-        write: (chunk, enc, next) => {
-            buffer.push(chunk);
-            next();
-        },
-    }).on('finish', () => {
-        expect(buffer.join().toString()).toBe('');
+    const to = destinationBufferStream(result => {
+        expect(result).toBe('');
         expect(outgoing.success).toBeTruthy();
     });
 
@@ -324,14 +308,8 @@ test('resolver.content() - throwable:false with fallback set - remote responds w
     outgoing.status = 'cached';
     outgoing.fallback = '<p>haz fallback</p>';
 
-    const buffer = [];
-    const to = new stream.Writable({
-        write: (chunk, enc, next) => {
-            buffer.push(chunk);
-            next();
-        },
-    }).on('finish', () => {
-        expect(buffer.join().toString()).toBe('<p>haz fallback</p>');
+    const to = destinationBufferStream(result => {
+        expect(result).toBe('<p>haz fallback</p>');
         expect(outgoing.success).toBeTruthy();
     });
 

@@ -366,3 +366,30 @@ test('integration basic - metrics stream objects created', async done => {
     await a.fetch({ 'podium-ctx': 'foo' });
     client.metrics.push(null);
 });
+
+test('integration basic - "pathname" is called with different values - should append the different pathnames to the content URL', async () => {
+    expect.hasAssertions();
+
+    const server = new PodletServer({ name: 'podlet', content: '/index' });
+    const service = await server.listen();
+    const results = [];
+
+    server.on('req:content', async (content, req) => {
+        results.push(req.url);
+
+        if (server.metrics.content === 2) {
+            expect(results[0]).toEqual('/index/foo');
+            expect(results[1]).toEqual('/index/bar');
+
+            // Server must be closed here, unless Jest just passes
+            // the test even if it fail. Silly jest...
+            await server.close();
+        }
+    });
+
+    const client = new Client({ name: 'podiumClient' });
+    const a = client.register(service.options);
+
+    await a.fetch({}, { pathname: '/foo' });
+    await a.fetch({}, { pathname: '/bar' });
+});

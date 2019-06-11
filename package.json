@@ -45,7 +45,7 @@
     "ttl-mem-cache": "4.1.0"
   },
   "devDependencies": {
-    "@podium/test-utils": "1.2.1",
+    "@podium/test-utils": "1.4.0",
     "benchmark": "^2.1.4",
     "eslint": "^5.13.0",
     "eslint-config-airbnb-base": "^13.1.0",

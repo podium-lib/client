@@ -3,8 +3,8 @@
 
 'use strict';
 
+const { PodletServer } = require('@podium/test-utils');
 const Client = require('../');
-const Faker = require('../test/faker');
 
 /**
  * Shuffle an array into an random order
@@ -23,14 +23,14 @@ const shuffle = array => {
  */
 
 test('client.js() - get all registered js assets - should return array with all js assets defined in manifests', async () => {
-    const serverA = new Faker({ name: 'aa', assets: { js: 'a.js' } });
-    const serverB = new Faker({ name: 'bb', assets: { js: 'b.js' } });
+    const serverA = new PodletServer({ name: 'aa', assets: { js: 'a.js' } });
+    const serverB = new PodletServer({ name: 'bb', assets: { js: 'b.js' } });
     const [serviceA, serviceB] = await Promise.all([
         serverA.listen(),
         serverB.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
@@ -42,16 +42,16 @@ test('client.js() - get all registered js assets - should return array with all 
 });
 
 test('client.js() - one manifest does not hold js asset - should return array where non defined js asset is omitted', async () => {
-    const serverA = new Faker({ name: 'aa', assets: { js: 'a.js' } });
-    const serverB = new Faker({ name: 'bb', assets: { js: 'b.js' } });
-    const serverC = new Faker({ name: 'cc' });
+    const serverA = new PodletServer({ name: 'aa', assets: { js: 'a.js' } });
+    const serverB = new PodletServer({ name: 'bb', assets: { js: 'b.js' } });
+    const serverC = new PodletServer({ name: 'cc' });
     const [serviceA, serviceB, serviceC] = await Promise.all([
         serverA.listen(),
         serverB.listen(),
         serverC.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
     const c = client.register(serviceC.options);
@@ -64,16 +64,16 @@ test('client.js() - one manifest does not hold js asset - should return array wh
 });
 
 test('client.js() - fetch content out of order - should return array where defined js asset are listed in the order they where registered', async () => {
-    const serverA = new Faker({ name: 'aa', assets: { js: 'a.js' } });
-    const serverB = new Faker({ name: 'bb', assets: { js: 'b.js' } });
-    const serverC = new Faker({ name: 'cc', assets: { js: 'c.js' } });
-    const serverD = new Faker({ name: 'dd', assets: { js: 'd.js' } });
-    const serverE = new Faker({ name: 'ee', assets: { js: 'e.js' } });
-    const serverF = new Faker({ name: 'ff', assets: { js: 'f.js' } });
-    const serverG = new Faker({ name: 'gg', assets: { js: 'g.js' } });
-    const serverH = new Faker({ name: 'hh', assets: { js: 'h.js' } });
-    const serverI = new Faker({ name: 'ii', assets: { js: 'i.js' } });
-    const serverJ = new Faker({ name: 'jj', assets: { js: 'j.js' } });
+    const serverA = new PodletServer({ name: 'aa', assets: { js: 'a.js' } });
+    const serverB = new PodletServer({ name: 'bb', assets: { js: 'b.js' } });
+    const serverC = new PodletServer({ name: 'cc', assets: { js: 'c.js' } });
+    const serverD = new PodletServer({ name: 'dd', assets: { js: 'd.js' } });
+    const serverE = new PodletServer({ name: 'ee', assets: { js: 'e.js' } });
+    const serverF = new PodletServer({ name: 'ff', assets: { js: 'f.js' } });
+    const serverG = new PodletServer({ name: 'gg', assets: { js: 'g.js' } });
+    const serverH = new PodletServer({ name: 'hh', assets: { js: 'h.js' } });
+    const serverI = new PodletServer({ name: 'ii', assets: { js: 'i.js' } });
+    const serverJ = new PodletServer({ name: 'jj', assets: { js: 'j.js' } });
 
     const [
         serviceA,
@@ -99,7 +99,7 @@ test('client.js() - fetch content out of order - should return array where defin
         serverJ.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
     const c = client.register(serviceC.options);

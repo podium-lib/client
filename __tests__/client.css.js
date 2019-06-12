@@ -3,8 +3,8 @@
 
 'use strict';
 
+const { PodletServer } = require('@podium/test-utils');
 const Client = require('../');
-const Faker = require('../test/faker');
 
 /**
  * Shuffle an array into an random order
@@ -23,14 +23,14 @@ const shuffle = array => {
  */
 
 test('client.css() - get all registered css assets - should return array with all css assets defined in manifests', async () => {
-    const serverA = new Faker({ name: 'aa', assets: { css: 'a.css' } });
-    const serverB = new Faker({ name: 'bb', assets: { css: 'b.css' } });
+    const serverA = new PodletServer({ name: 'aa', assets: { css: 'a.css' } });
+    const serverB = new PodletServer({ name: 'bb', assets: { css: 'b.css' } });
     const [serviceA, serviceB] = await Promise.all([
         serverA.listen(),
         serverB.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
@@ -42,16 +42,16 @@ test('client.css() - get all registered css assets - should return array with al
 });
 
 test('client.css() - one manifest does not hold css asset - should return array where non defined css asset is omitted', async () => {
-    const serverA = new Faker({ name: 'aa', assets: { css: 'a.css' } });
-    const serverB = new Faker({ name: 'bb', assets: { css: 'b.css' } });
-    const serverC = new Faker({ name: 'cc' });
+    const serverA = new PodletServer({ name: 'aa', assets: { css: 'a.css' } });
+    const serverB = new PodletServer({ name: 'bb', assets: { css: 'b.css' } });
+    const serverC = new PodletServer({ name: 'cc' });
     const [serviceA, serviceB, serviceC] = await Promise.all([
         serverA.listen(),
         serverB.listen(),
         serverC.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
     const c = client.register(serviceC.options);
@@ -64,16 +64,16 @@ test('client.css() - one manifest does not hold css asset - should return array 
 });
 
 test('client.css() - fetch content out of order - should return array where defined css asset are listed in the order they where registered', async () => {
-    const serverA = new Faker({ name: 'aa', assets: { css: 'a.css' } });
-    const serverB = new Faker({ name: 'bb', assets: { css: 'b.css' } });
-    const serverC = new Faker({ name: 'cc', assets: { css: 'c.css' } });
-    const serverD = new Faker({ name: 'dd', assets: { css: 'd.css' } });
-    const serverE = new Faker({ name: 'ee', assets: { css: 'e.css' } });
-    const serverF = new Faker({ name: 'ff', assets: { css: 'f.css' } });
-    const serverG = new Faker({ name: 'gg', assets: { css: 'g.css' } });
-    const serverH = new Faker({ name: 'hh', assets: { css: 'h.css' } });
-    const serverI = new Faker({ name: 'ii', assets: { css: 'i.css' } });
-    const serverJ = new Faker({ name: 'jj', assets: { css: 'j.css' } });
+    const serverA = new PodletServer({ name: 'aa', assets: { css: 'a.css' } });
+    const serverB = new PodletServer({ name: 'bb', assets: { css: 'b.css' } });
+    const serverC = new PodletServer({ name: 'cc', assets: { css: 'c.css' } });
+    const serverD = new PodletServer({ name: 'dd', assets: { css: 'd.css' } });
+    const serverE = new PodletServer({ name: 'ee', assets: { css: 'e.css' } });
+    const serverF = new PodletServer({ name: 'ff', assets: { css: 'f.css' } });
+    const serverG = new PodletServer({ name: 'gg', assets: { css: 'g.css' } });
+    const serverH = new PodletServer({ name: 'hh', assets: { css: 'h.css' } });
+    const serverI = new PodletServer({ name: 'ii', assets: { css: 'i.css' } });
+    const serverJ = new PodletServer({ name: 'jj', assets: { css: 'j.css' } });
 
     const [
         serviceA,
@@ -99,7 +99,7 @@ test('client.css() - fetch content out of order - should return array where defi
         serverJ.listen(),
     ]);
 
-    const client = new Client();
+    const client = new Client({ name: 'podiumClient' });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
     const c = client.register(serviceC.options);

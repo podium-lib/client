@@ -1,7 +1,7 @@
 'use strict';
 
+const { destinationBufferStream } = require('@podium/test-utils');
 const isStream = require('is-stream');
-const stream = require('readable-stream');
 const HttpOutgoing = require('../lib/http-outgoing');
 
 const REQ_OPTIONS = {
@@ -32,6 +32,12 @@ test('HttpOutgoing() - "options.uri" not provided to constructor - should throw'
     );
 });
 
+test('HttpOutgoing() - should be a PassThrough stream', () => {
+    const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
+    // NOTE: PassThrough is just a transform stream pushing all chunks through. is-stream has no PassThrough check.
+    expect(isStream.transform(outgoing)).toBe(true);
+});
+
 test('HttpOutgoing() - set "uri" - should be accessable on "this.manifestUri"', () => {
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS);
     expect(outgoing.manifestUri).toBe(RESOURCE_OPTIONS.uri);
@@ -48,66 +54,23 @@ test('HttpOutgoing() - "this.manifest" should be {_fallback: ""}', () => {
     expect(outgoing.manifest).toEqual({ _fallback: '' });
 });
 
-test('HttpOutgoing() - "this.content" should be empty String', () => {
-    const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
-    expect(outgoing.content).toBe('');
-});
-
-test('HttpOutgoing() - No value for streamThrough - "this.stream" should contain a PassThrough stream', () => {
-    const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
-    // NOTE: PassThrough is just a transform stream pushing all chunks through. is-stream has no PassThrough check.
-    expect(isStream.transform(outgoing.stream)).toBe(true);
-});
-
-test('HttpOutgoing() - "true" value for streamThrough - "this.stream" should contain a PassThrough stream', () => {
-    const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS, true);
-    // NOTE: PassThrough is just a transform stream pushing all chunks through. is-stream has no PassThrough check.
-    expect(isStream.transform(outgoing.stream)).toBe(true);
-});
-
-test('HttpOutgoing() - "false" value for streamThrough - "this.stream" should contain a Writable stream', () => {
-    const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS, false);
-    expect(isStream.writable(outgoing.stream)).toBe(true);
-});
-
-test('HttpOutgoing() - this.stream errors - should emit error event', () => {
-    expect.hasAssertions();
-
-    const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS, true);
-    outgoing.stream.on('error', error => {
-        expect(error).toBe('error');
-    });
-    outgoing.stream.emit('error', 'error');
-});
-
 test('HttpOutgoing() - get manifestUri - should return URI to manifest', () => {
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS);
     expect(outgoing.manifestUri).toBe(RESOURCE_OPTIONS.uri);
 });
 
-test('HttpOutgoing() - fallbackStream - "this.fallbackStream()" should return a readable stream', () => {
-    const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
-    expect(isStream.readable(outgoing.fallbackStream())).toBe(true);
-});
-
-test('HttpOutgoing() - fallbackStream - "this.fallbackStream()" should stream fallback content', () => {
+test('HttpOutgoing() - call .pushFallback() - should push the fallback content on the stream', () => {
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
     outgoing.manifest = {};
     outgoing.fallback = '<p>haz fallback</p>';
 
-    const buffer = [];
-    const to = new stream.Writable({
-        write: (chunk, enc, next) => {
-            buffer.push(chunk);
-            next();
-        },
+    const to = destinationBufferStream(result => {
+        expect(result).toBe('<p>haz fallback</p>');
     });
 
-    outgoing
-        .fallbackStream(() => {
-            expect(buffer.join().toString()).toBe('<p>haz fallback</p>');
-        })
-        .pipe(to);
+    outgoing.pipe(to);
+
+    outgoing.pushFallback();
 });
 
 test('HttpOutgoing() - "options.throwable" is not defined - "this.throwable" should be "false"', () => {

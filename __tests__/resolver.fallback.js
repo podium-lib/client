@@ -3,9 +3,9 @@
 
 'use strict';
 
+const { PodletServer } = require('@podium/test-utils');
 const HttpOutgoing = require('../lib/http-outgoing');
 const Fallback = require('../lib/resolver.fallback');
-const Faker = require('../test/faker');
 
 test('resolver.fallback() - object tag - should be PodletClientFallbackResolver', () => {
     const fallback = new Fallback();
@@ -15,7 +15,7 @@ test('resolver.fallback() - object tag - should be PodletClientFallbackResolver'
 });
 
 test('resolver.fallback() - fallback field is empty - should set value on "outgoing.fallback" to empty String', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const manifest = server.manifest;
     manifest.fallback = '';
 
@@ -28,7 +28,7 @@ test('resolver.fallback() - fallback field is empty - should set value on "outgo
 });
 
 test('resolver.fallback() - fallback field contains invalid value - should set value on "outgoing.fallback" to empty String', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const manifest = server.manifest;
     manifest.fallback = 'ht++ps://blæ.finn.no/fallback.html';
 
@@ -41,7 +41,7 @@ test('resolver.fallback() - fallback field contains invalid value - should set v
 });
 
 test('resolver.fallback() - fallback field is a URI - should fetch fallback and set content on "outgoing.fallback"', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     const manifest = server.manifest;
@@ -58,7 +58,7 @@ test('resolver.fallback() - fallback field is a URI - should fetch fallback and 
 });
 
 test('resolver.fallback() - fallback field is a URI - should fetch fallback and set content on "outgoing.manifest._fallback"', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     const manifest = server.manifest;
@@ -90,7 +90,7 @@ test('resolver.fallback() - remote can not be resolved - "outgoing.manifest" sho
 });
 
 test('resolver.fallback() - remote responds with http 500 - "outgoing.manifest" should be empty string', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     const outgoing = new HttpOutgoing({

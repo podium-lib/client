@@ -5,7 +5,7 @@
 const HttpOutgoing = require('../lib/http-outgoing');
 const Manifest = require('../lib/resolver.manifest');
 const Client = require('../');
-const Faker = require('../test/faker');
+const { PodletServer } = require('@podium/test-utils');
 const lolex = require('lolex');
 
 /**
@@ -35,7 +35,7 @@ test('resolver.manifest() - "outgoing.manifest" holds a manifest - should resolv
 });
 
 test('resolver.manifest() - remote has no cache header - should set outgoing.maxAge to default', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     const manifest = new Manifest();
@@ -52,7 +52,7 @@ test('resolver.manifest() - remote has no cache header - should set outgoing.max
 });
 
 test('resolver.manifest() - remote has "cache-control: public, max-age=10" header - should set outgoing.maxAge to header value', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
     server.headersManifest = {
         'cache-control': 'public, max-age=10',
@@ -73,7 +73,7 @@ test('resolver.manifest() - remote has "cache-control: public, max-age=10" heade
 });
 
 test('resolver.manifest() - remote has "cache-control: no-cache" header - should set outgoing.maxAge to default', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
     server.headersManifest = {
         'cache-control': 'no-cache',
@@ -95,7 +95,7 @@ test('resolver.manifest() - remote has "cache-control: no-cache" header - should
 test('resolver.manifest() - remote has "expires" header - should set outgoing.maxAge to header value', async () => {
     const clock = lolex.install();
 
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     // Set expire header time to two hours into future
@@ -120,10 +120,10 @@ test('resolver.manifest() - remote has "expires" header - should set outgoing.ma
 test('resolver.manifest() - one remote has "expires" header second none - should set and timout one and use default for second', async () => {
     const clock = lolex.install();
 
-    const serverA = new Faker({
+    const serverA = new PodletServer({
         name: 'aa',
     });
-    const serverB = new Faker({
+    const serverB = new PodletServer({
         name: 'bb',
     });
 
@@ -136,7 +136,10 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     };
 
     // Set default expires four hours into future
-    const client = new Client({ maxAge: 1000 * 60 * 60 * 4 });
+    const client = new Client({
+        name: 'podiumClient',
+        maxAge: 1000 * 60 * 60 * 4,
+    });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
@@ -173,7 +176,7 @@ test('resolver.manifest() - remote can not be resolved - "outgoing.manifest" sho
 });
 
 test('resolver.manifest() - remote responds with http 500 - "outgoing.manifest" should be {_fallback: ""}', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     const manifest = new Manifest();
@@ -189,7 +192,7 @@ test('resolver.manifest() - remote responds with http 500 - "outgoing.manifest" 
 });
 
 test('resolver.manifest() - manifest is not valid - "outgoing.manifest" should be {_fallback: ""}', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     const manifest = new Manifest();
@@ -205,7 +208,7 @@ test('resolver.manifest() - manifest is not valid - "outgoing.manifest" should b
 });
 
 test('resolver.manifest() - "content" in manifest is relative - "outgoing.manifest.content" should be absolute', async () => {
-    const server = new Faker();
+    const server = new PodletServer();
     const service = await server.listen();
 
     const manifest = new Manifest();
@@ -220,7 +223,7 @@ test('resolver.manifest() - "content" in manifest is relative - "outgoing.manife
 });
 
 test('resolver.manifest() - "content" in manifest is absolute - "outgoing.manifest.content" should be absolute', async () => {
-    const server = new Faker({
+    const server = new PodletServer({
         content: 'http://does.not.mather.com',
     });
     const service = await server.listen();
@@ -237,7 +240,7 @@ test('resolver.manifest() - "content" in manifest is absolute - "outgoing.manife
 });
 
 test('resolver.manifest() - "fallback" in manifest is relative - "outgoing.manifest.fallback" should be absolute', async () => {
-    const server = new Faker({
+    const server = new PodletServer({
         fallback: '/fallback.html',
     });
 
@@ -249,13 +252,15 @@ test('resolver.manifest() - "fallback" in manifest is relative - "outgoing.manif
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.fallback).toEqual(`${service.address}/fallback.html`);
+    expect(outgoing.manifest.fallback).toEqual(
+        `${service.address}/fallback.html`,
+    );
 
     await server.close();
 });
 
 test('resolver.manifest() - "fallback" in manifest is absolute - "outgoing.manifest.fallback" should be absolute', async () => {
-    const server = new Faker({
+    const server = new PodletServer({
         fallback: 'http://does.not.mather.com',
     });
     const service = await server.listen();
@@ -272,7 +277,7 @@ test('resolver.manifest() - "fallback" in manifest is absolute - "outgoing.manif
 });
 
 test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is unset - "outgoing.manifest.assets.css" should be relative', async () => {
-    const server = new Faker({ assets: { css: 'a.css' } });
+    const server = new PodletServer({ assets: { css: 'a.css' } });
     const service = await server.listen();
 
     const manifest = new Manifest();
@@ -287,7 +292,7 @@ test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is unset
 });
 
 test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true" - "outgoing.manifest.assets.css" should be absolute to podlet', async () => {
-    const server = new Faker({ assets: { css: 'a.css' } });
+    const server = new PodletServer({ assets: { css: 'a.css' } });
     const service = await server.listen();
 
     const manifest = new Manifest();
@@ -297,15 +302,16 @@ test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.assets.css).toEqual(
-        `${service.address}/${server.assets.css}`,
-    );
 
+    expect(outgoing.manifest.css).toEqual(
+        [{ value: `${service.address}/${server.assets.css}`, type: 'default' }]
+    );
+  
     await server.close();
 });
 
 test('resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true" - "outgoing.manifest.assets.css" should be absolute to whats in manifest', async () => {
-    const server = new Faker({
+    const server = new PodletServer({
         assets: { css: 'http://does.not.mather.com/a.css' },
     });
     const service = await server.listen();
@@ -317,15 +323,16 @@ test('resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.assets.css).toEqual(
-        'http://does.not.mather.com/a.css',
+
+    expect(outgoing.manifest.css).toEqual(
+        [{ value: 'http://does.not.mather.com/a.css', type: 'default' }]
     );
 
     await server.close();
 });
 
-test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset - "outgoing.manifest.assets.js" should be relative', async () => {
-    const server = new Faker({ assets: { js: 'a.js' } });
+test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset - "outgoing.manifest.js" should be relative', async () => {
+    const server = new PodletServer({ assets: { js: 'a.js' } });
     const service = await server.listen();
 
     const manifest = new Manifest();
@@ -334,13 +341,14 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset -
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.assets.js).toEqual(server.assets.js);
+
+    expect(outgoing.manifest.js).toEqual([{ value: server.assets.js, type: 'default' }]);
 
     await server.close();
 });
 
-test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" - "outgoing.manifest.assets.js" should be absolute to podlet', async () => {
-    const server = new Faker({ assets: { js: 'a.js' } });
+test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" - "outgoing.manifest.js" should be absolute to podlet', async () => {
+    const server = new PodletServer({ assets: { js: 'a.js' } });
     const service = await server.listen();
 
     const manifest = new Manifest();
@@ -350,15 +358,16 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" 
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.assets.js).toEqual(
-        `${service.address}/${server.assets.js}`,
+
+    expect(outgoing.manifest.js).toEqual(
+        [{ value: `${service.address}/${server.assets.js}`, type: 'default' }]
     );
 
     await server.close();
 });
 
-test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" - "outgoing.manifest.assets.js" should be absolute to whats in manifest', async () => {
-    const server = new Faker({
+test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" - "outgoing.manifest.js" should be absolute to whats in manifest', async () => {
+    const server = new PodletServer({
         assets: { js: 'http://does.not.mather.com/a.js' },
     });
     const service = await server.listen();
@@ -370,13 +379,14 @@ test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" 
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.assets.js).toEqual('http://does.not.mather.com/a.js');
+
+    expect(outgoing.manifest.js).toEqual([{ value: 'http://does.not.mather.com/a.js', type: 'default' }]);
 
     await server.close();
 });
 
 test('resolver.manifest() - a "proxy" target in manifest is relative - should convert it to be absolute', async () => {
-    const server = new Faker({
+    const server = new PodletServer({
         proxy: {
             foo: '/api/foo',
         },
@@ -395,7 +405,7 @@ test('resolver.manifest() - a "proxy" target in manifest is relative - should co
 });
 
 test('resolver.manifest() - a "proxy" target in manifest is absolute - should keep it absolute', async () => {
-    const server = new Faker({
+    const server = new PodletServer({
         proxy: {
             bar: 'http://does.not.mather.com/api/bar',
         },
@@ -416,7 +426,7 @@ test('resolver.manifest() - a "proxy" target in manifest is absolute - should ke
 });
 
 test('resolver.manifest() - "proxy" targets in manifest is both absolute and relative - should keep absolute URIs and alter relative URIs', async () => {
-    const server = new Faker({
+    const server = new PodletServer({
         proxy: {
             bar: 'http://does.not.mather.com/api/bar',
             foo: '/api/foo',

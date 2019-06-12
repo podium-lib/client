@@ -22,6 +22,7 @@ $ npm install @podium/client
 Connect to a Podium component server and stream the HTML content:
 
 ```js
+const { HttpIncoming } = require('@podium/utils');
 const Client = require('@podium/client');
 const client = new Client();
 
@@ -30,7 +31,12 @@ const component = client.register({
     uri: 'http://foo.site.com/manifest.json',
 });
 
-const stream = component.stream();
+const stream = component.stream(new HttpIncoming());
+stream.once('beforeStream', res => {
+    console.log(res.headers);
+    console.log(res.css);
+    console.log(res.js);
+});
 stream.on('error', error => {
     console.log(error);
 });
@@ -42,6 +48,7 @@ stream.pipe(process.stdout);
 Connect to a podium component server and fetch the HTML content:
 
 ```js
+const { HttpIncoming } = require('@podium/utils');
 const Client = require('@podium/client');
 const client = new Client();
 
@@ -51,9 +58,12 @@ const component = client.register({
 });
 
 component
-    .fetch()
-    .then(content => {
-        console.log(content);
+    .fetch(new HttpIncoming())
+    .then(res => {
+        console.log(res.content);
+        console.log(res.headers);
+        console.log(res.css);
+        console.log(res.js);
     })
     .catch(error => {
         console.log(error);
@@ -94,6 +104,8 @@ provided:
 -   `maxAge` - {Number} - Default value, in milliseconds, for how long manifests should be cached. Default: Infinity
 -   `agent` - {HTTPAgent} - Default HTTP Agent used for all requests.
 -   `logger` - {Object} - A logger which conforms to the log4j interface. See the docs for [abslog](https://www.npmjs.com/package/abslog) for more information.
+-   `resolveThreshold` - {Number} - How long, in milliseconds, update resolving should wait before entering `stable` state. See the section "[Podlet update life cycle](#podlet-update-life-cycle)" for more information. Default: 10000 (10 seconds).
+-   `resolveMax` - {Number} - How long, in milliseconds, update resolving should wait before entering `unhealthy` state. See the section "[Podlet update life cycle](#podlet-update-life-cycle)" for more information. Default: 240000 (4 minutes).
 
 ## API
 
@@ -216,7 +228,7 @@ console.log(status); // true
 console.log(client.js()); // ['foo.js', 'bar.js']
 ```
 
-### refreshManifests()
+### .refreshManifests()
 
 Refreshes the manifests of all registered resources. Does so by calling the
 `.refresh()` method on all resources under the hood.
@@ -252,11 +264,62 @@ which `.dump()` exports, they will not be inserted into the cache.
 
 Returns an Array with the keys which were inserted into the cache.
 
+## Properties
+
+The Client instance has the following properties:
+
+### .metrics
+
+Property that exposes a metric stream. This stream joins all internal metrics
+streams into one stream resulting in all metrics from all sub modules being
+exposed here.
+
+Please see [@metrics/metric] for full documentation.
+
+### .state
+
+What state the client is in. See the section
+"[Podlet update life cycle](#podlet-update-life-cycle)" for more information.
+
+The event will fire with the following value:
+
+-   `instantiated` - When a `Client` has been instantiated but no requests to any podlets has been made.
+-   `initializing` - When one or multiple podlets are requested for the very first time.
+-   `unstable` - When an update of a podlet is detected and is in the process of refetching the manifest.
+-   `stable` - When all registered podlets are using cached manifests and only fetching content.
+-   `unhealthy` - When an update of a podlet never settled.
+
 ## Events
 
-The client emits the following events:
+The Client instance emits the following events:
 
-### change
+### state
+
+When there is a change in state. See the section
+"[Podlet update life cycle](#podlet-update-life-cycle)" for more information.
+
+```js
+const client = new Client();
+client.on('state', state => {
+    console.log(state);
+});
+
+const resource = client.register({
+    uri: 'http://foo.site.com/manifest.json',
+    name: 'foo',
+});
+
+resource.fetch();
+```
+
+The event will fire with the following value:
+
+-   `initializing` - When one or multiple podlets are requested for the very first time.
+-   `unstable` - When an update of a podlet is detected and is in the process of refetching the manifest.
+-   `stable` - When all registered podlets are using cached manifests and only fetching content.
+-   `unhealthy` - When an update of a podlet never settled.
+
+### change (deprecated)
 
 When there is a change in version number between the cached manifest held
 by the client and the manifest on the remote source.
@@ -288,13 +351,14 @@ component's manifest. This is the content root of the component.
 
 A Podium Resource Object has the following API:
 
-### .fetch(podiumContext, options)
+### .fetch(incoming, options)
 
-Fetches the content of the component. Returns a `Promise`.
+Fetches the content of the component. Returns a `Promise` which resolves with a
+Response object containing the keys `content`, `headers`, `css` and `js`.
 
-#### podiumContext (required)
+#### incoming (required)
 
-The Podium Context. See https://github.com/podium-lib/context
+A HttpIncoming object. See https://github.com/podium-lib/utils/blob/master/lib/http-incoming.js
 
 #### options (optional)
 
@@ -305,13 +369,25 @@ provided:
 -   `headers` - {Object} - An Object which will be appended as http headers to the request to fetch the component's content.
 -   `query` - {Object} - An Object which will be appended as query parameters to the request to fetch the component's content.
 
-### .stream(podiumContext, options)
+#### return value
 
-Streams the content of the component. Returns a `ReadStream`.
+```js
+const result = await component.fetch();
+console.log(result.content);
+console.log(result.js);
+console.log(result.css);
+```
 
-#### podiumContext (required)
+### .stream(incoming, options)
 
-The Podium Context. See https://github.com/podium-lib/context
+Streams the content of the component. Returns a `ReadableStream` which streams
+the content of the component. Before the stream starts flowing a `beforeStream`
+with a Response object, containing `headers`, `css` and `js` references is
+emitted.
+
+#### incoming (required)
+
+A HttpIncoming object. See https://github.com/podium-lib/utils/blob/master/lib/http-incoming.js
 
 #### options (optional)
 
@@ -331,18 +407,40 @@ during the call to `register`.
 
 A property returning the location of the podium resource.
 
+### Events
+
+#### beforeStream
+
+A `beforeStream` event is emitted before the stream starts flowing. An response
+object with keys `headers`, `js` and `css` is emitted with the event.
+
+`headers` will always contain the response headers from the podlet. If the
+resource manifest defines JavaScript assets, `js` will contain the value from
+the manifest file otherwise `js` will be an empty string. If the resource
+manifest defines CSS assets, `css` will contain the value from the manifest file
+otherwise `css` will be an empty string.
+
+```js
+const stream = component.stream();
+stream.once('beforeStream', data => {
+    console.log(data.headers);
+    console.log(data.css);
+    console.log(data.js);
+});
+```
+
 ## Controlling caching of the manifest
 
-The client has an internal cache where it keeps a cached version of the
-manifest for each registered Podium component.
+The client has an internal cache where it keeps a cached version of the manifest
+for each registered Podium component.
 
-By default all manifests are cached for 24 hours unless a new
-version of the manifest is detected by a change in the `podlet-version` HTTP
-header on the content URI. When this happens, the cache is thrown away and the
-fresh version of the manifest is cached.
+By default all manifests are cached for 24 hours unless a new version of the
+manifest is detected by a change in the `podlet-version` HTTP header on the
+content URI. When this happens, the cache is thrown away and the fresh version
+of the manifest is cached.
 
-The default length of time the manifest is cached for can be configured
-by setting `maxAge` in the constructor of the client.
+The default length of time the manifest is cached for can be configured by
+setting `maxAge` in the constructor of the client.
 
 ```js
 const client = new Client({ maxAge: 1000 * 60 * 60 * 4 });
@@ -395,8 +493,8 @@ const bar = client.register({
 });
 
 Promise.all([foo.fetch(), bar.fetch()])
-    .then(content => {
-        console.log(content);
+    .then(res => {
+        console.log(res.content);
     })
     .catch(error => {
         console.log(error);
@@ -414,11 +512,14 @@ The error object will reflect the http status code of the remote. In other
 words; if the remote responded with a 404, the `statusCode` in the error object
 will be 404.
 
-## On retrying
+## Podlet update life cycle
 
-A component consists of a manifest which contains metadata about that component.
-This manifest is fetched and cached by the client together with it's fallback
-content if such content has been defined.
+A podlets main entry is a manifest which contains metadata about that component.
+This manifest is fetched on the first request to the podlet and cached by the
+client together with its fallback content if a fallback has been defined in the
+manifest. On the second and subsequent requests for a podlet the manifest is
+read from the internal cache in the client and the client goes straight to
+fetching the content.
 
 Detection of updates to a component is done by the content route in the
 component serving an HTTP header with the same version number as in the
@@ -426,17 +527,71 @@ component's manifest and if the client detects a difference between the HTTP
 header version number and the version in the manifest cached in the client, the
 component has changed.
 
-In the event of an update the client will have to do multiple HTTP requests to
-refetch the manifest, fallback and content. In a distributed system there can be
-windows where a component can exist with two versions at the same time during a
-rolling deploy. In such a scenario the client might go into an "update loop" due
-to hitting different versions of the component.
+In the event of an update the client will throw away the cached manifest and
+make multiple HTTP requests to refetch the manifest, fallback and content.
+
+### On retrying
+
+In a distributed system there can be windows where a component can exist with
+two versions at the same time during a rolling deploy. In such a scenario the
+client might go into an "update loop" due to hitting different versions of the
+component.
 
 In a rolling deploy this is not nessessery a bad thing. But to protect both the
 application using the client and the component itself, the client will terminate
-the process of updating if such an "update loop" is detected. How many times the
-client will retry settling an update before termination can be set by the
-`retries` argument in the client constructor and the `.register()` method.
+the process of updating if such an "update loop" is detected.
+
+This feature will also protect against cases where there might be a mismatch
+between the version number in a manifest file and what's set as a header on the
+content route.
+
+How many times the client will retry settling an update before termination can
+be set by the `retries` argument in the client constructor and the `.register()`
+method.
+
+### Missing version header
+
+There might be error situations where a content route is missing the version
+header so the client does not have anything to compare the version in the
+manifest against. In such a situation the client will continue to fetch the
+content, but the manifest and its fallback will never be re-evaluated for an
+update.
+
+### Health status
+
+During the life cycle of updating one or more podlets the client will be in
+different states. The state is a representation of all registered podlets in the
+client. In other words; if one of five podlets enters a given state, the state
+is representative for all five podlets.
+
+These states are:
+
+-   `instantiated` - When a `Client` has been instantiated but no requests to any podlets has been made.
+-   `initializing` - When one or multiple podlets are requested for the very first time. This state will only happen after `instantiated`.
+-   `unstable` - When an update of a podlet is detected and is in the process of refetching the manifest.
+-   `stable` - When all registered podlets are using cached manifests and only fetching content.
+-   `unhealthy` - When an update of a podlet never settled. For instance, if a podlet is stuck in an "update loop".
+
+The most common state is `stable`.
+
+When a podlet is updated and the client detects this the client will enter
+`unstable` state. This state will live for a given time and depends on how
+the deployment of a podlet is done. For example, during a rolling deploy of a
+podlet, the `unstable` state will live as long as the podlet exists in two
+different versions during deployment plus some additional extra time afterward
+to ensure everything has settled. The duration of this window can be configured
+using the `resolveThreshold` argument in the `Client` constructor.
+
+When a podlet update is detected the client will also start to monitor if the
+new podlet gets into a stable state within a given time. In other words; if a
+podlet enters an "update loop" as described above, the client will detect this
+and after a given time set the state to `unhealthy`. How long it should go
+before the `unhealthy` state is entered can be configured by the `resolveMax`
+argument on the `Client` constructor.
+
+The state can be checked by the `.state` property on the `Client` object. The
+client will also emit a `state` event each time the client enters one of the
+above states.
 
 ## License
 
@@ -460,6 +615,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+[@metrics/metric]: https://github.com/metrics-js/metric '@metrics/metric'
 [@podium/layout]: https://github.com/podium-lib/layout '@podium/layout'
 [rfc 7234]: https://tools.ietf.org/html/rfc7234 'RFC 7234'
 [boom]: https://github.com/hapijs/boom 'Boom'

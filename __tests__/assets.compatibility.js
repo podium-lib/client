@@ -5,11 +5,11 @@ const HttpOutgoing = require('../lib/http-outgoing');
 const Manifest = require('../lib/resolver.manifest');
 const Client = require('../');
 
-// NB; these tests are here only to test compabillity between
+// NB; these tests are here only to test compatibility between
 // V3 and V4 manifest changes. Can be removed when V3 manifest
 // support is removed.
 
-test('compabillity - default manifest from V4 podlet - v4 + v3 compabillity manifest - should be values on .js and .css in returned content Object', async () => {
+test('compatibility - default manifest from V4 podlet - v4 + v3 compatibility manifest - should be values on .js and .css in returned content Object', async () => {
     const server = new PodletServer({
         assets: {
             css: 'bar.css',
@@ -25,8 +25,8 @@ test('compabillity - default manifest from V4 podlet - v4 + v3 compabillity mani
     const podlet = client.register(service.options);
     const content = await podlet.fetch({});
 
-    expect(content.css).toEqual([{ type: 'default', value: 'bar.css' }]);
-    expect(content.js).toEqual([{ type: 'default', value: 'foo.js' }]);
+    expect(content.css).toEqual([{ type: 'default', value: `${service.address}/bar.css` }]);
+    expect(content.js).toEqual([{ type: 'default', value: `${service.address}/foo.js` }]);
 
     expect(client.css()).toEqual(['bar.css']);
     expect(client.js()).toEqual(['foo.js']);
@@ -34,7 +34,7 @@ test('compabillity - default manifest from V4 podlet - v4 + v3 compabillity mani
     await server.close();
 });
 
-test('compabillity - v3 manifest - should be values on .js and .css in returned content Object', async () => {
+test('compatibility - v3 manifest - should be values on .js and .css in returned content Object', async () => {
     const server = new PodletServer();
     server.manifestBody = JSON.stringify({
         name: 'component',
@@ -54,8 +54,8 @@ test('compabillity - v3 manifest - should be values on .js and .css in returned 
     const podlet = client.register(service.options);
     const content = await podlet.fetch({});
 
-    expect(content.css).toEqual([{ type: 'module', value: 'bar.css' }]);
-    expect(content.js).toEqual([{ type: 'module', value: 'foo.js' }]);
+    expect(content.css).toEqual([{ type: 'module', value: `${service.address}/bar.css` }]);
+    expect(content.js).toEqual([{ type: 'module', value: `${service.address}/foo.js` }]);
 
     expect(client.css()).toEqual(['bar.css']);
     expect(client.js()).toEqual(['foo.js']);
@@ -63,7 +63,7 @@ test('compabillity - v3 manifest - should be values on .js and .css in returned 
     await server.close();
 });
 
-test('compabillity - v4 manifest - should be values on .js and .css in returned content Object', async () => {
+test('compatibility - v4 manifest - should be values on .js and .css in returned content Object', async () => {
     const server = new PodletServer();
     server.manifestBody = JSON.stringify({
         name: 'component',
@@ -84,8 +84,8 @@ test('compabillity - v4 manifest - should be values on .js and .css in returned 
     const podlet = client.register(service.options);
     const content = await podlet.fetch({});
 
-    expect(content.css).toEqual([{ type: 'module', value: 'bar.css' }]);
-    expect(content.js).toEqual([{ type: 'module', value: 'foo.js' }]);
+    expect(content.css).toEqual([{ type: 'module', value: `${service.address}/bar.css` }]);
+    expect(content.js).toEqual([{ type: 'module', value: `${service.address}/foo.js` }]);
 
     expect(client.css()).toEqual(['bar.css']);
     expect(client.js()).toEqual(['foo.js']);
@@ -95,10 +95,10 @@ test('compabillity - v4 manifest - should be values on .js and .css in returned 
 
 
 // The following tests was moved from resolver.manifest to
-// keep testing backwards compabillity
+// keep testing backwards compatibility
 // These tests can be removed when V3 manifest is no longer
 // supported.
-test('compabillity - resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true" - "outgoing.manifest.assets.css" should be absolute to podlet', async () => {
+test('compatibility - resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true" - "outgoing.manifest.assets.css" should be absolute to podlet', async () => {
     const server = new PodletServer({ assets: { css: 'a.css' } });
     const service = await server.listen();
 
@@ -116,7 +116,7 @@ test('compabillity - resolver.manifest() - "css" in manifest is relative, "resol
     await server.close();
 });
 
-test('compabillity - resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true" - "outgoing.manifest.assets.css" should be absolute to whats in manifest', async () => {
+test('compatibility - resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true" - "outgoing.manifest.assets.css" should be absolute to whats in manifest', async () => {
     const server = new PodletServer({
         assets: { css: 'http://does.not.mather.com/a.css' },
     });
@@ -136,7 +136,7 @@ test('compabillity - resolver.manifest() - "css" in manifest is absolute, "resol
     await server.close();
 });
 
-test('compabillity - resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset - "outgoing.manifest.assets.js" should be relative', async () => {
+test('compatibility - resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset - "outgoing.manifest.assets.js" should be relative', async () => {
     const server = new PodletServer({ assets: { js: 'a.js' } });
     const service = await server.listen();
 
@@ -151,7 +151,7 @@ test('compabillity - resolver.manifest() - "js" in manifest is relative, "resolv
     await server.close();
 });
 
-test('compabillity - resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" - "outgoing.manifest.assets.js" should be absolute to podlet', async () => {
+test('compatibility - resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" - "outgoing.manifest.assets.js" should be absolute to podlet', async () => {
     const server = new PodletServer({ assets: { js: 'a.js' } });
     const service = await server.listen();
 
@@ -169,7 +169,7 @@ test('compabillity - resolver.manifest() - "js" in manifest is relative, "resolv
     await server.close();
 });
 
-test('compabillity - resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" - "outgoing.manifest.assets.js" should be absolute to whats in manifest', async () => {
+test('compatibility - resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" - "outgoing.manifest.assets.js" should be absolute to whats in manifest', async () => {
     const server = new PodletServer({
         assets: { js: 'http://does.not.mather.com/a.js' },
     });

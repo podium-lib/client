@@ -306,7 +306,7 @@ test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true
     expect(outgoing.manifest.css).toEqual(
         [{ value: `${service.address}/${server.assets.css}`, type: 'default' }]
     );
-  
+
     await server.close();
 });
 
@@ -342,7 +342,7 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset -
 
     await manifest.resolve(outgoing);
 
-    expect(outgoing.manifest.js).toEqual([{ value: server.assets.js, type: 'default' }]);
+    expect(outgoing.manifest.assets.js).toEqual(server.assets.js);
 
     await server.close();
 });

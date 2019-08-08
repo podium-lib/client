@@ -303,8 +303,8 @@ test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true
 
     await manifest.resolve(outgoing);
 
-    expect(outgoing.manifest.css).toEqual(
-        [{ value: `${service.address}/${server.assets.css}`, type: 'default' }]
+    expect(outgoing.manifest.css).toMatchObject(
+        [{ value: `${service.address}/${server.assets.css}`, type: 'text/css' }]
     );
 
     await server.close();
@@ -324,8 +324,8 @@ test('resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true
 
     await manifest.resolve(outgoing);
 
-    expect(outgoing.manifest.css).toEqual(
-        [{ value: 'http://does.not.mather.com/a.css', type: 'default' }]
+    expect(outgoing.manifest.css).toMatchObject(
+        [{ value: 'http://does.not.mather.com/a.css', type: 'text/css' }]
     );
 
     await server.close();
@@ -359,7 +359,7 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" 
 
     await manifest.resolve(outgoing);
 
-    expect(outgoing.manifest.js).toEqual(
+    expect(outgoing.manifest.js).toMatchObject(
         [{ value: `${service.address}/${server.assets.js}`, type: 'default' }]
     );
 
@@ -380,7 +380,7 @@ test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" 
 
     await manifest.resolve(outgoing);
 
-    expect(outgoing.manifest.js).toEqual([{ value: 'http://does.not.mather.com/a.js', type: 'default' }]);
+    expect(outgoing.manifest.js).toMatchObject([{ value: 'http://does.not.mather.com/a.js', type: 'default' }]);
 
     await server.close();
 });

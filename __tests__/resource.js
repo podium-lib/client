@@ -101,13 +101,13 @@ test('resource.fetch() - returns an object with content, headers, js and css key
         date: '<replaced>',
         'podlet-version': '1.0.0',
     });
-    expect(result.css).toEqual([
+    expect(result.css).toMatchObject([
         {
-            type: 'default',
+            type: 'text/css',
             value: 'http://fakecss.com',
         },
     ]);
-    expect(result.js).toEqual([
+    expect(result.js).toMatchObject([
         {
             type: 'default',
             value: 'http://fakejs.com',
@@ -184,7 +184,7 @@ test('resource.stream() - should emit js event when js assets defined', async ()
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
     strm.once('beforeStream', ({ js }) => {
-        expect(js).toEqual([{ type: 'default', value: 'http://fakejs.com' }]);
+        expect(js).toMatchObject([{ type: 'default', value: 'http://fakejs.com' }]);
     });
 
     await getStream(strm);
@@ -201,7 +201,7 @@ test('resource.stream() - should emit css event when css assets defined', async 
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
     strm.once('beforeStream', ({ css }) => {
-        expect(css).toEqual([{ type: 'default', value: 'http://fakecss.com' }]);
+        expect(css).toMatchObject([{ type: 'text/css', value: 'http://fakecss.com' }]);
     });
 
     await getStream(strm);
@@ -228,10 +228,10 @@ test('resource.stream() - should emit beforeStream event before emitting data', 
 
     await getStream(strm);
 
-    expect(items[0].css).toEqual([
-        { type: 'default', value: 'http://fakecss.com' },
+    expect(items[0].css).toMatchObject([
+        { type: 'text/css', value: 'http://fakecss.com' },
     ]);
-    expect(items[0].js).toEqual([
+    expect(items[0].js).toMatchObject([
         { type: 'default', value: 'http://fakejs.com' },
     ]);
     expect(items[1]).toEqual('<p>content component</p>');

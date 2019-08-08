@@ -25,8 +25,8 @@ test('compatibility - default manifest from V4 podlet - v4 + v3 compatibility ma
     const podlet = client.register(service.options);
     const content = await podlet.fetch({});
 
-    expect(content.css).toEqual([{ type: 'default', value: `${service.address}/bar.css` }]);
-    expect(content.js).toEqual([{ type: 'default', value: `${service.address}/foo.js` }]);
+    expect(content.css).toMatchObject([{ type: 'text/css', value: `${service.address}/bar.css` }]);
+    expect(content.js).toMatchObject([{ type: 'default', value: `${service.address}/foo.js` }]);
 
     expect(client.css()).toEqual(['bar.css']);
     expect(client.js()).toEqual(['foo.js']);
@@ -54,8 +54,8 @@ test('compatibility - v3 manifest - should be values on .js and .css in returned
     const podlet = client.register(service.options);
     const content = await podlet.fetch({});
 
-    expect(content.css).toEqual([{ type: 'module', value: `${service.address}/bar.css` }]);
-    expect(content.js).toEqual([{ type: 'module', value: `${service.address}/foo.js` }]);
+    expect(content.css).toMatchObject([{ type: 'text/css', value: `${service.address}/bar.css` }]);
+    expect(content.js).toMatchObject([{ type: 'default', value: `${service.address}/foo.js` }]);
 
     expect(client.css()).toEqual(['bar.css']);
     expect(client.js()).toEqual(['foo.js']);
@@ -84,8 +84,8 @@ test('compatibility - v4 manifest - should be values on .js and .css in returned
     const podlet = client.register(service.options);
     const content = await podlet.fetch({});
 
-    expect(content.css).toEqual([{ type: 'module', value: `${service.address}/bar.css` }]);
-    expect(content.js).toEqual([{ type: 'module', value: `${service.address}/foo.js` }]);
+    expect(content.css).toMatchObject([{ type: 'module', value: `${service.address}/bar.css` }]);
+    expect(content.js).toMatchObject([{ type: 'module', value: `${service.address}/foo.js` }]);
 
     expect(client.css()).toEqual(['bar.css']);
     expect(client.js()).toEqual(['foo.js']);

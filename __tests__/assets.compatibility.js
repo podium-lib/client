@@ -203,6 +203,7 @@ test('compatibility - resolver.manifest() - "js" in manifest is absolute, "resol
     expect(outgoing.manifest.assets.js).toEqual(
         'http://does.not.mather.com/a.js',
     );
+    await server.close();
 });
 
 test('compatibility - resolver.manifest() - "js" in manifest is empty, "resolveJs" is "true" - "outgoing.manifest.assets.js" should be empty', async () => {

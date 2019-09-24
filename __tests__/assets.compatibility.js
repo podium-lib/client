@@ -136,6 +136,24 @@ test('compatibility - resolver.manifest() - "css" in manifest is absolute, "reso
     await server.close();
 });
 
+test('compatibility - resolver.manifest() - "css" in manifest is empty, "resolveCss" is "true" - "outgoing.manifest.assets.css" should be empty', async () => {
+    const server = new PodletServer({
+        assets: { css: '' },
+    });
+    const service = await server.listen();
+
+    const manifest = new Manifest();
+    const outgoing = new HttpOutgoing({
+        uri: service.manifest,
+        resolveCss: true,
+    });
+
+    await manifest.resolve(outgoing);
+    expect(outgoing.manifest.assets.css).toEqual('');
+
+    await server.close();
+});
+
 test('compatibility - resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset - "outgoing.manifest.assets.js" should be relative', async () => {
     const server = new PodletServer({ assets: { js: 'a.js' } });
     const service = await server.listen();
@@ -182,7 +200,25 @@ test('compatibility - resolver.manifest() - "js" in manifest is absolute, "resol
     });
 
     await manifest.resolve(outgoing);
-    expect(outgoing.manifest.assets.js).toEqual('http://does.not.mather.com/a.js');
+    expect(outgoing.manifest.assets.js).toEqual(
+        'http://does.not.mather.com/a.js',
+    );
+});
+
+test('compatibility - resolver.manifest() - "js" in manifest is empty, "resolveJs" is "true" - "outgoing.manifest.assets.js" should be empty', async () => {
+    const server = new PodletServer({
+        assets: {},
+    });
+    const service = await server.listen();
+
+    const manifest = new Manifest();
+    const outgoing = new HttpOutgoing({
+        uri: service.manifest,
+        resolveJs: true,
+    });
+
+    await manifest.resolve(outgoing);
+    expect(outgoing.manifest.assets.js).toEqual('');
 
     await server.close();
 });

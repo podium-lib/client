@@ -35,33 +35,33 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
+    "@hapi/boom": "^8.0.1",
     "@metrics/client": "2.5.0",
     "@podium/schemas": "4.0.0",
-    "@podium/utils": "4.1.1",
+    "@podium/utils": "^4.1.2",
     "abslog": "2.4.0",
-    "@hapi/boom": "^8.0.1",
     "http-cache-semantics": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",
-    "readable-stream": "^3.2.0",
+    "readable-stream": "^3.4.0",
     "request": "^2.88.0",
     "ttl-mem-cache": "4.1.0"
   },
   "devDependencies": {
     "@podium/test-utils": "2.0.0",
     "benchmark": "^2.1.4",
-    "eslint": "^6.5.1",
+    "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-config-prettier": "^6.4.0",
+    "eslint-config-prettier": "^6.5.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
-    "get-stream": "^5.0.0",
+    "get-stream": "^5.1.0",
     "http-proxy": "^1.18.0",
-    "husky": "^3.0.8",
+    "husky": "^3.0.9",
     "is-stream": "^2.0.0",
-    "jest": "^24.1.0",
-    "lint-staged": "^9.4.1",
-    "lolex": "^5.0.0",
-    "prettier": "^1.16.4"
+    "jest": "^24.9.0",
+    "lint-staged": "^9.4.2",
+    "lolex": "^5.1.1",
+    "prettier": "^1.19.1"
   },
   "jest": {
     "coveragePathIgnorePatterns": [

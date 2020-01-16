@@ -3,7 +3,7 @@
 Client for fetching podium component fragments over HTTP.
 
 [![Dependencies](https://img.shields.io/david/podium-lib/client.svg?style=flat-square)](https://david-dm.org/podium-lib/client)
-[![Build Status]](https://github.com/podium-lib/client/workflows/test/badge.svg?style=flat-square)
+![GitHub Actions status](https://github.com/podium-lib/client/workflows/Run%20Lint%20and%20Tests/badge.svg)
 [![Known Vulnerabilities](https://snyk.io/test/github/podium-lib/client/badge.svg?targetFile=package.json&style=flat-square)](https://snyk.io/test/github/podium-lib/client?targetFile=package.json)
 
 This module is intended for internal use in Podium and is not a module an end

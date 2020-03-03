@@ -130,6 +130,7 @@ test('integration - throwable:true - remote content can not be resolved - should
     try {
         await component.fetch({});
     } catch (error) {
+        expect(error.output.statusCode).toBe(502);
         expect(error.message).toMatch(/Error reading content/);
     }
 
@@ -148,6 +149,7 @@ test('integration - throwable:false - remote content can not be resolved - shoul
     const component = client.register(service.options);
 
     const result = await component.fetch({});
+    expect(result.statusCode).toEqual(null);
     expect(result.content).toEqual(server.fallbackBody);
     expect(result.headers).toEqual({});
     expect(result.css).toEqual([]);
@@ -194,6 +196,7 @@ test('integration - throwable:false - remote content responds with http 500 - sh
     const component = client.register(service.options);
 
     const result = await component.fetch({});
+    expect(result.statusCode).toBe(500);
     expect(result.content).toEqual(server.fallbackBody);
     expect(result.headers).toEqual({});
     expect(result.css).toEqual([]);
@@ -219,6 +222,7 @@ test('integration - throwable:false - manifest / content fetching goes into recu
     };
 
     const result = await component.fetch({});
+    expect(result.statusCode).toBe(200);
     expect(result.content).toEqual(server.fallbackBody);
     expect(result.headers).toEqual({});
     expect(result.css).toEqual([]);

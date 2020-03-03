@@ -41,6 +41,7 @@ test('Response() - no arguments - should return default values when calling toJS
         headers: {},
         css: [],
         js: [],
+        statusCode: null,
     });
 });
 
@@ -75,12 +76,14 @@ test('Response() - arguments is set - should return set values when calling toJS
         headers: { foo: 'bar' },
         css: ['foo'],
         js: ['foo'],
+        statusCode: 404,
     });
     expect(response.toJSON()).toEqual({
         content: 'foo',
         headers: { foo: 'bar' },
         css: ['foo'],
         js: ['foo'],
+        statusCode: 404,
     });
 });
 
@@ -111,7 +114,7 @@ test('Response() - concatinate Object with other String - should use value of se
         css: ['foo'],
         js: ['foo'],
     });
-    expect(`bar ${  response}`).toEqual('bar foo');
+    expect(`bar ${response}`).toEqual('bar foo');
 });
 
 test('Response() - JSON.stringify object - should return JSON string object', () => {
@@ -121,5 +124,7 @@ test('Response() - JSON.stringify object - should return JSON string object', ()
         css: ['foo'],
         js: ['foo'],
     });
-    expect(JSON.stringify(response)).toEqual('{"content":"foo","headers":{"foo":"bar"},"css":["foo"],"js":["foo"]}');
+    expect(JSON.stringify(response)).toEqual(
+        '{"content":"foo","headers":{"foo":"bar"},"css":["foo"],"js":["foo"],"statusCode":null}',
+    );
 });

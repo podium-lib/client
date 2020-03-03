@@ -93,6 +93,7 @@ test('resource.fetch() - returns an object with content, headers, js and css key
     const result = await resource.fetch({});
     result.headers.date = '<replaced>';
 
+    expect(result.statusCode).toEqual(200);
     expect(result.content).toEqual('<p>content component</p>');
     expect(result.headers).toEqual({
         connection: 'close',
@@ -125,6 +126,7 @@ test('resource.fetch() - returns empty array for js and css when no assets are p
     const result = await resource.fetch({});
     result.headers.date = '<replaced>';
 
+    expect(result.statusCode).toEqual(200);
     expect(result.content).toEqual('<p>content component</p>');
     expect(result.headers).toEqual({
         connection: 'close',
@@ -157,14 +159,15 @@ test('resource.stream() - should return a stream', async () => {
 });
 
 test('resource.stream() - should emit beforeStream event with no assets', async () => {
-    expect.assertions(3);
+    expect.assertions(4);
 
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
-    strm.once('beforeStream', ({ headers, js, css }) => {
+    strm.once('beforeStream', ({ headers, js, css, statusCode }) => {
+        expect(statusCode).toEqual(200);
         expect(headers['podlet-version']).toEqual('1.0.0');
         expect(js).toEqual([]);
         expect(css).toEqual([]);
@@ -184,7 +187,9 @@ test('resource.stream() - should emit js event when js assets defined', async ()
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
     strm.once('beforeStream', ({ js }) => {
-        expect(js).toMatchObject([{ type: 'default', value: 'http://fakejs.com' }]);
+        expect(js).toMatchObject([
+            { type: 'default', value: 'http://fakejs.com' },
+        ]);
     });
 
     await getStream(strm);
@@ -201,7 +206,9 @@ test('resource.stream() - should emit css event when css assets defined', async 
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
     strm.once('beforeStream', ({ css }) => {
-        expect(css).toMatchObject([{ type: 'text/css', value: 'http://fakecss.com' }]);
+        expect(css).toMatchObject([
+            { type: 'text/css', value: 'http://fakecss.com' },
+        ]);
     });
 
     await getStream(strm);

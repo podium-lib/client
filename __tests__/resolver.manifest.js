@@ -6,7 +6,7 @@ const HttpOutgoing = require('../lib/http-outgoing');
 const Manifest = require('../lib/resolver.manifest');
 const Client = require('../');
 const { PodletServer } = require('@podium/test-utils');
-const lolex = require('lolex');
+const lolex = require('@sinonjs/fake-timers');
 
 /**
  * NOTE I:
@@ -303,9 +303,9 @@ test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true
 
     await manifest.resolve(outgoing);
 
-    expect(outgoing.manifest.css).toMatchObject(
-        [{ value: `${service.address}/${server.assets.css}`, type: 'text/css' }]
-    );
+    expect(outgoing.manifest.css).toMatchObject([
+        { value: `${service.address}/${server.assets.css}`, type: 'text/css' },
+    ]);
 
     await server.close();
 });
@@ -324,9 +324,9 @@ test('resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true
 
     await manifest.resolve(outgoing);
 
-    expect(outgoing.manifest.css).toMatchObject(
-        [{ value: 'http://does.not.mather.com/a.css', type: 'text/css' }]
-    );
+    expect(outgoing.manifest.css).toMatchObject([
+        { value: 'http://does.not.mather.com/a.css', type: 'text/css' },
+    ]);
 
     await server.close();
 });
@@ -359,9 +359,9 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" 
 
     await manifest.resolve(outgoing);
 
-    expect(outgoing.manifest.js).toMatchObject(
-        [{ value: `${service.address}/${server.assets.js}`, type: 'default' }]
-    );
+    expect(outgoing.manifest.js).toMatchObject([
+        { value: `${service.address}/${server.assets.js}`, type: 'default' },
+    ]);
 
     await server.close();
 });
@@ -380,7 +380,9 @@ test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" 
 
     await manifest.resolve(outgoing);
 
-    expect(outgoing.manifest.js).toMatchObject([{ value: 'http://does.not.mather.com/a.js', type: 'default' }]);
+    expect(outgoing.manifest.js).toMatchObject([
+        { value: 'http://does.not.mather.com/a.js', type: 'default' },
+    ]);
 
     await server.close();
 });

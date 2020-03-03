@@ -2,7 +2,7 @@
 
 'use strict';
 
-const lolex = require('lolex');
+const lolex = require('@sinonjs/fake-timers');
 const State = require('../lib/state');
 
 test('State() - object tag - should be PodiumClientState', () => {
@@ -17,7 +17,7 @@ test('State() - "threshold" is larger than "max" - should throw', () => {
         // eslint-disable-next-line no-unused-vars
         const state = new State({ resolveThreshold: 6000, resolveMax: 4000 });
     }).toThrowError(
-        'argument "resolveMax" must be larger than "resolveThreshold" argument'
+        'argument "resolveMax" must be larger than "resolveThreshold" argument',
     );
 });
 

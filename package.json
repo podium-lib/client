@@ -44,6 +44,7 @@
     "lodash.clonedeep": "^4.5.0",
     "readable-stream": "^3.4.0",
     "request": "^2.88.0",
+    "tap": "^14.10.6",
     "ttl-mem-cache": "4.1.0"
   },
   "devDependencies": {
@@ -58,7 +59,6 @@
     "get-stream": "5.1.0",
     "http-proxy": "1.18.0",
     "is-stream": "2.0.0",
-    "jest": "25.1.0",
     "lolex": "5.1.2",
     "prettier": "1.19.1"
   },

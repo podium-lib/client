@@ -1,5 +1,6 @@
 'use strict';
 
+const { test } = require('tap');
 const Resource = require('../lib/resource');
 const Client = require('../');
 
@@ -7,76 +8,71 @@ const Client = require('../');
  * .register()
  */
 
-test('client.register() - call with a valid value for "options.uri" - should return a "Resources" object', () => {
+test('client.register() - call with a valid value for "options.uri" - should return a "Resources" object', t => {
     const client = new Client({ name: 'podiumClient' });
     const resource = client.register({
         uri: 'http://example-a.org',
         name: 'example',
     });
-    expect(resource).toBeInstanceOf(Resource);
+    t.ok(resource instanceof Resource);
+    t.end();
 });
 
-test('client.register() - call with no options - should throw', () => {
+test('client.register() - call with no options - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
-    expect(() => {
+    t.throws(() => {
         client.register();
-    }).toThrowError(
-        'The value, "undefined", for the required argument "name" on the .register() method is not defined or not valid.',
-    );
+    }, 'The value, "undefined", for the required argument "name" on the .register() method is not defined or not valid.');
+    t.end();
 });
 
-test('client.register() - call with missing value for "options.uri" - should throw', () => {
+test('client.register() - call with missing value for "options.uri" - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
 
-    expect(() => {
+    t.throws(() => {
         client.register({ name: 'example' });
-    }).toThrowError(
-        'The value, "undefined", for the required argument "uri" on the .register() method is not defined or not valid.',
-    );
+    }, 'The value, "undefined", for the required argument "uri" on the .register() method is not defined or not valid.');
+    t.end();
 });
 
-test('client.register() - call with a invalid value for "options.uri" - should throw', () => {
+test('client.register() - call with a invalid value for "options.uri" - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
 
-    expect(() => {
+    t.throws(() => {
         client.register({ uri: '/wrong', name: 'someName' });
-    }).toThrowError(
-        'The value, "/wrong", for the required argument "uri" on the .register() method is not defined or not valid.',
-    );
+    }, 'The value, "/wrong", for the required argument "uri" on the .register() method is not defined or not valid.');
+    t.end();
 });
 
-test('client.register() - call with a invalid value for "options.name" - should throw', () => {
+test('client.register() - call with a invalid value for "options.name" - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
 
-    expect(() => {
+    t.throws(() => {
         client.register({ uri: 'http://example-a.org', name: 'some name' });
-    }).toThrowError(
-        'The value, "some name", for the required argument "name" on the .register() method is not defined or not valid.',
-    );
+    }, 'The value, "some name", for the required argument "name" on the .register() method is not defined or not valid.');
+    t.end();
 });
 
-test('client.register() - call with missing value for "options.name" - should throw', () => {
+test('client.register() - call with missing value for "options.name" - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
 
-    expect(() => {
+    t.throws(() => {
         client.register({ uri: 'http://example-a.org' });
-    }).toThrowError(
-        'The value, "undefined", for the required argument "name" on the .register() method is not defined or not valid.',
-    );
+    }, 'The value, "undefined", for the required argument "name" on the .register() method is not defined or not valid.');
+    t.end();
 });
 
-test('client.register() - call duplicate names - should throw', () => {
+test('client.register() - call duplicate names - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
     client.register({ uri: 'http://example-a.org', name: 'someName' });
 
-    expect(() => {
+    t.throws(() => {
         client.register({ uri: 'http://example-a.org', name: 'someName' });
-    }).toThrowError(
-        'Resource with the name "someName" has already been registered.',
-    );
+    }, 'Resource with the name "someName" has already been registered.');
+    t.end();
 });
 
-test('client.register() - register resources - should set resource as property of client object', () => {
+test('client.register() - register resources - should set resource as property of client object', t => {
     const client = new Client({ name: 'podiumClient' });
     const a = client.register({
         uri: 'http://example-a.org',
@@ -86,13 +82,14 @@ test('client.register() - register resources - should set resource as property o
         uri: 'http://example-b.org',
         name: 'exampleB',
     });
-    expect(client).toHaveProperty('exampleA');
-    expect(client).toHaveProperty('exampleB');
-    expect(a).toEqual(client.exampleA);
-    expect(b).toEqual(client.exampleB);
+    t.ok(client.exampleA);
+    t.ok(client.exampleB);
+    t.equal(a, client.exampleA);
+    t.equal(b, client.exampleB);
+    t.end();
 });
 
-test('client.register() - register resources - should be possible to iterate over resources set on client object', () => {
+test('client.register() - register resources - should be possible to iterate over resources set on client object', t => {
     const client = new Client({ name: 'podiumClient' });
     const a = client.register({
         uri: 'http://example-a.org',
@@ -103,17 +100,19 @@ test('client.register() - register resources - should be possible to iterate ove
         name: 'exampleB',
     });
 
-    expect([a, b]).toEqual(expect.arrayContaining(Array.from(client)));
+    t.same([a, b], Array.from(client));
+    t.end();
 });
 
-test('client.register() - try to manually set register resource - should throw', () => {
+test('client.register() - try to manually set register resource - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
     client.register({
         uri: 'http://example-a.org',
         name: 'exampleA',
     });
 
-    expect(() => {
+    t.throws(() => {
         client.exampleA = 'foo';
-    }).toThrowError('Cannot set read-only property.');
+    }, 'Cannot set read-only property.');
+    t.end();
 });

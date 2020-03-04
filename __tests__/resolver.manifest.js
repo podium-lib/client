@@ -92,23 +92,16 @@ test('resolver.manifest() - remote has "cache-control: no-cache" header - should
     await server.close();
 });
 
-test('resolver.manifest() - remote has "expires" header - should set outgoing.maxAge to header value', async () => {
-    const clock = lolex.install();
+test.only('resolver.manifest() - remote has "expires" header - should set outgoing.maxAge to header value', async () => {
+    const now = Date.now();
+    const clock = lolex.install({ now });
 
     const server = new PodletServer();
     const service = await server.listen();
 
     // Set expire header time to two hours into future
-    const now = Date.now();
     const twoHours = 1000 * 60 * 60 * 2;
     const expires = new Date(now + twoHours).toUTCString();
-
-    // eslint-disable-next-line no-console
-    console.log('NOW:', now);
-    // eslint-disable-next-line no-console
-    console.log('TWO HOURS:', twoHours);
-    // eslint-disable-next-line no-console
-    console.log('EXPIRES:', expires);
 
     server.headersManifest = { expires };
 
@@ -123,6 +116,7 @@ test('resolver.manifest() - remote has "expires" header - should set outgoing.ma
     expect(outgoing.maxAge).toBe(twoHours);
 
     await server.close();
+
     clock.uninstall();
 });
 

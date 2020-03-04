@@ -28,6 +28,7 @@ test('Client() - object tag - should be PodiumClient', t => {
  */
 
 test('Client().on("dispose") - client is hot, manifest reaches timeout - should emit dispose event', async t => {
+    t.plan(1);
     const clock = lolex.install();
 
     const server = new PodletServer({

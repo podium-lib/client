@@ -99,9 +99,18 @@ test('resolver.manifest() - remote has "expires" header - should set outgoing.ma
     const service = await server.listen();
 
     // Set expire header time to two hours into future
-    server.headersManifest = {
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 2).toUTCString(),
-    };
+    const now = Date.now();
+    const twoHours = 1000 * 60 * 60 * 2;
+    const expires = new Date(now + twoHours).toUTCString();
+
+    // eslint-disable-next-line no-console
+    console.log('NOW:', now);
+    // eslint-disable-next-line no-console
+    console.log('TWO HOURS:', twoHours);
+    // eslint-disable-next-line no-console
+    console.log('EXPIRES:', expires);
+
+    server.headersManifest = { expires };
 
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
@@ -111,7 +120,7 @@ test('resolver.manifest() - remote has "expires" header - should set outgoing.ma
 
     await manifest.resolve(outgoing);
 
-    expect(outgoing.maxAge).toBe(1000 * 60 * 60 * 2); // 2 hours
+    expect(outgoing.maxAge).toBe(twoHours);
 
     await server.close();
     clock.uninstall();

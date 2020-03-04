@@ -3,6 +3,7 @@
 
 'use strict';
 
+const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
 const Client = require('../');
 
@@ -22,7 +23,7 @@ const shuffle = array => {
  * .css()
  */
 
-test('client.css() - get all registered css assets - should return array with all css assets defined in manifests', async () => {
+test('client.css() - get all registered css assets - should return array with all css assets defined in manifests', async t => {
     const serverA = new PodletServer({ name: 'aa', assets: { css: 'a.css' } });
     const serverB = new PodletServer({ name: 'bb', assets: { css: 'b.css' } });
     const [serviceA, serviceB] = await Promise.all([
@@ -36,12 +37,12 @@ test('client.css() - get all registered css assets - should return array with al
 
     await Promise.all([a.fetch({}), b.fetch({})]);
 
-    expect(client.css()).toEqual(['a.css', 'b.css']);
+    t.same(client.css(), ['a.css', 'b.css']);
 
     await Promise.all([serverA.close(), serverB.close()]);
 });
 
-test('client.css() - one manifest does not hold css asset - should return array where non defined css asset is omitted', async () => {
+test('client.css() - one manifest does not hold css asset - should return array where non defined css asset is omitted', async t => {
     const serverA = new PodletServer({ name: 'aa', assets: { css: 'a.css' } });
     const serverB = new PodletServer({ name: 'bb', assets: { css: 'b.css' } });
     const serverC = new PodletServer({ name: 'cc' });
@@ -58,12 +59,12 @@ test('client.css() - one manifest does not hold css asset - should return array 
 
     await Promise.all([a.fetch({}), b.fetch({}), c.fetch({})]);
 
-    expect(client.css()).toEqual(['a.css', 'b.css']);
+    t.same(client.css(), ['a.css', 'b.css']);
 
     await Promise.all([serverA.close(), serverB.close(), serverC.close()]);
 });
 
-test('client.css() - fetch content out of order - should return array where defined css asset are listed in the order they where registered', async () => {
+test('client.css() - fetch content out of order - should return array where defined css asset are listed in the order they where registered', async t => {
     const serverA = new PodletServer({ name: 'aa', assets: { css: 'a.css' } });
     const serverB = new PodletServer({ name: 'bb', assets: { css: 'b.css' } });
     const serverC = new PodletServer({ name: 'cc', assets: { css: 'c.css' } });
@@ -127,7 +128,7 @@ test('client.css() - fetch content out of order - should return array where defi
         ]),
     );
 
-    expect(client.css()).toEqual([
+    t.same(client.css(), [
         'a.css',
         'b.css',
         'c.css',

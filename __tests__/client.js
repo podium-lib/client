@@ -4,7 +4,7 @@
 
 const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
-const lolex = require('lolex');
+const lolex = require('@sinonjs/fake-timers');
 const Client = require('../');
 
 /**

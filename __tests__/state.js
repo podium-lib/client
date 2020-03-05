@@ -3,7 +3,7 @@
 'use strict';
 
 const { test } = require('tap');
-const lolex = require('lolex');
+const lolex = require('@sinonjs/fake-timers');
 const State = require('../lib/state');
 
 test('State() - object tag - should be PodiumClientState', t => {

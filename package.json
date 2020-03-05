@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@podium/test-utils": "2.1.0",
+    "@sinonjs/fake-timers": "^6.0.0",
     "benchmark": "2.1.4",
     "eslint": "6.8.0",
     "eslint-config-airbnb-base": "14.0.0",
@@ -59,7 +60,6 @@
     "get-stream": "5.1.0",
     "http-proxy": "1.18.0",
     "is-stream": "2.0.0",
-    "lolex": "5.1.2",
     "prettier": "1.19.1"
   },
   "jest": {

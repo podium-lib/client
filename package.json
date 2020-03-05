@@ -26,11 +26,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "tap __tests__",
-    "test:filter": "jest -t 'foofoo'",
-    "test:verbose": "jest --verbose",
-    "test:coverage": "jest --coverage",
-    "test:debug": "jest --detectOpenHandles",
+    "test": "tap test/*.js",
     "lint:format": "eslint --fix .",
     "precommit": "lint-staged"
   },
@@ -61,20 +57,5 @@
     "http-proxy": "1.18.0",
     "is-stream": "2.0.0",
     "prettier": "1.19.1"
-  },
-  "jest": {
-    "coveragePathIgnorePatterns": [
-      "test/"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 99,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
-      }
-    },
-    "testEnvironment": "node",
-    "clearMocks": true
   }
 }

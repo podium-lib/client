@@ -2,13 +2,11 @@
 
 'use strict';
 
+const { test } = require('tap');
 const HttpOutgoing = require('../lib/http-outgoing');
 const Content = require('../lib/resolver.content');
 const utils = require('@podium/utils');
-const {
-    destinationBufferStream,
-    PodletServer
-} = require('@podium/test-utils');
+const { destinationBufferStream, PodletServer } = require('@podium/test-utils');
 
 /**
  * TODO I:
@@ -20,14 +18,16 @@ const {
  * Resolving URI's should happen in outgoing object and not in manifest resolver.
  */
 
-test('resolver.content() - object tag - should be PodletClientContentResolver', () => {
+test('resolver.content() - object tag - should be PodletClientContentResolver', t => {
     const content = new Content();
-    expect(Object.prototype.toString.call(content)).toEqual(
+    t.equal(
+        Object.prototype.toString.call(content),
         '[object PodletClientContentResolver]',
     );
+    t.end();
 });
 
-test('resolver.content() - "podlet-version" header is same as manifest.version - should keep manifest on outgoing.manifest', async () => {
+test('resolver.content() - "podlet-version" header is same as manifest.version - should keep manifest on outgoing.manifest', async t => {
     const server = new PodletServer();
     const service = await server.listen();
     const outgoing = new HttpOutgoing({ uri: service.options.uri });
@@ -36,7 +36,7 @@ test('resolver.content() - "podlet-version" header is same as manifest.version -
     const { manifest } = server;
     manifest.content = utils.uriRelativeToAbsolute(
         server.manifest.content,
-        outgoing.manifestUri
+        outgoing.manifestUri,
     );
 
     outgoing.manifest = manifest;
@@ -48,11 +48,12 @@ test('resolver.content() - "podlet-version" header is same as manifest.version -
     const content = new Content();
     await content.resolve(outgoing);
 
-    expect(outgoing.manifest).toBeDefined();
+    t.ok(outgoing.manifest);
     await server.close();
+    t.end();
 });
 
-test('resolver.content() - "podlet-version" header is empty - should keep manifest on outgoing.manifest', async () => {
+test('resolver.content() - "podlet-version" header is empty - should keep manifest on outgoing.manifest', async t => {
     const server = new PodletServer();
     const service = await server.listen();
     server.headersContent = {
@@ -65,7 +66,7 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
     const { manifest } = server;
     manifest.content = utils.uriRelativeToAbsolute(
         server.manifest.content,
-        outgoing.manifestUri
+        outgoing.manifestUri,
     );
 
     outgoing.manifest = manifest;
@@ -77,11 +78,12 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
     const content = new Content();
     await content.resolve(outgoing);
 
-    expect(outgoing.manifest).toBeDefined();
+    t.ok(outgoing.manifest);
     await server.close();
+    t.end();
 });
 
-test('resolver.content() - "podlet-version" header is different than manifest.version - should set outgoing.status to "stale" and keep manifest', async () => {
+test('resolver.content() - "podlet-version" header is different than manifest.version - should set outgoing.status to "stale" and keep manifest', async t => {
     const server = new PodletServer();
     const service = await server.listen();
     server.headersContent = {
@@ -94,7 +96,7 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
     const { manifest } = server;
     manifest.content = utils.uriRelativeToAbsolute(
         server.manifest.content,
-        outgoing.manifestUri
+        outgoing.manifestUri,
     );
 
     outgoing.manifest = manifest;
@@ -106,13 +108,14 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
     const content = new Content();
     await content.resolve(outgoing);
 
-    expect(outgoing.manifest.version).toEqual(server.manifest.version);
-    expect(outgoing.status).toEqual('stale');
+    t.equal(outgoing.manifest.version, server.manifest.version);
+    t.equal(outgoing.status, 'stale');
     await server.close();
+    t.end();
 });
 
-test('resolver.content() - throwable:true - remote can not be resolved - should throw', async () => {
-    expect.hasAssertions();
+test('resolver.content() - throwable:true - remote can not be resolved - should throw', async t => {
+    t.plan(2);
 
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
@@ -132,13 +135,14 @@ test('resolver.content() - throwable:true - remote can not be resolved - should 
     try {
         await content.resolve(outgoing);
     } catch (error) {
-        expect(error.message).toMatch(/Error reading content/);
-        expect(outgoing.success).toBeFalsy();
+        t.match(error.message, /Error reading content/);
+        t.notOk(outgoing.success);
     }
+    t.end();
 });
 
-test('resolver.content() - throwable:true - remote responds with http 500 - should throw', async () => {
-    expect.hasAssertions();
+test('resolver.content() - throwable:true - remote responds with http 500 - should throw', async t => {
+    t.plan(3);
 
     const server = new PodletServer();
     const service = await server.listen();
@@ -161,16 +165,17 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
     try {
         await content.resolve(outgoing);
     } catch (error) {
-        expect(error.output.statusCode).toBe(500);
-        expect(error.message).toMatch(/Could not read content/);
-        expect(outgoing.success).toBeFalsy();
+        t.equal(error.output.statusCode, 500);
+        t.match(error.message, /Could not read content/);
+        t.notOk(outgoing.success);
     }
 
     await server.close();
+    t.end();
 });
 
-test('resolver.content() - throwable:true - remote responds with http 404 - should throw with error object reflecting status code podlet responded with', async () => {
-    expect.hasAssertions();
+test('resolver.content() - throwable:true - remote responds with http 404 - should throw with error object reflecting status code podlet responded with', async t => {
+    t.plan(3);
 
     const server = new PodletServer();
     const service = await server.listen();
@@ -193,16 +198,17 @@ test('resolver.content() - throwable:true - remote responds with http 404 - shou
     try {
         await content.resolve(outgoing);
     } catch (error) {
-        expect(error.output.statusCode).toBe(404);
-        expect(error.message).toMatch(/Could not read content/);
-        expect(outgoing.success).toBeFalsy();
+        t.equal(error.output.statusCode, 404);
+        t.match(error.message, /Could not read content/);
+        t.notOk(outgoing.success);
     }
 
     await server.close();
+    t.end();
 });
 
-test('resolver.content() - throwable:false - remote can not be resolved - "outgoing" should stream empty string', async () => {
-    expect.hasAssertions();
+test('resolver.content() - throwable:false - remote can not be resolved - "outgoing" should stream empty string', async t => {
+    t.plan(2);
 
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
@@ -218,18 +224,19 @@ test('resolver.content() - throwable:false - remote can not be resolved - "outgo
     outgoing.status = 'cached';
 
     const to = destinationBufferStream(result => {
-        expect(result).toBe('');
-        expect(outgoing.success).toBeTruthy();
+        t.equal(result, '');
+        t.ok(outgoing.success);
     });
 
     outgoing.pipe(to);
 
     const content = new Content();
     await content.resolve(outgoing);
+    t.end();
 });
 
-test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "outgoing" should stream fallback', async () => {
-    expect.hasAssertions();
+test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "outgoing" should stream fallback', async t => {
+    t.plan(2);
 
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
@@ -246,18 +253,19 @@ test('resolver.content() - throwable:false with fallback set - remote can not be
     outgoing.fallback = '<p>haz fallback</p>';
 
     const to = destinationBufferStream(result => {
-        expect(result).toBe('<p>haz fallback</p>');
-        expect(outgoing.success).toBeTruthy();
+        t.equal(result, '<p>haz fallback</p>');
+        t.ok(outgoing.success);
     });
 
     outgoing.pipe(to);
 
     const content = new Content();
     await content.resolve(outgoing);
+    t.end();
 });
 
-test('resolver.content() - throwable:false - remote responds with http 500 - "outgoing" should stream empty string', async () => {
-    expect.hasAssertions();
+test('resolver.content() - throwable:false - remote responds with http 500 - "outgoing" should stream empty string', async t => {
+    t.plan(2);
 
     const server = new PodletServer();
     const service = await server.listen();
@@ -276,8 +284,8 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "ou
     outgoing.status = 'cached';
 
     const to = destinationBufferStream(result => {
-        expect(result).toBe('');
-        expect(outgoing.success).toBeTruthy();
+        t.equal(result, '');
+        t.ok(outgoing.success);
     });
 
     outgoing.pipe(to);
@@ -286,10 +294,11 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "ou
     await content.resolve(outgoing);
 
     await server.close();
+    t.end();
 });
 
-test('resolver.content() - throwable:false with fallback set - remote responds with http 500 - "outgoing" should stream fallback', async () => {
-    expect.hasAssertions();
+test('resolver.content() - throwable:false with fallback set - remote responds with http 500 - "outgoing" should stream fallback', async t => {
+    t.plan(2);
 
     const server = new PodletServer();
     const service = await server.listen();
@@ -309,8 +318,8 @@ test('resolver.content() - throwable:false with fallback set - remote responds w
     outgoing.fallback = '<p>haz fallback</p>';
 
     const to = destinationBufferStream(result => {
-        expect(result).toBe('<p>haz fallback</p>');
-        expect(outgoing.success).toBeTruthy();
+        t.equal(result, '<p>haz fallback</p>');
+        t.ok(outgoing.success);
     });
 
     outgoing.pipe(to);
@@ -319,10 +328,11 @@ test('resolver.content() - throwable:false with fallback set - remote responds w
     await content.resolve(outgoing);
 
     await server.close();
+    t.end();
 });
 
-test('resolver.content() - kill switch - throwable:true - recursions equals threshold - should throw', async () => {
-    expect.hasAssertions();
+test('resolver.content() - kill switch - throwable:true - recursions equals threshold - should throw', async t => {
+    t.plan(2);
 
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
@@ -343,15 +353,17 @@ test('resolver.content() - kill switch - throwable:true - recursions equals thre
     try {
         await content.resolve(outgoing);
     } catch (error) {
-        expect(error.message).toMatch(
+        t.match(
+            error.message,
             /Recursion detected - failed to resolve fetching of podlet 4 times/,
         );
-        expect(outgoing.success).toBeFalsy();
+        t.notOk(outgoing.success);
     }
+    t.end();
 });
 
-test('resolver.content() - kill switch - throwable:false - recursions equals threshold - "outgoing.success" should be true', async () => {
-    expect.hasAssertions();
+test('resolver.content() - kill switch - throwable:false - recursions equals threshold - "outgoing.success" should be true', async t => {
+    t.plan(1);
 
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
@@ -370,5 +382,6 @@ test('resolver.content() - kill switch - throwable:false - recursions equals thr
     const content = new Content();
     await content.resolve(outgoing);
 
-    expect(outgoing.success).toBeTruthy();
+    t.ok(outgoing.success);
+    t.end();
 });

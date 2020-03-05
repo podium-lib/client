@@ -3,6 +3,7 @@
 
 'use strict';
 
+const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
 const Client = require('../');
 
@@ -22,7 +23,7 @@ const shuffle = array => {
  * .js()
  */
 
-test('client.js() - get all registered js assets - should return array with all js assets defined in manifests', async () => {
+test('client.js() - get all registered js assets - should return array with all js assets defined in manifests', async t => {
     const serverA = new PodletServer({ name: 'aa', assets: { js: 'a.js' } });
     const serverB = new PodletServer({ name: 'bb', assets: { js: 'b.js' } });
     const [serviceA, serviceB] = await Promise.all([
@@ -36,12 +37,12 @@ test('client.js() - get all registered js assets - should return array with all 
 
     await Promise.all([a.fetch({}), b.fetch({})]);
 
-    expect(client.js()).toEqual(['a.js', 'b.js']);
+    t.same(client.js(), ['a.js', 'b.js']);
 
     await Promise.all([serverA.close(), serverB.close()]);
 });
 
-test('client.js() - one manifest does not hold js asset - should return array where non defined js asset is omitted', async () => {
+test('client.js() - one manifest does not hold js asset - should return array where non defined js asset is omitted', async t => {
     const serverA = new PodletServer({ name: 'aa', assets: { js: 'a.js' } });
     const serverB = new PodletServer({ name: 'bb', assets: { js: 'b.js' } });
     const serverC = new PodletServer({ name: 'cc' });
@@ -58,12 +59,12 @@ test('client.js() - one manifest does not hold js asset - should return array wh
 
     await Promise.all([a.fetch({}), b.fetch({}), c.fetch({})]);
 
-    expect(client.js()).toEqual(['a.js', 'b.js']);
+    t.same(client.js(), ['a.js', 'b.js']);
 
     await Promise.all([serverA.close(), serverB.close(), serverC.close()]);
 });
 
-test('client.js() - fetch content out of order - should return array where defined js asset are listed in the order they where registered', async () => {
+test('client.js() - fetch content out of order - should return array where defined js asset are listed in the order they where registered', async t => {
     const serverA = new PodletServer({ name: 'aa', assets: { js: 'a.js' } });
     const serverB = new PodletServer({ name: 'bb', assets: { js: 'b.js' } });
     const serverC = new PodletServer({ name: 'cc', assets: { js: 'c.js' } });
@@ -127,7 +128,7 @@ test('client.js() - fetch content out of order - should return array where defin
         ]),
     );
 
-    expect(client.js()).toEqual([
+    t.same(client.js(), [
         'a.js',
         'b.js',
         'c.js',

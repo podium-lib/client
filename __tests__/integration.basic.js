@@ -1,9 +1,10 @@
 'use strict';
 
+const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
 const Client = require('../');
 
-test('integration basic', async () => {
+test('integration basic', async t => {
     const serverA = new PodletServer({ name: 'aa' });
     const serverB = new PodletServer({ name: 'bb' });
     const [serviceA, serviceB] = await Promise.all([
@@ -18,10 +19,10 @@ test('integration basic', async () => {
     const actual1 = await a.fetch({ 'podium-locale': 'en-NZ' });
     actual1.headers.date = '<replaced>';
 
-    expect(actual1.content).toEqual(serverA.contentBody);
-    expect(actual1.js).toEqual([]);
-    expect(actual1.css).toEqual([]);
-    expect(actual1.headers).toEqual({
+    t.same(actual1.content, serverA.contentBody);
+    t.same(actual1.js, []);
+    t.same(actual1.css, []);
+    t.same(actual1.headers, {
         connection: 'keep-alive',
         'content-length': '17',
         'content-type': 'text/html; charset=utf-8',
@@ -32,10 +33,10 @@ test('integration basic', async () => {
     const actual2 = await b.fetch({});
     actual2.headers.date = '<replaced>';
 
-    expect(actual2.content).toEqual(serverB.contentBody);
-    expect(actual2.js).toEqual([]);
-    expect(actual2.css).toEqual([]);
-    expect(actual2.headers).toEqual({
+    t.same(actual2.content, serverB.contentBody);
+    t.same(actual2.js, []);
+    t.same(actual2.css, []);
+    t.same(actual2.headers, {
         connection: 'keep-alive',
         'content-length': '17',
         'content-type': 'text/html; charset=utf-8',
@@ -46,8 +47,8 @@ test('integration basic', async () => {
     await Promise.all([serverA.close(), serverB.close()]);
 });
 
-test('integration - throwable:true - remote manifest can not be resolved - should throw', async () => {
-    expect.hasAssertions();
+test('integration - throwable:true - remote manifest can not be resolved - should throw', async t => {
+    t.plan(1);
 
     const client = new Client({ name: 'podiumClient' });
     const component = client.register({
@@ -59,13 +60,11 @@ test('integration - throwable:true - remote manifest can not be resolved - shoul
     try {
         await component.fetch({});
     } catch (error) {
-        expect(error.message).toMatch(
-            /No manifest available - Cannot read content/,
-        );
+        t.match(error.message, /No manifest available - Cannot read content/);
     }
 });
 
-test('integration - throwable:false - remote manifest can not be resolved - should resolve with empty string', async () => {
+test('integration - throwable:false - remote manifest can not be resolved - should resolve with empty string', async t => {
     const client = new Client({ name: 'podiumClient' });
     const component = client.register({
         name: 'component',
@@ -73,10 +72,10 @@ test('integration - throwable:false - remote manifest can not be resolved - shou
     });
 
     const result = await component.fetch({});
-    expect(result.content).toBe('');
+    t.equal(result.content, '');
 });
 
-test('integration - throwable:false - remote fallback can not be resolved - should resolve with empty string', async () => {
+test('integration - throwable:false - remote fallback can not be resolved - should resolve with empty string', async t => {
     const server = new PodletServer({
         fallback: 'http://does.not.exist.finn.no/fallback.html',
         content: '/error', // set to trigger fallback senario
@@ -88,12 +87,12 @@ test('integration - throwable:false - remote fallback can not be resolved - shou
     const component = client.register(service.options);
 
     const result = await component.fetch({});
-    expect(result.content).toBe('');
+    t.equal(result.content, '');
 
     await server.close();
 });
 
-test('integration - throwable:false - remote fallback responds with http 500 - should resolve with empty string', async () => {
+test('integration - throwable:false - remote fallback responds with http 500 - should resolve with empty string', async t => {
     const server = new PodletServer({
         fallback: 'error',
         content: '/error', // set to trigger fallback senario
@@ -105,13 +104,13 @@ test('integration - throwable:false - remote fallback responds with http 500 - s
     const component = client.register(service.options);
 
     const result = await component.fetch({});
-    expect(result.content).toBe('');
+    t.equal(result.content, '');
 
     await server.close();
 });
 
-test('integration - throwable:true - remote content can not be resolved - should throw', async () => {
-    expect.hasAssertions();
+test('integration - throwable:true - remote content can not be resolved - should throw', async t => {
+    t.plan(1);
 
     const server = new PodletServer({
         fallback: '/fallback.html',
@@ -130,13 +129,13 @@ test('integration - throwable:true - remote content can not be resolved - should
     try {
         await component.fetch({});
     } catch (error) {
-        expect(error.message).toMatch(/Error reading content/);
+        t.match(error.message, /Error reading content/);
     }
 
     await server.close();
 });
 
-test('integration - throwable:false - remote content can not be resolved - should resolve with fallback', async () => {
+test('integration - throwable:false - remote content can not be resolved - should resolve with fallback', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
         content: 'http://does.not.exist.finn.no/content.html',
@@ -148,16 +147,16 @@ test('integration - throwable:false - remote content can not be resolved - shoul
     const component = client.register(service.options);
 
     const result = await component.fetch({});
-    expect(result.content).toEqual(server.fallbackBody);
-    expect(result.headers).toEqual({});
-    expect(result.css).toEqual([]);
-    expect(result.js).toEqual([]);
+    t.same(result.content, server.fallbackBody);
+    t.same(result.headers, {});
+    t.same(result.css, []);
+    t.same(result.js, []);
 
     await server.close();
 });
 
-test('integration - throwable:true - remote content responds with http 500 - should throw', async () => {
-    expect.hasAssertions();
+test('integration - throwable:true - remote content responds with http 500 - should throw', async t => {
+    t.plan(1);
 
     const server = new PodletServer({
         fallback: '/fallback.html',
@@ -176,13 +175,13 @@ test('integration - throwable:true - remote content responds with http 500 - sho
     try {
         await component.fetch({});
     } catch (error) {
-        expect(error.message).toMatch(/Could not read content/);
+        t.match(error.message, /Could not read content/);
     }
 
     await server.close();
 });
 
-test('integration - throwable:false - remote content responds with http 500 - should resolve with fallback', async () => {
+test('integration - throwable:false - remote content responds with http 500 - should resolve with fallback', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
         content: '/error',
@@ -194,15 +193,15 @@ test('integration - throwable:false - remote content responds with http 500 - sh
     const component = client.register(service.options);
 
     const result = await component.fetch({});
-    expect(result.content).toEqual(server.fallbackBody);
-    expect(result.headers).toEqual({});
-    expect(result.css).toEqual([]);
-    expect(result.js).toEqual([]);
+    t.same(result.content, server.fallbackBody);
+    t.same(result.headers, {});
+    t.same(result.css, []);
+    t.same(result.js, []);
 
     await server.close();
 });
 
-test('integration - throwable:false - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and resolve with fallback', async () => {
+test('integration - throwable:false - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and resolve with fallback', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
     });
@@ -219,22 +218,22 @@ test('integration - throwable:false - manifest / content fetching goes into recu
     };
 
     const result = await component.fetch({});
-    expect(result.content).toEqual(server.fallbackBody);
-    expect(result.headers).toEqual({});
-    expect(result.css).toEqual([]);
-    expect(result.js).toEqual([]);
+    t.same(result.content, server.fallbackBody);
+    t.same(result.headers, {});
+    t.same(result.css, []);
+    t.same(result.js, []);
 
     // manifest and fallback is one more than default
     // due to initial refresh() call
-    expect(server.metrics.manifest).toBe(5);
-    expect(server.metrics.fallback).toBe(5);
-    expect(server.metrics.content).toBe(4);
+    t.equal(server.metrics.manifest, 5);
+    t.equal(server.metrics.fallback, 5);
+    t.equal(server.metrics.content, 4);
 
     await server.close();
 });
 
-test('integration - throwable:true - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and then throw', async () => {
-    expect.hasAssertions();
+test('integration - throwable:true - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and then throw', async t => {
+    t.plan(4);
 
     const server = new PodletServer({
         fallback: '/fallback.html',
@@ -258,28 +257,29 @@ test('integration - throwable:true - manifest / content fetching goes into recur
     try {
         await component.fetch({});
     } catch (error) {
-        expect(error.message).toMatch(
+        t.match(
+            error.message,
             /Recursion detected - failed to resolve fetching of podlet 4 times/,
         );
     }
 
     // manifest and fallback is one more than default
     // due to initial refresh() call
-    expect(server.metrics.manifest).toBe(5);
-    expect(server.metrics.fallback).toBe(5);
-    expect(server.metrics.content).toBe(4);
+    t.equal(server.metrics.manifest, 5);
+    t.equal(server.metrics.fallback, 5);
+    t.equal(server.metrics.content, 4);
 
     await server.close();
 });
 
-test('integration basic - set headers argument - should pass on headers to request', async () => {
-    expect.hasAssertions();
+test('integration basic - set headers argument - should pass on headers to request', async t => {
+    t.plan(2);
 
     const server = new PodletServer({ name: 'podlet' });
     const service = await server.listen();
     server.on('req:content', async (content, req) => {
-        expect(req.headers.foo).toBe('bar');
-        expect(req.headers['podium-ctx']).toBe('foo');
+        t.equal(req.headers.foo, 'bar');
+        t.equal(req.headers['podium-ctx'], 'foo');
 
         // Server must be closed here, unless Jest just passes
         // the test even if it fail. Silly jest...
@@ -299,15 +299,13 @@ test('integration basic - set headers argument - should pass on headers to reque
     );
 });
 
-test('integration basic - set headers argument - header has a "user-agent" - should override "user-agent" with podium agent', async () => {
-    expect.hasAssertions();
+test('integration basic - set headers argument - header has a "user-agent" - should override "user-agent" with podium agent', async t => {
+    t.plan(1);
 
     const server = new PodletServer({ name: 'podlet' });
     const service = await server.listen();
     server.on('req:content', async (content, req) => {
-        expect(
-            req.headers['user-agent'].startsWith('@podium/client'),
-        ).toBeTruthy();
+        t.ok(req.headers['user-agent'].startsWith('@podium/client'));
 
         // Server must be closed here, unless Jest just passes
         // the test even if it fail. Silly jest...
@@ -327,48 +325,50 @@ test('integration basic - set headers argument - header has a "user-agent" - sho
     );
 });
 
-test('integration basic - metrics stream objects created', async done => {
-    expect.hasAssertions();
+test('integration basic - metrics stream objects created', t => {
+    t.plan(10);
 
     const server = new PodletServer({ name: 'podlet' });
-    const service = await server.listen();
 
     const client = new Client({ name: 'clientName' });
 
     const metrics = [];
     client.metrics.on('data', metric => metrics.push(metric));
-    client.metrics.on('end', async () => {
-        expect(metrics).toHaveLength(3);
-        expect(metrics[0].name).toBe('podium_client_resolver_manifest_resolve');
-        expect(metrics[0].type).toBe(5);
-        expect(metrics[0].labels[0]).toEqual({
+    client.metrics.on('end', () => {
+        t.equal(metrics.length, 3);
+        t.equal(metrics[0].name, 'podium_client_resolver_manifest_resolve');
+        t.equal(metrics[0].type, 5);
+        t.same(metrics[0].labels[0], {
             name: 'name',
             value: 'clientName',
         });
-        expect(metrics[1].name).toBe('podium_client_resolver_fallback_resolve');
-        expect(metrics[1].type).toBe(5);
-        expect(metrics[1].labels[0]).toEqual({
+        t.equal(metrics[1].name, 'podium_client_resolver_fallback_resolve');
+        t.equal(metrics[1].type, 5);
+        t.same(metrics[1].labels[0], {
             name: 'name',
             value: 'clientName',
         });
-        expect(metrics[2].name).toBe('podium_client_resolver_content_resolve');
-        expect(metrics[2].type).toBe(5);
-        expect(metrics[2].labels[0]).toEqual({
+        t.equal(metrics[2].name, 'podium_client_resolver_content_resolve');
+        t.equal(metrics[2].type, 5);
+        t.same(metrics[2].labels[0], {
             name: 'name',
             value: 'clientName',
         });
-        await server.close();
-        done();
+
+        server.close().then(() => t.end());
     });
 
-    const a = client.register(service.options);
+    server.listen().then(service => {
+        const a = client.register(service.options);
 
-    await a.fetch({ 'podium-ctx': 'foo' });
-    client.metrics.push(null);
+        a.fetch({ 'podium-ctx': 'foo' }).then(() => {
+            client.metrics.push(null);
+        });
+    });
 });
 
-test('integration basic - "pathname" is called with different values - should append the different pathnames to the content URL', async () => {
-    expect.hasAssertions();
+test('integration basic - "pathname" is called with different values - should append the different pathnames to the content URL', async t => {
+    t.plan(2);
 
     const server = new PodletServer({ name: 'podlet', content: '/index' });
     const service = await server.listen();
@@ -378,8 +378,8 @@ test('integration basic - "pathname" is called with different values - should ap
         results.push(req.url);
 
         if (server.metrics.content === 2) {
-            expect(results[0]).toEqual('/index/foo');
-            expect(results[1]).toEqual('/index/bar');
+            t.equal(results[0], '/index/foo');
+            t.equal(results[1], '/index/bar');
 
             // Server must be closed here, unless Jest just passes
             // the test even if it fail. Silly jest...

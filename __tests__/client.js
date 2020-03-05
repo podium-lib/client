@@ -2,34 +2,33 @@
 
 'use strict';
 
+const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
 const lolex = require('lolex');
 const Client = require('../');
-
 
 /**
  * Constructor
  */
 
-test('Client() - instantiate new client object - should have register method', () => {
+test('Client() - instantiate new client object - should have register method', t => {
     const client = new Client({ name: 'podiumClient' });
-    expect(client.register).toBeInstanceOf(Function);
+    t.ok(client.register instanceof Function);
+    t.end();
 });
 
-test('Client() - object tag - should be PodiumClient', () => {
+test('Client() - object tag - should be PodiumClient', t => {
     const client = new Client({ name: 'podiumClient' });
-    expect(Object.prototype.toString.call(client)).toEqual(
-        '[object PodiumClient]',
-    );
+    t.equal(Object.prototype.toString.call(client), '[object PodiumClient]');
+    t.end();
 });
 
 /**
  * .on('dispose')
  */
 
-test('Client().on("dispose") - client is hot, manifest reaches timeout - should emit dispose event', async () => {
-    expect.hasAssertions();
-
+test('Client().on("dispose") - client is hot, manifest reaches timeout - should emit dispose event', async t => {
+    t.plan(1);
     const clock = lolex.install();
 
     const server = new PodletServer({
@@ -42,7 +41,8 @@ test('Client().on("dispose") - client is hot, manifest reaches timeout - should 
         maxAge: 24 * 60 * 60 * 1000,
     });
     client.on('dispose', key => {
-        expect(key).toEqual(service.options.name);
+        t.equal(key, service.options.name);
+        t.end();
     });
 
     const podlet = client.register(service.options);
@@ -61,7 +61,7 @@ test('Client().on("dispose") - client is hot, manifest reaches timeout - should 
  * .refreshManifests()
  */
 
-test("client.refreshManifests() - should populate all resources' manifests", async () => {
+test("client.refreshManifests() - should populate all resources' manifests", async t => {
     const serverA = new PodletServer({
         name: 'aa',
         assets: { js: 'a.js', css: 'a.css' },
@@ -79,14 +79,14 @@ test("client.refreshManifests() - should populate all resources' manifests", asy
     client.register(serviceA.options);
     client.register(serviceB.options);
 
-    expect(client.js()).toEqual([]);
-    expect(client.css()).toEqual([]);
+    t.same(client.js(), []);
+    t.same(client.css(), []);
 
     const fetchResult = await client.refreshManifests();
 
-    expect(client.js()).toEqual(['a.js', 'b.js']);
-    expect(client.css()).toEqual(['a.css', 'b.css']);
-    expect(fetchResult).toBeUndefined();
+    t.same(client.js(), ['a.js', 'b.js']);
+    t.same(client.css(), ['a.css', 'b.css']);
+    t.equal(fetchResult, undefined);
 
     await Promise.all([serverA.close(), serverB.close()]);
 });
@@ -95,7 +95,7 @@ test("client.refreshManifests() - should populate all resources' manifests", asy
  * .dump()
  */
 
-test("client.dump() - should dump resources' manifests", async () => {
+test("client.dump() - should dump resources' manifests", async t => {
     const serverA = new PodletServer({
         name: 'aa',
         assets: { js: 'a.js', css: 'a.css' },
@@ -117,7 +117,7 @@ test("client.dump() - should dump resources' manifests", async () => {
 
     const dump = client.dump();
 
-    expect(dump.length).toEqual(2);
+    t.equal(dump.length, 2);
 
     await Promise.all([serverA.close(), serverB.close()]);
 });
@@ -126,7 +126,7 @@ test("client.dump() - should dump resources' manifests", async () => {
  * .load()
  */
 
-test("client.load() - should load dumped resources' manifests", async () => {
+test("client.load() - should load dumped resources' manifests", async t => {
     const serverA = new PodletServer({
         name: 'aa',
         assets: { js: 'a.js', css: 'a.css' },
@@ -153,8 +153,8 @@ test("client.load() - should load dumped resources' manifests", async () => {
     const dump = clientA.dump();
     clientB.load(dump);
 
-    expect(clientB.js()).toEqual(['a.js', 'b.js']);
-    expect(clientB.css()).toEqual(['a.css', 'b.css']);
+    t.same(clientB.js(), ['a.js', 'b.js']);
+    t.same(clientB.css(), ['a.css', 'b.css']);
 
     await Promise.all([serverA.close(), serverB.close()]);
 });

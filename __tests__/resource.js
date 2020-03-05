@@ -4,6 +4,7 @@
 
 /* eslint no-unused-vars: "off" */
 
+const { test } = require('tap');
 const getStream = require('get-stream');
 const stream = require('readable-stream');
 const Cache = require('ttl-mem-cache');
@@ -19,59 +20,60 @@ const URI = 'http://example.org';
  * Constructor
  */
 
-test('Resource() - object tag - should be PodletClientResource', () => {
+test('Resource() - object tag - should be PodletClientResource', t => {
     const resource = new Resource(new Cache(), new State(), { uri: URI });
-    expect(Object.prototype.toString.call(resource)).toEqual(
+    t.equal(
+        Object.prototype.toString.call(resource),
         '[object PodiumClientResource]',
     );
+    t.end();
 });
 
-test('Resource() - no "registry" - should throw', () => {
-    expect.hasAssertions();
-    expect(() => {
+test('Resource() - no "registry" - should throw', t => {
+    t.throws(() => {
         const resource = new Resource();
-    }).toThrowError(
-        'you must pass a "registry" object to the PodiumClientResource constructor',
-    );
+    }, 'you must pass a "registry" object to the PodiumClientResource constructor');
+    t.end();
 });
 
-test('Resource() - instantiate new resource object - should have "fetch" method', () => {
+test('Resource() - instantiate new resource object - should have "fetch" method', t => {
     const resource = new Resource(new Cache(), new State(), { uri: URI });
-    expect(resource.fetch).toBeInstanceOf(Function);
+    t.ok(resource.fetch instanceof Function);
+    t.end();
 });
 
-test('Resource() - instantiate new resource object - should have "stream" method', () => {
+test('Resource() - instantiate new resource object - should have "stream" method', t => {
     const resource = new Resource(new Cache(), new State(), { uri: URI });
-    expect(resource.stream).toBeInstanceOf(Function);
+    t.ok(resource.stream instanceof Function);
+    t.end();
 });
 
 /**
  * .fetch()
  */
 
-test('resource.fetch() - should return a promise', async () => {
+test('resource.fetch() - should return a promise', async t => {
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
     const fetch = resource.fetch({});
-    expect(fetch).toBeInstanceOf(Promise);
+    t.ok(fetch instanceof Promise);
 
     await fetch;
 
     await server.close();
+    t.end();
 });
 
-test('resource.fetch(podiumContext) - should pass it on', async () => {
-    expect.assertions(2);
+test('resource.fetch(podiumContext) - should pass it on', async t => {
+    t.plan(2);
 
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
     server.on('req:content', (count, req) => {
-        expect(req.headers['podium-locale']).toBe('nb-NO');
-        expect(req.headers['podium-mount-origin']).toBe(
-            'http://www.example.org',
-        );
+        t.equal(req.headers['podium-locale'], 'nb-NO');
+        t.equal(req.headers['podium-mount-origin'], 'http://www.example.org');
     });
 
     const resource = new Resource(new Cache(), new State(), service.options);
@@ -81,9 +83,10 @@ test('resource.fetch(podiumContext) - should pass it on', async () => {
     });
 
     await server.close();
+    t.end();
 });
 
-test('resource.fetch() - returns an object with content, headers, js and css keys', async () => {
+test('resource.fetch() - returns an object with content, headers, js and css keys', async t => {
     const server = new PodletServer({
         assets: { js: 'http://fakejs.com', css: 'http://fakecss.com' },
     });
@@ -93,21 +96,21 @@ test('resource.fetch() - returns an object with content, headers, js and css key
     const result = await resource.fetch({});
     result.headers.date = '<replaced>';
 
-    expect(result.content).toEqual('<p>content component</p>');
-    expect(result.headers).toEqual({
+    t.equal(result.content, '<p>content component</p>');
+    t.same(result.headers, {
         connection: 'close',
         'content-length': '24',
         'content-type': 'text/html; charset=utf-8',
         date: '<replaced>',
         'podlet-version': '1.0.0',
     });
-    expect(result.css).toMatchObject([
+    t.same(result.css, [
         {
             type: 'text/css',
             value: 'http://fakecss.com',
         },
     ]);
-    expect(result.js).toMatchObject([
+    t.same(result.js, [
         {
             type: 'default',
             value: 'http://fakejs.com',
@@ -115,9 +118,10 @@ test('resource.fetch() - returns an object with content, headers, js and css key
     ]);
 
     await server.close();
+    t.end();
 });
 
-test('resource.fetch() - returns empty array for js and css when no assets are present in manifest', async () => {
+test('resource.fetch() - returns empty array for js and css when no assets are present in manifest', async t => {
     const server = new PodletServer();
     const service = await server.listen();
 
@@ -125,39 +129,41 @@ test('resource.fetch() - returns empty array for js and css when no assets are p
     const result = await resource.fetch({});
     result.headers.date = '<replaced>';
 
-    expect(result.content).toEqual('<p>content component</p>');
-    expect(result.headers).toEqual({
+    t.equal(result.content, '<p>content component</p>');
+    t.same(result.headers, {
         connection: 'close',
         'content-length': '24',
         'content-type': 'text/html; charset=utf-8',
         date: '<replaced>',
         'podlet-version': '1.0.0',
     });
-    expect(result.css).toEqual([]);
-    expect(result.js).toEqual([]);
+    t.same(result.css, []);
+    t.same(result.js, []);
 
     await server.close();
+    t.end();
 });
 
 /**
  * .stream()
  */
 
-test('resource.stream() - should return a stream', async () => {
+test('resource.stream() - should return a stream', async t => {
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
-    expect(strm).toBeInstanceOf(stream);
+    t.ok(strm instanceof stream);
 
     await getStream(strm);
 
     await server.close();
+    t.end();
 });
 
-test('resource.stream() - should emit beforeStream event with no assets', async () => {
-    expect.assertions(3);
+test('resource.stream() - should emit beforeStream event with no assets', async t => {
+    t.plan(3);
 
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
@@ -165,18 +171,19 @@ test('resource.stream() - should emit beforeStream event with no assets', async 
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
     strm.once('beforeStream', ({ headers, js, css }) => {
-        expect(headers['podlet-version']).toEqual('1.0.0');
-        expect(js).toEqual([]);
-        expect(css).toEqual([]);
+        t.equal(headers['podlet-version'], '1.0.0');
+        t.same(js, []);
+        t.same(css, []);
     });
 
     await getStream(strm);
 
     await server.close();
+    t.end();
 });
 
-test('resource.stream() - should emit js event when js assets defined', async () => {
-    expect.assertions(1);
+test('resource.stream() - should emit js event when js assets defined', async t => {
+    t.plan(1);
 
     const server = new PodletServer({ assets: { js: 'http://fakejs.com' } });
     const service = await server.listen();
@@ -184,16 +191,17 @@ test('resource.stream() - should emit js event when js assets defined', async ()
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
     strm.once('beforeStream', ({ js }) => {
-        expect(js).toMatchObject([{ type: 'default', value: 'http://fakejs.com' }]);
+        t.same(js, [{ type: 'default', value: 'http://fakejs.com' }]);
     });
 
     await getStream(strm);
 
     await server.close();
+    t.end();
 });
 
-test('resource.stream() - should emit css event when css assets defined', async () => {
-    expect.assertions(1);
+test('resource.stream() - should emit css event when css assets defined', async t => {
+    t.plan(1);
 
     const server = new PodletServer({ assets: { css: 'http://fakecss.com' } });
     const service = await server.listen();
@@ -201,15 +209,16 @@ test('resource.stream() - should emit css event when css assets defined', async 
     const resource = new Resource(new Cache(), new State(), service.options);
     const strm = resource.stream({});
     strm.once('beforeStream', ({ css }) => {
-        expect(css).toMatchObject([{ type: 'text/css', value: 'http://fakecss.com' }]);
+        t.same(css, [{ type: 'text/css', value: 'http://fakecss.com' }]);
     });
 
     await getStream(strm);
 
     await server.close();
+    t.end();
 });
 
-test('resource.stream() - should emit beforeStream event before emitting data', async () => {
+test('resource.stream() - should emit beforeStream event before emitting data', async t => {
     const server = new PodletServer({
         assets: { js: 'http://fakejs.com', css: 'http://fakecss.com' },
     });
@@ -228,35 +237,33 @@ test('resource.stream() - should emit beforeStream event before emitting data', 
 
     await getStream(strm);
 
-    expect(items[0].css).toMatchObject([
-        { type: 'text/css', value: 'http://fakecss.com' },
-    ]);
-    expect(items[0].js).toMatchObject([
-        { type: 'default', value: 'http://fakejs.com' },
-    ]);
-    expect(items[1]).toEqual('<p>content component</p>');
+    t.same(items[0].css, [{ type: 'text/css', value: 'http://fakecss.com' }]);
+    t.same(items[0].js, [{ type: 'default', value: 'http://fakejs.com' }]);
+    t.equal(items[1], '<p>content component</p>');
 
     await server.close();
+    t.end();
 });
 
 /**
  * .refresh()
  */
 
-test('resource.refresh() - should return a promise', async () => {
+test('resource.refresh() - should return a promise', async t => {
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
     const refresh = resource.refresh();
-    expect(refresh).toBeInstanceOf(Promise);
+    t.ok(refresh instanceof Promise);
 
     await refresh;
 
     await server.close();
+    t.end();
 });
 
-test('resource.refresh() - manifest is available - should return "true"', async () => {
+test('resource.refresh() - manifest is available - should return "true"', async t => {
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
@@ -265,12 +272,13 @@ test('resource.refresh() - manifest is available - should return "true"', async 
 
     const result = await component.refresh();
 
-    expect(result).toBe(true);
+    t.equal(result, true);
 
     await server.close();
+    t.end();
 });
 
-test('resource.refresh() - manifest is NOT available - should return "false"', async () => {
+test('resource.refresh() - manifest is NOT available - should return "false"', async t => {
     const client = new Client({ name: 'podiumClient' });
 
     const component = client.register({
@@ -280,10 +288,11 @@ test('resource.refresh() - manifest is NOT available - should return "false"', a
 
     const result = await component.refresh();
 
-    expect(result).toBe(false);
+    t.equal(result, false);
+    t.end();
 });
 
-test('resource.refresh() - manifest with fallback is available - should get manifest and fallback, but not content', async () => {
+test('resource.refresh() - manifest with fallback is available - should get manifest and fallback, but not content', async t => {
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
@@ -292,30 +301,33 @@ test('resource.refresh() - manifest with fallback is available - should get mani
 
     await component.refresh();
 
-    expect(server.metrics.manifest).toBe(1);
-    expect(server.metrics.fallback).toBe(1);
-    expect(server.metrics.content).toBe(0);
+    t.equal(server.metrics.manifest, 1);
+    t.equal(server.metrics.fallback, 1);
+    t.equal(server.metrics.content, 0);
 
     await server.close();
+    t.end();
 });
 
 /**
  * .uri
  */
 
-test('Resource().uri - instantiate new resource object - expose own uri', () => {
+test('Resource().uri - instantiate new resource object - expose own uri', t => {
     const resource = new Resource(new Cache(), new State(), { uri: URI });
-    expect(resource.uri).toBe(URI);
+    t.equal(resource.uri, URI);
+    t.end();
 });
 
 /**
  * .name
  */
 
-test('Resource().name - instantiate new resource object - expose own name', () => {
+test('Resource().name - instantiate new resource object - expose own name', t => {
     const resource = new Resource(new Cache(), new State(), {
         uri: URI,
         name: 'someName',
     });
-    expect(resource.name).toBe('someName');
+    t.equal(resource.name, 'someName');
+    t.end();
 });

@@ -507,9 +507,29 @@ the process of retrieving content from the remote. If the same happens with
 When a resource is flagged as throwable and it throws an error the error will be
 an enriched [boom] with detailed information on what went wrong.
 
+```js
+try {
+    const result = await foo.fetch();
+} catch (err) {
+    // err.statusCode === 404
+}
+```
+
 The error object will reflect the http status code of the remote. In other
 words; if the remote responded with a 404, the `statusCode` in the error object
 will be 404.
+
+One exceptional case is when the podlet responds with a `3xx` code. In this case, the error object's `isRedirect` property will be set to true and a property `redirectUrl` will be included. The client itself will not follow redirects, it is up to you to do so.
+
+```js
+try {
+    const result = await foo.fetch();
+} catch (err) {
+    // err.statusCode === 302
+    // err.isRedirect === true
+    // err.redirectUrl === 'http://redirects.are.us.com'
+}
+```
 
 ## Podlet update life cycle
 

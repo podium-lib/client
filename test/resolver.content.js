@@ -142,7 +142,7 @@ test('resolver.content() - throwable:true - remote can not be resolved - should 
 });
 
 test('resolver.content() - throwable:true - remote responds with http 500 - should throw', async t => {
-    t.plan(3);
+    t.plan(4);
 
     const server = new PodletServer();
     const service = await server.listen();
@@ -165,7 +165,8 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
     try {
         await content.resolve(outgoing);
     } catch (error) {
-        t.equal(error.output.statusCode, 500);
+        t.equal(error.statusCode, 500);
+        t.equal(error.output.statusCode, 500); // backwards compat
         t.match(error.message, /Could not read content/);
         t.notOk(outgoing.success);
     }
@@ -175,7 +176,7 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
 });
 
 test('resolver.content() - throwable:true - remote responds with http 404 - should throw with error object reflecting status code podlet responded with', async t => {
-    t.plan(3);
+    t.plan(4);
 
     const server = new PodletServer();
     const service = await server.listen();
@@ -198,7 +199,8 @@ test('resolver.content() - throwable:true - remote responds with http 404 - shou
     try {
         await content.resolve(outgoing);
     } catch (error) {
-        t.equal(error.output.statusCode, 404);
+        t.equal(error.statusCode, 404);
+        t.equal(error.output.statusCode, 404); // backwards compat
         t.match(error.message, /Could not read content/);
         t.notOk(outgoing.success);
     }
@@ -383,5 +385,47 @@ test('resolver.content() - kill switch - throwable:false - recursions equals thr
     await content.resolve(outgoing);
 
     t.ok(outgoing.success);
+    t.end();
+});
+
+test('resolver.content() - "redirects" 302 status should also include location on decorated error object', async t => {
+    const server = new PodletServer();
+    server.headersContent = {
+        location: 'http://redirects.are.us.com',
+    };
+    server.statusCode = 302;
+    const service = await server.listen();
+    const outgoing = new HttpOutgoing({
+        uri: service.options.uri,
+        throwable: true,
+    });
+
+    // See TODO II
+    const { manifest } = server;
+    manifest.content = utils.uriRelativeToAbsolute(
+        server.manifest.content,
+        outgoing.manifestUri,
+    );
+
+    outgoing.manifest = manifest;
+    outgoing.status = 'cached';
+
+    // See TODO I
+    outgoing.reqOptions.podiumContext = {};
+
+    const content = new Content();
+
+    try {
+        await content.resolve(outgoing);
+    } catch (error) {
+        t.equal(error.statusCode, 302);
+        // Backwards compat property which cannot be set to anything < 400 because of how @hapi/boom works
+        t.equal(error.output.statusCode, 500);
+        t.equal(error.isRedirect, true);
+        t.equal(error.redirectUrl, 'http://redirects.are.us.com');
+    }
+
+    // t.ok(outgoing.manifest);
+    await server.close();
     t.end();
 });

@@ -389,6 +389,7 @@ test('resolver.content() - kill switch - throwable:false - recursions equals thr
 });
 
 test('resolver.content() - "redirects" 302 status should also include location on decorated error object', async t => {
+    t.plan(4);
     const server = new PodletServer();
     server.headersContent = {
         location: 'http://redirects.are.us.com',

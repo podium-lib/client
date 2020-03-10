@@ -421,11 +421,41 @@ test('resolver.content() - "redirects" 302 response should include redirect obje
     const content = new Content();
 
     const response = await content.resolve(outgoing);
-    // console.log(response);
     t.same(response.redirect, {
         statusCode: 302,
         location: 'http://redirects.are.us.com',
     });
+
+    await server.close();
+    t.end();
+});
+
+test('resolver.content() - "redirectable" 200 response should not respond with redirect properties', async t => {
+    t.plan(1);
+    const server = new PodletServer();
+    const service = await server.listen();
+    const outgoing = new HttpOutgoing({
+        uri: service.options.uri,
+        redirectable: true,
+    });
+
+    // See TODO II
+    const { manifest } = server;
+    manifest.content = utils.uriRelativeToAbsolute(
+        server.manifest.content,
+        outgoing.manifestUri,
+    );
+
+    outgoing.manifest = manifest;
+    outgoing.status = 'cached';
+
+    // See TODO I
+    outgoing.reqOptions.podiumContext = {};
+
+    const content = new Content();
+
+    const response = await content.resolve(outgoing);
+    t.equal(response.redirect, null);
 
     await server.close();
     t.end();
@@ -461,7 +491,6 @@ test('resolver.content() - "redirects" 302 response should not throw', async t =
     const content = new Content();
 
     const response = await content.resolve(outgoing);
-    // console.log(response);
     t.same(response.redirect, {
         statusCode: 302,
         location: 'http://redirects.are.us.com',

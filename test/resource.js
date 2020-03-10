@@ -144,7 +144,7 @@ test('resource.fetch() - returns empty array for js and css when no assets are p
     t.end();
 });
 
-test('resource.fetch() - ', async t => {
+test('resource.fetch() - redirectable flag - podlet responds with 302 redirect - redirect property is populated', async t => {
     const server = new PodletServer();
     server.headersContent = {
         location: 'http://redirects.are.us.com',

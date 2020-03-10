@@ -144,6 +144,41 @@ test('resource.fetch() - returns empty array for js and css when no assets are p
     t.end();
 });
 
+test('resource.fetch() - ', async t => {
+    const server = new PodletServer();
+    server.headersContent = {
+        location: 'http://redirects.are.us.com',
+    };
+    server.statusCode = 302;
+    const service = await server.listen();
+
+    const resource = new Resource(new Cache(), new State(), {
+        ...service.options,
+        redirectable: true,
+    });
+    const result = await resource.fetch({});
+    result.headers.date = '<replaced>';
+
+    t.equal(result.content, '');
+    t.same(result.headers, {
+        connection: 'close',
+        'content-length': '24',
+        'content-type': 'text/html; charset=utf-8',
+        date: '<replaced>',
+        'podlet-version': '1.0.0',
+        location: 'http://redirects.are.us.com',
+    });
+    t.same(result.redirect, {
+        statusCode: 302,
+        location: 'http://redirects.are.us.com',
+    });
+    t.same(result.css, []);
+    t.same(result.js, []);
+
+    await server.close();
+    t.end();
+});
+
 /**
  * .stream()
  */

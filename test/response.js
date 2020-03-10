@@ -49,6 +49,7 @@ test('Response() - no arguments - should return default values when calling toJS
         headers: {},
         css: [],
         js: [],
+        redirect: null,
     });
     t.end();
 });
@@ -89,12 +90,14 @@ test('Response() - arguments is set - should return set values when calling toJS
         headers: { foo: 'bar' },
         css: ['foo'],
         js: ['foo'],
+        redirect: { statusCode: 302, location: 'http://redirects.are.us.com' },
     });
     t.same(response.toJSON(), {
         content: 'foo',
         headers: { foo: 'bar' },
         css: ['foo'],
         js: ['foo'],
+        redirect: { statusCode: 302, location: 'http://redirects.are.us.com' },
     });
     t.end();
 });
@@ -138,10 +141,11 @@ test('Response() - JSON.stringify object - should return JSON string object', t 
         headers: { foo: 'bar' },
         css: ['foo'],
         js: ['foo'],
+        redirect: null,
     });
     t.equal(
         JSON.stringify(response),
-        '{"content":"foo","headers":{"foo":"bar"},"css":["foo"],"js":["foo"]}',
+        '{"redirect":null,"content":"foo","headers":{"foo":"bar"},"css":["foo"],"js":["foo"]}',
     );
     t.end();
 });

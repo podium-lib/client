@@ -6,7 +6,11 @@ const { test } = require('tap');
 const HttpOutgoing = require('../lib/http-outgoing');
 const Content = require('../lib/resolver.content');
 const utils = require('@podium/utils');
-const { destinationBufferStream, PodletServer } = require('@podium/test-utils');
+const {
+    destinationBufferStream,
+    PodletServer,
+    HttpServer,
+} = require('@podium/test-utils');
 
 /**
  * TODO I:
@@ -388,8 +392,8 @@ test('resolver.content() - kill switch - throwable:false - recursions equals thr
     t.end();
 });
 
-test('resolver.content() - "redirects" 302 status should also include location on decorated error object', async t => {
-    t.plan(4);
+test('resolver.content() - "redirects" 302 response should include redirect object', async t => {
+    t.plan(1);
     const server = new PodletServer();
     server.headersContent = {
         location: 'http://redirects.are.us.com',
@@ -398,6 +402,46 @@ test('resolver.content() - "redirects" 302 status should also include location o
     const service = await server.listen();
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
+        redirectable: true,
+    });
+
+    // See TODO II
+    const { manifest } = server;
+    manifest.content = utils.uriRelativeToAbsolute(
+        server.manifest.content,
+        outgoing.manifestUri,
+    );
+
+    outgoing.manifest = manifest;
+    outgoing.status = 'cached';
+
+    // See TODO I
+    outgoing.reqOptions.podiumContext = {};
+
+    const content = new Content();
+
+    const response = await content.resolve(outgoing);
+    // console.log(response);
+    t.same(response.redirect, {
+        statusCode: 302,
+        location: 'http://redirects.are.us.com',
+    });
+
+    await server.close();
+    t.end();
+});
+
+test('resolver.content() - "redirects" 302 response should not throw', async t => {
+    t.plan(1);
+    const server = new PodletServer();
+    server.headersContent = {
+        location: 'http://redirects.are.us.com',
+    };
+    server.statusCode = 302;
+    const service = await server.listen();
+    const outgoing = new HttpOutgoing({
+        uri: service.options.uri,
+        redirectable: true,
         throwable: true,
     });
 
@@ -416,17 +460,70 @@ test('resolver.content() - "redirects" 302 status should also include location o
 
     const content = new Content();
 
-    try {
-        await content.resolve(outgoing);
-    } catch (error) {
-        t.equal(error.statusCode, 302);
-        // Backwards compat property which cannot be set to anything < 400 because of how @hapi/boom works
-        t.equal(error.output.statusCode, 500);
-        t.equal(error.isRedirect, true);
-        t.equal(error.redirectUrl, 'http://redirects.are.us.com');
-    }
+    const response = await content.resolve(outgoing);
+    // console.log(response);
+    t.same(response.redirect, {
+        statusCode: 302,
+        location: 'http://redirects.are.us.com',
+    });
 
-    // t.ok(outgoing.manifest);
     await server.close();
+    t.end();
+});
+
+test('resolver.content() - "redirects" 302 response - client should follow redirect by default', async t => {
+    t.plan(5);
+
+    const externalService = new HttpServer();
+    externalService.request = (req, res) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.end('proxied content response');
+    };
+    const address = await externalService.listen();
+
+    const server = new PodletServer();
+    server.headersContent = {
+        location: address,
+    };
+    server.statusCode = 302;
+    const service = await server.listen();
+    const outgoing = new HttpOutgoing({
+        uri: service.options.uri,
+    });
+
+    // See TODO II
+    const { manifest } = server;
+    manifest.content = utils.uriRelativeToAbsolute(
+        server.manifest.content,
+        outgoing.manifestUri,
+    );
+
+    outgoing.manifest = manifest;
+    outgoing.status = 'cached';
+
+    // See TODO I
+    outgoing.reqOptions.podiumContext = {};
+
+    const content = new Content();
+
+    const response = await content.resolve(outgoing);
+
+    t.equal(response.success, true, 'response should be successful');
+    t.equal(
+        response.headers['content-type'],
+        'text/html; charset=utf-8',
+        'response content-type header should be from proxied service',
+    );
+    t.equal(
+        response.headers['content-length'],
+        '24',
+        'content-length header should be content length of proxied service response',
+    );
+    t.equal(outgoing.redirectable, false, 'redirectable should be false');
+    t.equal(response.redirect, null, 'redirect should not be set');
+
+    await server.close();
+    await externalService.close();
     t.end();
 });

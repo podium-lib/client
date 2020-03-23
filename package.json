@@ -56,6 +56,6 @@
     "get-stream": "5.1.0",
     "http-proxy": "1.18.0",
     "is-stream": "2.0.0",
-    "prettier": "1.19.1"
+    "prettier": "2.0.2"
   }
 }

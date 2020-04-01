@@ -5,7 +5,7 @@
 'use strict';
 
 const benchmark = require('benchmark');
-const Client = require('../');
+const Client = require("..");
 
 const suite = new benchmark.Suite();
 

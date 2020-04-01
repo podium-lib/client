@@ -4,7 +4,7 @@
 
 const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
-const Client = require('../');
+const Client = require("..");
 
 test('client.on("change") - resource is new - should emit "change" event on first fetch', async t => {
     t.plan(1);

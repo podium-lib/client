@@ -11,7 +11,7 @@
 const memwatch = require('memwatch-next');
 const http = require('http');
 const url = require('url');
-const Client = require('../');
+const Client = require("..");
 
 memwatch.on('leak', info => {
     console.error('Memory leak detected:', info);

@@ -5,7 +5,7 @@
 const { test } = require('tap');
 const HttpOutgoing = require('../lib/http-outgoing');
 const Manifest = require('../lib/resolver.manifest');
-const Client = require('../');
+const Client = require("..");
 const { PodletServer } = require('@podium/test-utils');
 const lolex = require('@sinonjs/fake-timers');
 

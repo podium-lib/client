@@ -2,7 +2,7 @@
 
 const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
-const Client = require('../');
+const Client = require("..");
 
 test('integration basic', async t => {
     const serverA = new PodletServer({ name: 'aa' });

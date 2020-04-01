@@ -38,6 +38,7 @@ declare interface RegisterOptions {
     retries?: number;
     timeout?: number;
     throwable?: boolean;
+    redirectable?: boolean;
     resolveJs?: boolean;
     resolveCss?: boolean;
 }

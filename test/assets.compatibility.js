@@ -4,7 +4,7 @@ const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
 const HttpOutgoing = require('../lib/http-outgoing');
 const Manifest = require('../lib/resolver.manifest');
-const Client = require('../');
+const Client = require("..");
 
 // NB; these tests are here only to test compatibility between
 // V3 and V4 manifest changes. Can be removed when V3 manifest

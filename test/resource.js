@@ -12,7 +12,7 @@ const Cache = require('ttl-mem-cache');
 const Resource = require('../lib/resource');
 const State = require('../lib/state');
 const { PodletServer } = require('@podium/test-utils');
-const Client = require('../');
+const Client = require("..");
 
 const URI = 'http://example.org';
 

@@ -3,7 +3,7 @@
 'use strict';
 
 const express = require('express');
-const Client = require('../../');
+const Client = require("../..");
 
 const PORT = parseInt(process.argv[2], 10);
 

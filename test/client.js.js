@@ -5,7 +5,7 @@
 
 const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
-const Client = require('../');
+const Client = require("..");
 
 /**
  * Shuffle an array into an random order

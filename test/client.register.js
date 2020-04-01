@@ -2,7 +2,7 @@
 
 const { test } = require('tap');
 const Resource = require('../lib/resource');
-const Client = require('../');
+const Client = require("..");
 
 /**
  * .register()

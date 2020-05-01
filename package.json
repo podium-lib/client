@@ -28,7 +28,9 @@
     "lint:fix": "eslint --fix .",
     "test": "tap test/*.js",
     "lint:format": "eslint --fix .",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "@hapi/boom": "^9.0.0",
@@ -41,7 +43,8 @@
     "readable-stream": "^3.4.0",
     "request": "^2.88.0",
     "tap": "^14.10.6",
-    "ttl-mem-cache": "4.1.0"
+    "ttl-mem-cache": "4.1.0",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "@podium/test-utils": "2.2.0",
@@ -57,5 +60,6 @@
     "http-proxy": "1.18.0",
     "is-stream": "2.0.0",
     "prettier": "2.0.2"
-  }
+  },
+  "snyk": true
 }

@@ -47,7 +47,7 @@
     "@podium/test-utils": "2.2.0",
     "@sinonjs/fake-timers": "6.0.1",
     "benchmark": "2.1.4",
-    "eslint": "6.8.0",
+    "eslint": "7.0.0",
     "eslint-config-airbnb-base": "14.1.0",
     "eslint-config-prettier": "6.10.1",
     "eslint-plugin-import": "2.20.2",

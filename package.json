@@ -33,14 +33,13 @@
   "dependencies": {
     "@hapi/boom": "^9.0.0",
     "@metrics/client": "2.5.0",
-    "@podium/schemas": "4.0.1",
+    "@podium/schemas": "4.0.2",
     "@podium/utils": "4.2.5",
     "abslog": "2.4.0",
     "http-cache-semantics": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",
     "readable-stream": "^3.4.0",
     "request": "^2.88.0",
-    "tap": "^14.10.6",
     "ttl-mem-cache": "4.1.0"
   },
   "devDependencies": {
@@ -56,6 +55,7 @@
     "get-stream": "5.1.0",
     "http-proxy": "1.18.1",
     "is-stream": "2.0.0",
-    "prettier": "2.0.2"
+    "prettier": "2.0.5",
+    "tap": "^14.10.6"
   }
 }

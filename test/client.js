@@ -4,8 +4,12 @@
 
 const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
+const { HttpIncoming } = require('@podium/utils');
 const lolex = require('@sinonjs/fake-timers');
 const Client = require("..");
+
+// Fake headers
+const headers = {};
 
 /**
  * Constructor
@@ -46,12 +50,12 @@ test('Client().on("dispose") - client is hot, manifest reaches timeout - should 
     });
 
     const podlet = client.register(service.options);
-    await podlet.fetch({});
+    await podlet.fetch(new HttpIncoming({ headers }));
 
     // Tick clock 25 hours into future
     clock.tick(25 * 60 * 60 * 1000);
 
-    await podlet.fetch({});
+    await podlet.fetch(new HttpIncoming({ headers }));
 
     await server.close();
     clock.uninstall();
@@ -113,7 +117,12 @@ test("client.dump() - should dump resources' manifests", async t => {
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
-    await Promise.all([a.fetch({}), b.fetch({})]);
+    const incoming = new HttpIncoming({ headers });
+
+    await Promise.all([
+        a.fetch(incoming), 
+        b.fetch(incoming)
+    ]);
 
     const dump = client.dump();
 
@@ -144,7 +153,12 @@ test("client.load() - should load dumped resources' manifests", async t => {
     const aa = clientA.register(serviceA.options);
     const ab = clientA.register(serviceB.options);
 
-    await Promise.all([aa.fetch({}), ab.fetch({})]);
+    const incoming = new HttpIncoming({ headers });
+
+    await Promise.all([
+        aa.fetch(incoming), 
+        ab.fetch(incoming)
+    ]);
 
     const clientB = new Client({ name: 'podiumClient' });
     clientB.register(serviceA.options);

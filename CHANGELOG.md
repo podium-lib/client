@@ -1,3 +1,15 @@
+# [5.0.0-next.2](https://github.com/podium-lib/client/compare/v5.0.0-next.1...v5.0.0-next.2) (2020-07-12)
+
+
+### Features
+
+* Drop node 10.x support ([a71c3b0](https://github.com/podium-lib/client/commit/a71c3b08198f9a20de5e6af042d5a78f85c33c4f))
+
+
+### BREAKING CHANGES
+
+* Only support node 12 and 14.
+
 # [5.0.0-next.1](https://github.com/podium-lib/client/compare/v4.4.2...v5.0.0-next.1) (2020-07-12)
 
 

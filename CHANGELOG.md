@@ -1,3 +1,15 @@
+# [5.0.0-next.1](https://github.com/podium-lib/client/compare/v4.4.2...v5.0.0-next.1) (2020-07-12)
+
+
+### Features
+
+* Make HttpIncoming required first argument to .fetch() and .stream() ([9b80ee7](https://github.com/podium-lib/client/commit/9b80ee715397e780d2df267483b6bc2db32b1c62))
+
+
+### BREAKING CHANGES
+
+* `HttpIncoming` must now be passed as the first argument to .fetch() and .stream()
+
 # Changelog
 
 Notable changes to this project will be documented in this file.

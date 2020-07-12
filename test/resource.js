@@ -57,7 +57,7 @@ test('Resource() - instantiate new resource object - should have "stream" method
 
 test('resource.fetch() - No HttpIncoming argument provided' , (t) => {
     const resource = new Resource(new Cache(), new State(), {});   
-    t.rejects(resource.fetch(), new TypeError('you must pass a "HttpIncoming" object as the first argument to the .fetch() method'), 'should reject');
+    t.rejects(resource.fetch(), new TypeError('you must pass an instance of "HttpIncoming" as the first argument to the .fetch() method'), 'should reject');
     t.end();
 });
 

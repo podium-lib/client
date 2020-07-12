@@ -1,20 +1,23 @@
+/* eslint no-unused-vars: "off" */
 /* eslint-disable import/order */
 
 'use strict';
-
-/* eslint no-unused-vars: "off" */
 
 const { test } = require('tap');
 const getStream = require('get-stream');
 const stream = require('readable-stream');
 const Cache = require('ttl-mem-cache');
 
+const { HttpIncoming } = require('@podium/utils');
 const Resource = require('../lib/resource');
 const State = require('../lib/state');
 const { PodletServer } = require('@podium/test-utils');
 const Client = require("..");
 
 const URI = 'http://example.org';
+
+// Fake headers
+const headers = {};
 
 /**
  * Constructor
@@ -48,16 +51,22 @@ test('Resource() - instantiate new resource object - should have "stream" method
     t.end();
 });
 
-/**
- * .fetch()
- */
+//
+// .fetch()
+//
+
+test('resource.fetch() - No HttpIncoming argument provided' , (t) => {
+    const resource = new Resource(new Cache(), new State(), {});   
+    t.rejects(resource.fetch(), new TypeError('you must pass an instance of "HttpIncoming" as the first argument to the .fetch() method'), 'should reject');
+    t.end();
+});
 
 test('resource.fetch() - should return a promise', async t => {
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
-    const fetch = resource.fetch({});
+    const fetch = resource.fetch(new HttpIncoming({ headers }));
     t.ok(fetch instanceof Promise);
 
     await fetch;
@@ -66,9 +75,7 @@ test('resource.fetch() - should return a promise', async t => {
     t.end();
 });
 
-test('resource.fetch(podiumContext) - should pass it on', async t => {
-    t.plan(2);
-
+test('resource.fetch() - set context - should pass it on', async t => {
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
     server.on('req:content', (count, req) => {
@@ -77,10 +84,13 @@ test('resource.fetch(podiumContext) - should pass it on', async t => {
     });
 
     const resource = new Resource(new Cache(), new State(), service.options);
-    await resource.fetch({
+    const incoming = new HttpIncoming({ headers });
+    incoming.context = {
         'podium-locale': 'nb-NO',
         'podium-mount-origin': 'http://www.example.org',
-    });
+    };
+
+    await resource.fetch(incoming);
 
     await server.close();
     t.end();
@@ -93,7 +103,7 @@ test('resource.fetch() - returns an object with content, headers, js and css key
     const service = await server.listen();
     const resource = new Resource(new Cache(), new State(), service.options);
 
-    const result = await resource.fetch({});
+    const result = await resource.fetch(new HttpIncoming({ headers }));
     result.headers.date = '<replaced>';
 
     t.equal(result.content, '<p>content component</p>');
@@ -126,7 +136,7 @@ test('resource.fetch() - returns empty array for js and css when no assets are p
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
-    const result = await resource.fetch({});
+    const result = await resource.fetch(new HttpIncoming({ headers }));
     result.headers.date = '<replaced>';
 
     t.equal(result.content, '<p>content component</p>');
@@ -156,7 +166,7 @@ test('resource.fetch() - redirectable flag - podlet responds with 302 redirect -
         ...service.options,
         redirectable: true,
     });
-    const result = await resource.fetch({});
+    const result = await resource.fetch(new HttpIncoming({ headers }));
     result.headers.date = '<replaced>';
 
     t.equal(result.content, '');
@@ -179,16 +189,25 @@ test('resource.fetch() - redirectable flag - podlet responds with 302 redirect -
     t.end();
 });
 
-/**
- * .stream()
- */
+//
+// .stream()
+//
+
+test('resource.stream() - No HttpIncoming argument provided' , (t) => {
+    const resource = new Resource(new Cache(), new State(), {});   
+    t.plan(1);
+    t.throws(() => {
+        const strm = resource.stream(); // eslint-disable-line no-unused-vars
+    }, "you must pass a  \"HttpIncoming\" object as the first argument to the .stream() method", 'Should throw');
+    t.end();
+});
 
 test('resource.stream() - should return a stream', async t => {
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
-    const strm = resource.stream({});
+    const strm = resource.stream(new HttpIncoming({ headers }));
     t.ok(strm instanceof stream);
 
     await getStream(strm);
@@ -198,17 +217,15 @@ test('resource.stream() - should return a stream', async t => {
 });
 
 test('resource.stream() - should emit beforeStream event with no assets', async t => {
-    t.plan(3);
-
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
-    const strm = resource.stream({});
-    strm.once('beforeStream', ({ headers, js, css }) => {
-        t.equal(headers['podlet-version'], '1.0.0');
-        t.same(js, []);
-        t.same(css, []);
+    const strm = resource.stream(new HttpIncoming({ headers }));
+    strm.once('beforeStream', (res) => {
+        t.equal(res.headers['podlet-version'], '1.0.0');
+        t.same(res.js, []);
+        t.same(res.css, []);
     });
 
     await getStream(strm);
@@ -218,13 +235,11 @@ test('resource.stream() - should emit beforeStream event with no assets', async 
 });
 
 test('resource.stream() - should emit js event when js assets defined', async t => {
-    t.plan(1);
-
     const server = new PodletServer({ assets: { js: 'http://fakejs.com' } });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
-    const strm = resource.stream({});
+    const strm = resource.stream(new HttpIncoming({ headers }));
     strm.once('beforeStream', ({ js }) => {
         t.same(js, [{ type: 'default', value: 'http://fakejs.com' }]);
     });
@@ -236,13 +251,11 @@ test('resource.stream() - should emit js event when js assets defined', async t 
 });
 
 test('resource.stream() - should emit css event when css assets defined', async t => {
-    t.plan(1);
-
     const server = new PodletServer({ assets: { css: 'http://fakecss.com' } });
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
-    const strm = resource.stream({});
+    const strm = resource.stream(new HttpIncoming({ headers }));
     strm.once('beforeStream', ({ css }) => {
         t.same(css, [{ type: 'text/css', value: 'http://fakecss.com' }]);
     });
@@ -260,7 +273,7 @@ test('resource.stream() - should emit beforeStream event before emitting data', 
     const service = await server.listen();
 
     const resource = new Resource(new Cache(), new State(), service.options);
-    const strm = resource.stream({});
+    const strm = resource.stream(new HttpIncoming({ headers }));
     const items = [];
 
     strm.once('beforeStream', beforeStream => {
@@ -280,9 +293,9 @@ test('resource.stream() - should emit beforeStream event before emitting data', 
     t.end();
 });
 
-/**
- * .refresh()
- */
+//
+// .refresh()
+//
 
 test('resource.refresh() - should return a promise', async t => {
     const server = new PodletServer({ version: '1.0.0' });
@@ -344,9 +357,9 @@ test('resource.refresh() - manifest with fallback is available - should get mani
     t.end();
 });
 
-/**
- * .uri
- */
+//
+// .uri
+//
 
 test('Resource().uri - instantiate new resource object - expose own uri', t => {
     const resource = new Resource(new Cache(), new State(), { uri: URI });
@@ -354,9 +367,9 @@ test('Resource().uri - instantiate new resource object - expose own uri', t => {
     t.end();
 });
 
-/**
- * .name
- */
+//
+// .name
+//
 
 test('Resource().name - instantiate new resource object - expose own name', t => {
     const resource = new Resource(new Cache(), new State(), {

@@ -2,9 +2,13 @@
 
 const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
+const { HttpIncoming } = require('@podium/utils');
 const HttpOutgoing = require('../lib/http-outgoing');
 const Manifest = require('../lib/resolver.manifest');
 const Client = require("..");
+
+// Fake headers
+const headers = {};
 
 // NB; these tests are here only to test compatibility between
 // V3 and V4 manifest changes. Can be removed when V3 manifest
@@ -24,7 +28,7 @@ test('compatibility - default manifest from V4 podlet - v4 + v3 compatibility ma
     });
 
     const podlet = client.register(service.options);
-    const content = await podlet.fetch({});
+    const content = await podlet.fetch(new HttpIncoming({ headers }));
 
     t.same(content.css, [
         { type: 'text/css', value: `${service.address}/bar.css` },
@@ -57,7 +61,7 @@ test('compatibility - v3 manifest - should be values on .js and .css in returned
     });
 
     const podlet = client.register(service.options);
-    const content = await podlet.fetch({});
+    const content = await podlet.fetch(new HttpIncoming({ headers }));
 
     t.same(content.css, [
         { type: 'text/css', value: `${service.address}/bar.css` },
@@ -91,7 +95,7 @@ test('compatibility - v4 manifest - should be values on .js and .css in returned
     });
 
     const podlet = client.register(service.options);
-    const content = await podlet.fetch({});
+    const content = await podlet.fetch(new HttpIncoming({ headers }));
 
     t.same(content.css, [
         { type: 'module', value: `${service.address}/bar.css` },

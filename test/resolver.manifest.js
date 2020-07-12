@@ -3,11 +3,16 @@
 'use strict';
 
 const { test } = require('tap');
+const { PodletServer } = require('@podium/test-utils');
+const { HttpIncoming } = require('@podium/utils');
 const HttpOutgoing = require('../lib/http-outgoing');
 const Manifest = require('../lib/resolver.manifest');
 const Client = require("..");
-const { PodletServer } = require('@podium/test-utils');
 const lolex = require('@sinonjs/fake-timers');
+
+// Fake headers
+const headers = {};
+
 
 /**
  * NOTE I:
@@ -29,7 +34,7 @@ test('resolver.manifest() - "outgoing.manifest" holds a manifest - should resolv
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.mather.com',
-    });
+    }, {}, new HttpIncoming({ headers }));
     outgoing.manifest = { name: 'component' };
 
     await manifest.resolve(outgoing);
@@ -46,7 +51,7 @@ test('resolver.manifest() - remote has no cache header - should set outgoing.max
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         maxAge: 40000,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -67,7 +72,7 @@ test('resolver.manifest() - remote has "cache-control: public, max-age=10" heade
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         maxAge: 40000,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -89,7 +94,7 @@ test('resolver.manifest() - remote has "cache-control: no-cache" header - should
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         maxAge: 40000,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -112,7 +117,7 @@ test('resolver.manifest() - remote has "expires" header - should set outgoing.ma
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         maxAge: 40000,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -148,9 +153,9 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
-
-    await a.fetch({});
-    await b.fetch({});
+    
+    await a.fetch(new HttpIncoming({ headers }));
+    await b.fetch(new HttpIncoming({ headers }));
 
     t.equal(serverA.metrics.manifest, 1);
     t.equal(serverB.metrics.manifest, 1);
@@ -158,8 +163,8 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     // Tick clock three hours into future
     clock.tick(1000 * 60 * 60 * 3);
 
-    await a.fetch({});
-    await b.fetch({});
+    await a.fetch(new HttpIncoming({ headers }));
+    await b.fetch(new HttpIncoming({ headers }));
 
     // Cache for server A should now have timed out
     t.equal(serverA.metrics.manifest, 2);
@@ -176,7 +181,7 @@ test('resolver.manifest() - remote can not be resolved - "outgoing.manifest" sho
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.same(outgoing.manifest, { _fallback: '' });
@@ -191,7 +196,7 @@ test('resolver.manifest() - remote responds with http 500 - "outgoing.manifest" 
     const outgoing = new HttpOutgoing({
         uri: service.error,
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.same(outgoing.manifest, { _fallback: '' });
@@ -208,7 +213,7 @@ test('resolver.manifest() - manifest is not valid - "outgoing.manifest" should b
     const outgoing = new HttpOutgoing({
         uri: service.content,
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.same(outgoing.manifest, { _fallback: '' });
@@ -224,7 +229,7 @@ test('resolver.manifest() - "content" in manifest is relative - "outgoing.manife
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.same(outgoing.manifest.content, service.content);
@@ -242,7 +247,7 @@ test('resolver.manifest() - "content" in manifest is absolute - "outgoing.manife
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.equal(outgoing.manifest.content, 'http://does.not.mather.com');
@@ -261,7 +266,7 @@ test('resolver.manifest() - "fallback" in manifest is relative - "outgoing.manif
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.equal(outgoing.manifest.fallback, `${service.address}/fallback.html`);
@@ -279,7 +284,7 @@ test('resolver.manifest() - "fallback" in manifest is absolute - "outgoing.manif
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.equal(outgoing.manifest.fallback, 'http://does.not.mather.com');
@@ -295,7 +300,7 @@ test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is unset
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.same(outgoing.manifest.assets.css, server.assets.css);
@@ -312,7 +317,7 @@ test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
         resolveCss: true,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -334,7 +339,7 @@ test('resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
         resolveCss: true,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -353,7 +358,7 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset -
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -371,7 +376,7 @@ test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" 
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
         resolveJs: true,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -393,7 +398,7 @@ test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" 
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
         resolveJs: true,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -416,7 +421,7 @@ test('resolver.manifest() - a "proxy" target in manifest is relative - should co
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.equal(outgoing.manifest.proxy.foo, `${service.address}/api/foo`);
@@ -436,7 +441,7 @@ test('resolver.manifest() - a "proxy" target in manifest is absolute - should ke
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.equal(outgoing.manifest.proxy.bar, 'http://does.not.mather.com/api/bar');
@@ -457,7 +462,7 @@ test('resolver.manifest() - "proxy" targets in manifest is both absolute and rel
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.equal(outgoing.manifest.proxy.bar, 'http://does.not.mather.com/api/bar');

@@ -5,7 +5,11 @@
 
 const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
+const { HttpIncoming } = require('@podium/utils');
 const Client = require("..");
+
+// Fake headers
+const headers = {};
 
 /**
  * Shuffle an array into an random order
@@ -35,7 +39,12 @@ test('client.css() - get all registered css assets - should return array with al
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
-    await Promise.all([a.fetch({}), b.fetch({})]);
+    const incoming = new HttpIncoming({ headers });
+
+    await Promise.all([
+        a.fetch(incoming), 
+        b.fetch(incoming)
+    ]);
 
     t.same(client.css(), ['a.css', 'b.css']);
 
@@ -57,7 +66,13 @@ test('client.css() - one manifest does not hold css asset - should return array 
     const b = client.register(serviceB.options);
     const c = client.register(serviceC.options);
 
-    await Promise.all([a.fetch({}), b.fetch({}), c.fetch({})]);
+    const incoming = new HttpIncoming({ headers });
+
+    await Promise.all([
+        a.fetch(incoming), 
+        b.fetch(incoming), 
+        c.fetch(incoming)
+    ]);
 
     t.same(client.css(), ['a.css', 'b.css']);
 
@@ -112,19 +127,21 @@ test('client.css() - fetch content out of order - should return array where defi
     const i = client.register(serviceI.options);
     const j = client.register(serviceJ.options);
 
+    const incoming = new HttpIncoming({ headers });
+
     // Shuffle fetch methods into random order
     await Promise.all(
         shuffle([
-            a.fetch({}),
-            b.fetch({}),
-            c.fetch({}),
-            d.fetch({}),
-            e.fetch({}),
-            f.fetch({}),
-            g.fetch({}),
-            h.fetch({}),
-            i.fetch({}),
-            j.fetch({}),
+            a.fetch(incoming),
+            b.fetch(incoming),
+            c.fetch(incoming),
+            d.fetch(incoming),
+            e.fetch(incoming),
+            f.fetch(incoming),
+            g.fetch(incoming),
+            h.fetch(incoming),
+            i.fetch(incoming),
+            j.fetch(incoming),
         ]),
     );
 

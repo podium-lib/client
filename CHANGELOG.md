@@ -1,3 +1,21 @@
+# [5.0.0-next.4](https://github.com/podium-lib/client/compare/v5.0.0-next.3...v5.0.0-next.4) (2020-07-16)
+
+
+### Features
+
+* Remove deprecated 'change' and 'dispose' events ([#129](https://github.com/podium-lib/client/issues/129)) ([449fff1](https://github.com/podium-lib/client/commit/449fff13323d4f7f76fd406dbee1f2532701916b))
+
+
+### BREAKING CHANGES
+
+* This removes the deprecated `change` and `dispose` events.
+
+Resolves: https://github.com/podium-lib/issues/issues/24
+
+* chore: lint love
+
+Co-authored-by: Trygve Lie <trygve.lie@finn.no>
+
 # [5.0.0-next.3](https://github.com/podium-lib/client/compare/v5.0.0-next.2...v5.0.0-next.3) (2020-07-16)
 
 

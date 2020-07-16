@@ -28,40 +28,6 @@ test('Client() - object tag - should be PodiumClient', t => {
 });
 
 /**
- * .on('dispose')
- */
-
-test('Client().on("dispose") - client is hot, manifest reaches timeout - should emit dispose event', async t => {
-    t.plan(1);
-    const clock = lolex.install();
-
-    const server = new PodletServer({
-        name: 'aa',
-    });
-    const service = await server.listen();
-
-    const client = new Client({
-        name: 'podiumClient',
-        maxAge: 24 * 60 * 60 * 1000,
-    });
-    client.on('dispose', key => {
-        t.equal(key, service.options.name);
-        t.end();
-    });
-
-    const podlet = client.register(service.options);
-    await podlet.fetch(new HttpIncoming({ headers }));
-
-    // Tick clock 25 hours into future
-    clock.tick(25 * 60 * 60 * 1000);
-
-    await podlet.fetch(new HttpIncoming({ headers }));
-
-    await server.close();
-    clock.uninstall();
-});
-
-/**
  * .refreshManifests()
  */
 

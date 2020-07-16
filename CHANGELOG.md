@@ -1,3 +1,19 @@
+# [5.0.0-next.3](https://github.com/podium-lib/client/compare/v5.0.0-next.2...v5.0.0-next.3) (2020-07-16)
+
+
+### Features
+
+* Remove .js() and .css() methods ([#128](https://github.com/podium-lib/client/issues/128)) ([db6d306](https://github.com/podium-lib/client/commit/db6d30617160db76d85e8839c7f896ef3dc97b41))
+
+
+### BREAKING CHANGES
+
+* Remove .js() and .css() methods to retrieve fetched js and css for all podlets. Also removes the `resolveJs` and `resolveCss` arguments when registering a podlet.
+
+Resolves: https://github.com/podium-lib/issues/issues/25
+
+Co-authored-by: Trygve Lie <trygve.lie@finn.no>
+
 # [5.0.0-next.2](https://github.com/podium-lib/client/compare/v5.0.0-next.1...v5.0.0-next.2) (2020-07-12)
 
 

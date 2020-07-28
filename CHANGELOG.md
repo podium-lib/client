@@ -1,3 +1,45 @@
+# [5.0.0-next.5](https://github.com/podium-lib/client/compare/v5.0.0-next.4...v5.0.0-next.5) (2020-07-28)
+
+
+### Features
+
+* Use ES private properties instead of Symbols and defineProperty for privacy ([#131](https://github.com/podium-lib/client/issues/131)) ([2787a6c](https://github.com/podium-lib/client/commit/2787a6c406f9fb2bb2e85583082b818c2c247b63))
+
+
+### BREAKING CHANGES
+
+* Due to dropping node 10.x support we use ES private properties instead of Symbols and `.defineProperty()`.
+
+We've been using Symbols and `.defineProperty()` to define private properties in classes up until now. This has the downside that they are not true private and in later versions of node.js one would see these Symbols when inspecting an object. What we want is proper private properties.
+
+This PR does also add a pretty printer which outputs an object literal or the object so when debugging one can see the getters and setters of the object.
+
+Example: printing a object with `console.log()` would previously print the following:
+
+```sh
+PodiumClientResponse {
+  [Symbol(podium:client:response:redirect)]: '',
+  [Symbol(podium:client:response:content)]: '',
+  [Symbol(podium:client:response:headers)]: {},
+  [Symbol(podium:client:response:css)]: [],
+  [Symbol(podium:client:response:js)]: []
+}
+```
+
+Now the following will be printed:
+
+```sh
+{
+  redirect: '',
+  content: '',
+  headers: {},
+  css: [],
+  js: []
+}
+```
+
+Co-authored-by: Trygve Lie <trygve.lie@finn.no>
+
 # [5.0.0-next.4](https://github.com/podium-lib/client/compare/v5.0.0-next.3...v5.0.0-next.4) (2020-07-16)
 
 

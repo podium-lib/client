@@ -18,12 +18,14 @@ test('integration basic', async t => {
 
     const actual1 = await a.fetch({ 'podium-locale': 'en-NZ' });
     actual1.headers.date = '<replaced>';
+    actual1.headers['keep-alive'] = '<workaround>'; // node.js pre 14 does not have keep-alive as a default
 
     t.same(actual1.content, serverA.contentBody);
     t.same(actual1.js, []);
     t.same(actual1.css, []);
     t.same(actual1.headers, {
         connection: 'keep-alive',
+        'keep-alive': '<workaround>',
         'content-length': '17',
         'content-type': 'text/html; charset=utf-8',
         date: '<replaced>',
@@ -32,12 +34,14 @@ test('integration basic', async t => {
 
     const actual2 = await b.fetch({});
     actual2.headers.date = '<replaced>';
+    actual2.headers['keep-alive'] = '<workaround>'; // node.js pre 14 does not have keep-alive as a default
 
     t.same(actual2.content, serverB.contentBody);
     t.same(actual2.js, []);
     t.same(actual2.css, []);
     t.same(actual2.headers, {
         connection: 'keep-alive',
+        'keep-alive': '<workaround>',
         'content-length': '17',
         'content-type': 'text/html; charset=utf-8',
         date: '<replaced>',

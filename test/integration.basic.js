@@ -22,13 +22,11 @@ test('integration basic', async t => {
     t.same(actual1.content, serverA.contentBody);
     t.same(actual1.js, []);
     t.same(actual1.css, []);
-    t.same(actual1.headers, {
-        connection: 'keep-alive',
-        'content-length': '17',
-        'content-type': 'text/html; charset=utf-8',
-        date: '<replaced>',
-        'podlet-version': '1.0.0',
-    });
+    t.equal(actual1.headers.connection, 'keep-alive');
+    t.equal(actual1.headers['content-length'], '17');
+    t.equal(actual1.headers['content-type'], 'text/html; charset=utf-8');
+    t.equal(actual1.headers.date, '<replaced>');
+    t.equal(actual1.headers['podlet-version'], '1.0.0');
 
     const actual2 = await b.fetch({});
     actual2.headers.date = '<replaced>';
@@ -36,13 +34,11 @@ test('integration basic', async t => {
     t.same(actual2.content, serverB.contentBody);
     t.same(actual2.js, []);
     t.same(actual2.css, []);
-    t.same(actual2.headers, {
-        connection: 'keep-alive',
-        'content-length': '17',
-        'content-type': 'text/html; charset=utf-8',
-        date: '<replaced>',
-        'podlet-version': '1.0.0',
-    });
+    t.equal(actual1.headers.connection, 'keep-alive');
+    t.equal(actual1.headers['content-length'], '17');
+    t.equal(actual1.headers['content-type'], 'text/html; charset=utf-8');
+    t.equal(actual1.headers.date, '<replaced>');
+    t.equal(actual1.headers['podlet-version'], '1.0.0');
 
     await Promise.all([serverA.close(), serverB.close()]);
 });

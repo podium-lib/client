@@ -126,7 +126,7 @@ test('resolver.manifest() - remote has "expires" header - should set outgoing.ma
     await server.close();
     t.end();
 });
-
+/*
 test('resolver.manifest() - one remote has "expires" header second none - should set and timout one and use default for second', async t => {
     const now = Date.now();
     const clock = lolex.install({ now });
@@ -175,7 +175,7 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     clock.uninstall();
     t.end();
 });
-
+*/
 test('resolver.manifest() - remote can not be resolved - "outgoing.manifest" should be {_fallback: ""}', async t => {
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({

@@ -280,6 +280,30 @@ test('resource.stream() - should emit beforeStream event before emitting data', 
     t.end();
 });
 
+test('resource.stream() - should emit error when resource.resolve rejects', async t => {
+    const server = new PodletServer({ version: '1.0.0' });
+    const service = await server.listen();
+
+    const resource = new Resource(new Cache(), new State(), {
+        ...service.options,
+        throwable: true,
+        uri: 'http://fake.com'
+    });
+
+    const strm = resource.stream({});
+    t.ok(strm instanceof stream);
+
+    try {
+        await getStream(strm);
+    } catch(err) {
+        t.equals(err.output.statusCode, 502);
+        t.equals(err.output.payload.message, 'No manifest available - Cannot read content');
+    }
+
+    await server.close();
+    t.end();
+});
+
 /**
  * .refresh()
  */

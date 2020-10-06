@@ -23,7 +23,8 @@ test('integration basic', async t => {
     t.same(actual1.content, serverA.contentBody);
     t.same(actual1.js, []);
     t.same(actual1.css, []);
-    t.same(actual1.headers, {
+
+  t.same(actual1.headers, {
         connection: 'keep-alive',
         'keep-alive': '<workaround>',
         'content-length': '17',
@@ -39,7 +40,8 @@ test('integration basic', async t => {
     t.same(actual2.content, serverB.contentBody);
     t.same(actual2.js, []);
     t.same(actual2.css, []);
-    t.same(actual2.headers, {
+
+  t.same(actual2.headers, {
         connection: 'keep-alive',
         'keep-alive': '<workaround>',
         'content-length': '17',

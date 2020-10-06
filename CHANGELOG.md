@@ -1,3 +1,10 @@
+# [5.0.0-next.6](https://github.com/podium-lib/client/compare/v5.0.0-next.5...v5.0.0-next.6) (2020-10-06)
+
+
+### Bug Fixes
+
+* emit errors on stream when .resolve method rejects ([#141](https://github.com/podium-lib/client/issues/141)) ([9bc989b](https://github.com/podium-lib/client/commit/9bc989b3f5190a2f19fe66420d54a2c23bbe574a))
+
 # [5.0.0-next.5](https://github.com/podium-lib/client/compare/v5.0.0-next.4...v5.0.0-next.5) (2020-07-28)
 
 

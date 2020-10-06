@@ -1,3 +1,10 @@
+## [4.4.3](https://github.com/podium-lib/client/compare/v4.4.2...v4.4.3) (2020-10-06)
+
+
+### Bug Fixes
+
+* emit errors on stream when .resolve method rejects ([#141](https://github.com/podium-lib/client/issues/141)) ([9bc989b](https://github.com/podium-lib/client/commit/9bc989b3f5190a2f19fe66420d54a2c23bbe574a))
+
 # Changelog
 
 Notable changes to this project will be documented in this file.

@@ -55,7 +55,7 @@
     "@semantic-release/release-notes-generator": "9.0.1",
     "semantic-release": "17.3.3",
     "@podium/test-utils": "2.2.0",
-    "@sinonjs/fake-timers": "6.0.1",
+    "@sinonjs/fake-timers": "7.0.2",
     "benchmark": "2.1.4",
     "eslint": "7.17.0",
     "eslint-config-airbnb-base": "14.2.1",

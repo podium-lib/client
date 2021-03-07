@@ -37,7 +37,7 @@
   "dependencies": {
     "@hapi/boom": "^9.0.0",
     "@metrics/client": "2.5.0",
-    "@podium/schemas": "4.1.4",
+    "@podium/schemas": "4.1.5",
     "@podium/utils": "4.4.7",
     "abslog": "2.4.0",
     "http-cache-semantics": "^4.0.3",

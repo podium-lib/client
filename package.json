@@ -38,7 +38,7 @@
     "@hapi/boom": "^9.0.0",
     "@metrics/client": "2.5.0",
     "@podium/schemas": "4.1.15",
-    "@podium/utils": "4.4.15",
+    "@podium/utils": "4.4.16",
     "abslog": "2.4.0",
     "http-cache-semantics": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",

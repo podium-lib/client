@@ -1,6 +1,6 @@
 {
   "name": "@podium/client",
-  "version": "4.4.15",
+  "version": "4.4.16",
   "main": "lib/client.js",
   "license": "MIT",
   "keywords": [

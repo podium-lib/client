@@ -1,3 +1,10 @@
+## [4.4.19](https://github.com/podium-lib/client/compare/v4.4.18...v4.4.19) (2021-04-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.17 ([a57669c](https://github.com/podium-lib/client/commit/a57669c5e26745a04b5e7b453db41049d7aea8c7))
+
 ## [4.4.18](https://github.com/podium-lib/client/compare/v4.4.17...v4.4.18) (2021-04-27)
 
 

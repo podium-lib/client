@@ -1,11 +1,9 @@
 /* eslint-disable import/order */
 
-'use strict';
-
-const { test } = require('tap');
-const { PodletServer } = require('@podium/test-utils');
-const { HttpIncoming } = require('@podium/utils');
-const Client = require("..");
+import tap from 'tap';
+import { PodletServer } from '@podium/test-utils';
+import { HttpIncoming } from '@podium/utils';
+import Client from '../lib/client.js';
 
 // Fake headers
 const headers = {};
@@ -14,13 +12,13 @@ const headers = {};
  * Constructor
  */
 
-test('Client() - instantiate new client object - should have register method', t => {
+tap.test('Client() - instantiate new client object - should have register method', t => {
     const client = new Client({ name: 'podiumClient' });
     t.ok(client.register instanceof Function);
     t.end();
 });
 
-test('Client() - object tag - should be PodiumClient', t => {
+tap.test('Client() - object tag - should be PodiumClient', t => {
     const client = new Client({ name: 'podiumClient' });
     t.equal(Object.prototype.toString.call(client), '[object PodiumClient]');
     t.end();
@@ -30,7 +28,7 @@ test('Client() - object tag - should be PodiumClient', t => {
  * .refreshManifests()
  */
 
-test("client.refreshManifests() - should populate all resources' manifests", async t => {
+tap.test("client.refreshManifests() - should populate all resources' manifests", async t => {
     const serverA = new PodletServer({
         name: 'aa',
     });
@@ -60,7 +58,7 @@ test("client.refreshManifests() - should populate all resources' manifests", asy
  * .dump()
  */
 
-test("client.dump() - should dump resources' manifests", async t => {
+tap.test("client.dump() - should dump resources' manifests", async t => {
     const serverA = new PodletServer({
         name: 'aa',
     });
@@ -94,7 +92,7 @@ test("client.dump() - should dump resources' manifests", async t => {
  * .load()
  */
 
-test("client.load() - should load dumped resources' manifests", async t => {
+tap.test("client.load() - should load dumped resources' manifests", async t => {
     const serverA = new PodletServer({
         name: 'aa',
     });

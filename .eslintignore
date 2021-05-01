@@ -1,2 +1,4 @@
 coverage/
-benchmark/util/server.js
+benchmark/
+example/
+dist/

@@ -1,12 +1,10 @@
 /* eslint-disable import/order */
 
-'use strict';
+import tap from 'tap';
+import Cache from '../lib/resolver.cache.js';
+import TtlMemCache from 'ttl-mem-cache';
 
-const { test } = require('tap');
-const Cache = require('../lib/resolver.cache');
-const TtlMemCache = require('ttl-mem-cache');
-
-test('resolver.cache() - object tag - should be PodletClientCacheResolver', t => {
+tap.test('resolver.cache() - object tag - should be PodletClientCacheResolver', t => {
     const cache = new Cache(new TtlMemCache());
     t.equal(
         Object.prototype.toString.call(cache),
@@ -15,7 +13,7 @@ test('resolver.cache() - object tag - should be PodletClientCacheResolver', t =>
     t.end();
 });
 
-test('resolver.cache() - "registry" not provided to constructor - should throw', t => {
+tap.test('resolver.cache() - "registry" not provided to constructor - should throw', t => {
     t.throws(() => {
         // eslint-disable-next-line no-unused-vars
         const cache = new Cache();

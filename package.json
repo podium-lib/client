@@ -1,7 +1,7 @@
 {
   "name": "@podium/client",
   "version": "5.0.0-next.6",
-  "main": "lib/client.js",
+  "type": "module",
   "license": "MIT",
   "keywords": [
     "micro services",
@@ -24,20 +24,27 @@
     "index.d.ts",
     "README.md",
     "LICENSE",
+    "dist",
     "lib"
   ],
+  "main": "./dist/client.js",
+  "exports": {
+    "require": "./dist/client.js",
+    "import": "./lib/client.js"
+  },
   "types": "index.d.ts",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "tap --no-esm --no-cov --no-ts --no-jsx test/*.js",
-    "precommit": "lint-staged"
+    "test": "tap --no-check-coverage",
+    "prepare": "npm run -s build",
+    "build": "rollup -c"
   },
   "dependencies": {
     "@hapi/boom": "^9.0.0",
     "@metrics/client": "2.5.0",
-    "@podium/schemas": "5.0.0-next.1",
-    "@podium/utils": "5.0.0-next.2",
+    "@podium/schemas": "5.0.0-next.4",
+    "@podium/utils": "5.0.0-next.6",
     "abslog": "2.4.0",
     "http-cache-semantics": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",
@@ -46,15 +53,15 @@
     "ttl-mem-cache": "4.1.0"
   },
   "devDependencies": {
+    "@podium/test-utils": "2.3.0",
     "@semantic-release/changelog": "5.0.1",
     "@semantic-release/commit-analyzer": "8.0.1",
     "@semantic-release/git": "9.0.0",
     "@semantic-release/github": "7.2.1",
     "@semantic-release/npm": "7.1.1",
     "@semantic-release/release-notes-generator": "9.0.2",
-    "semantic-release": "17.4.2",
-    "@podium/test-utils": "2.3.0",
     "@sinonjs/fake-timers": "7.0.5",
+    "babel-eslint": "10.1.0",
     "benchmark": "2.1.4",
     "eslint": "7.25.0",
     "eslint-config-airbnb-base": "14.2.1",
@@ -62,10 +69,12 @@
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-prettier": "3.4.0",
     "express": "4.17.1",
-    "get-stream": "6.0.0",
+    "get-stream": "6.0.1",
     "http-proxy": "1.18.1",
     "is-stream": "2.0.0",
     "prettier": "2.2.1",
-    "tap": "14.11.0"
+    "rollup": "2.46.0",
+    "semantic-release": "17.4.2",
+    "tap": "15.0.6"
   }
 }

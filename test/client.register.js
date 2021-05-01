@@ -1,14 +1,12 @@
-'use strict';
-
-const { test } = require('tap');
-const Resource = require('../lib/resource');
-const Client = require("..");
+import tap from 'tap';
+import Resource from '../lib/resource.js';
+import Client from '../lib/client.js';
 
 /**
  * .register()
  */
 
-test('client.register() - call with a valid value for "options.uri" - should return a "Resources" object', t => {
+tap.test('client.register() - call with a valid value for "options.uri" - should return a "Resources" object', t => {
     const client = new Client({ name: 'podiumClient' });
     const resource = client.register({
         uri: 'http://example-a.org',
@@ -18,7 +16,7 @@ test('client.register() - call with a valid value for "options.uri" - should ret
     t.end();
 });
 
-test('client.register() - call with no options - should throw', t => {
+tap.test('client.register() - call with no options - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
     t.throws(() => {
         client.register();
@@ -26,7 +24,7 @@ test('client.register() - call with no options - should throw', t => {
     t.end();
 });
 
-test('client.register() - call with missing value for "options.uri" - should throw', t => {
+tap.test('client.register() - call with missing value for "options.uri" - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
 
     t.throws(() => {
@@ -35,7 +33,7 @@ test('client.register() - call with missing value for "options.uri" - should thr
     t.end();
 });
 
-test('client.register() - call with a invalid value for "options.uri" - should throw', t => {
+tap.test('client.register() - call with a invalid value for "options.uri" - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
 
     t.throws(() => {
@@ -44,7 +42,7 @@ test('client.register() - call with a invalid value for "options.uri" - should t
     t.end();
 });
 
-test('client.register() - call with a invalid value for "options.name" - should throw', t => {
+tap.test('client.register() - call with a invalid value for "options.name" - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
 
     t.throws(() => {
@@ -53,7 +51,7 @@ test('client.register() - call with a invalid value for "options.name" - should 
     t.end();
 });
 
-test('client.register() - call with missing value for "options.name" - should throw', t => {
+tap.test('client.register() - call with missing value for "options.name" - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
 
     t.throws(() => {
@@ -62,7 +60,7 @@ test('client.register() - call with missing value for "options.name" - should th
     t.end();
 });
 
-test('client.register() - call duplicate names - should throw', t => {
+tap.test('client.register() - call duplicate names - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
     client.register({ uri: 'http://example-a.org', name: 'someName' });
 
@@ -72,7 +70,7 @@ test('client.register() - call duplicate names - should throw', t => {
     t.end();
 });
 
-test('client.register() - register resources - should set resource as property of client object', t => {
+tap.test('client.register() - register resources - should set resource as property of client object', t => {
     const client = new Client({ name: 'podiumClient' });
     const a = client.register({
         uri: 'http://example-a.org',
@@ -89,7 +87,7 @@ test('client.register() - register resources - should set resource as property o
     t.end();
 });
 
-test('client.register() - register resources - should be possible to iterate over resources set on client object', t => {
+tap.test('client.register() - register resources - should be possible to iterate over resources set on client object', t => {
     const client = new Client({ name: 'podiumClient' });
     const a = client.register({
         uri: 'http://example-a.org',
@@ -104,7 +102,7 @@ test('client.register() - register resources - should be possible to iterate ove
     t.end();
 });
 
-test('client.register() - try to manually set register resource - should throw', t => {
+tap.test('client.register() - try to manually set register resource - should throw', t => {
     const client = new Client({ name: 'podiumClient' });
     client.register({
         uri: 'http://example-a.org',

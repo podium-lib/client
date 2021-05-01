@@ -1,4 +1,5 @@
 # [5.0.0-next.6](https://github.com/podium-lib/client/compare/v5.0.0-next.5...v5.0.0-next.6) (2020-10-06)
+## [4.4.19](https://github.com/podium-lib/client/compare/v4.4.18...v4.4.19) (2021-04-27)
 
 
 ### Bug Fixes
@@ -104,6 +105,114 @@ Co-authored-by: Trygve Lie <trygve.lie@finn.no>
 ### BREAKING CHANGES
 
 * `HttpIncoming` must now be passed as the first argument to .fetch() and .stream()
+* **deps:** update dependency @podium/utils to v4.4.17 ([a57669c](https://github.com/podium-lib/client/commit/a57669c5e26745a04b5e7b453db41049d7aea8c7))
+
+## [4.4.18](https://github.com/podium-lib/client/compare/v4.4.17...v4.4.18) (2021-04-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.1.16 ([2156ae4](https://github.com/podium-lib/client/commit/2156ae49c6832a9d9895bdb4d506b83c5c67205e))
+
+## [4.4.17](https://github.com/podium-lib/client/compare/v4.4.16...v4.4.17) (2021-04-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.16 ([f0bfe5f](https://github.com/podium-lib/client/commit/f0bfe5f24d4fc0a69e36cab7e80b0d8d11415aca))
+
+## [4.4.16](https://github.com/podium-lib/client/compare/v4.4.15...v4.4.16) (2021-04-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.1.15 ([f9eea3f](https://github.com/podium-lib/client/commit/f9eea3faa87047316ace92382780899fc6d1533e))
+
+## [4.4.15](https://github.com/podium-lib/client/compare/v4.4.14...v4.4.15) (2021-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.15 ([ce00590](https://github.com/podium-lib/client/commit/ce00590e5c5eb23ca138f4337605b8a84787e01c))
+
+## [4.4.14](https://github.com/podium-lib/client/compare/v4.4.13...v4.4.14) (2021-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.14 ([cd7ed39](https://github.com/podium-lib/client/commit/cd7ed39fadf12232a6fc67678815dd30c8a076ac))
+
+## [4.4.13](https://github.com/podium-lib/client/compare/v4.4.12...v4.4.13) (2021-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.1.14 ([3870a77](https://github.com/podium-lib/client/commit/3870a77ccd7d03f05f051e42c49dfa4b1cd25e14))
+
+## [4.4.12](https://github.com/podium-lib/client/compare/v4.4.11...v4.4.12) (2021-04-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.13 ([6771733](https://github.com/podium-lib/client/commit/67717335c91b5366c2931cbf8d34e5d62c720678))
+
+## [4.4.11](https://github.com/podium-lib/client/compare/v4.4.10...v4.4.11) (2021-04-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.1.11 ([4f136aa](https://github.com/podium-lib/client/commit/4f136aa20e99537dc8e4633133325b95a035640f))
+
+## [4.4.10](https://github.com/podium-lib/client/compare/v4.4.9...v4.4.10) (2021-03-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.1.10 ([8f12c52](https://github.com/podium-lib/client/commit/8f12c52ed6e3f0e214e66ee4c293e65422a0b9f2))
+
+## [4.4.9](https://github.com/podium-lib/client/compare/v4.4.8...v4.4.9) (2021-03-31)
+
+
+### Bug Fixes
+
+* Update @podium/schema to version 4.1.9 to fix ajv error ([#188](https://github.com/podium-lib/client/issues/188)) ([1b03065](https://github.com/podium-lib/client/commit/1b0306562a15e0fe496adb22bf9b2aa76ac26436))
+
+## [4.4.8](https://github.com/podium-lib/client/compare/v4.4.7...v4.4.8) (2020-10-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.1 ([3f0dddc](https://github.com/podium-lib/client/commit/3f0dddcf3b203d1903dc13fa4522c632459ae48b))
+
+## [4.4.7](https://github.com/podium-lib/client/compare/v4.4.6...v4.4.7) (2020-10-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.0 ([f3712b3](https://github.com/podium-lib/client/commit/f3712b3be5e17d0e2956e9e4cae3cf79696a3634))
+
+## [4.4.6](https://github.com/podium-lib/client/compare/v4.4.5...v4.4.6) (2020-10-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.3.3 ([f4ee3a2](https://github.com/podium-lib/client/commit/f4ee3a2d6e821cfd9033deac4ed5661c0eb5fbf8))
+
+## [4.4.5](https://github.com/podium-lib/client/compare/v4.4.4...v4.4.5) (2020-10-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.0.5 ([e9263c9](https://github.com/podium-lib/client/commit/e9263c9c7d7a890bd913249ea29adce9ed786ea3))
+
+## [4.4.4](https://github.com/podium-lib/client/compare/v4.4.3...v4.4.4) (2020-10-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.0.4 ([#136](https://github.com/podium-lib/client/issues/136)) ([9f71f0f](https://github.com/podium-lib/client/commit/9f71f0fe3c579d58c6a3b5376f8d9a0f3165867e)), closes [#142](https://github.com/podium-lib/client/issues/142)
+* **deps:** update dependency @podium/utils to v4.3.1 ([f5483b6](https://github.com/podium-lib/client/commit/f5483b6445baf36e6d1d33daa59da564a42ef33e))
+
 ## [4.4.3](https://github.com/podium-lib/client/compare/v4.4.2...v4.4.3) (2020-10-06)
 
 

@@ -1,8 +1,110 @@
+# [5.0.0-next.6](https://github.com/podium-lib/client/compare/v5.0.0-next.5...v5.0.0-next.6) (2020-10-06)
 ## [4.4.19](https://github.com/podium-lib/client/compare/v4.4.18...v4.4.19) (2021-04-27)
 
 
 ### Bug Fixes
 
+* emit errors on stream when .resolve method rejects ([#141](https://github.com/podium-lib/client/issues/141)) ([9bc989b](https://github.com/podium-lib/client/commit/9bc989b3f5190a2f19fe66420d54a2c23bbe574a))
+
+# [5.0.0-next.5](https://github.com/podium-lib/client/compare/v5.0.0-next.4...v5.0.0-next.5) (2020-07-28)
+
+
+### Features
+
+* Use ES private properties instead of Symbols and defineProperty for privacy ([#131](https://github.com/podium-lib/client/issues/131)) ([2787a6c](https://github.com/podium-lib/client/commit/2787a6c406f9fb2bb2e85583082b818c2c247b63))
+
+
+### BREAKING CHANGES
+
+* Due to dropping node 10.x support we use ES private properties instead of Symbols and `.defineProperty()`.
+
+We've been using Symbols and `.defineProperty()` to define private properties in classes up until now. This has the downside that they are not true private and in later versions of node.js one would see these Symbols when inspecting an object. What we want is proper private properties.
+
+This PR does also add a pretty printer which outputs an object literal or the object so when debugging one can see the getters and setters of the object.
+
+Example: printing a object with `console.log()` would previously print the following:
+
+```sh
+PodiumClientResponse {
+  [Symbol(podium:client:response:redirect)]: '',
+  [Symbol(podium:client:response:content)]: '',
+  [Symbol(podium:client:response:headers)]: {},
+  [Symbol(podium:client:response:css)]: [],
+  [Symbol(podium:client:response:js)]: []
+}
+```
+
+Now the following will be printed:
+
+```sh
+{
+  redirect: '',
+  content: '',
+  headers: {},
+  css: [],
+  js: []
+}
+```
+
+Co-authored-by: Trygve Lie <trygve.lie@finn.no>
+
+# [5.0.0-next.4](https://github.com/podium-lib/client/compare/v5.0.0-next.3...v5.0.0-next.4) (2020-07-16)
+
+
+### Features
+
+* Remove deprecated 'change' and 'dispose' events ([#129](https://github.com/podium-lib/client/issues/129)) ([449fff1](https://github.com/podium-lib/client/commit/449fff13323d4f7f76fd406dbee1f2532701916b))
+
+
+### BREAKING CHANGES
+
+* This removes the deprecated `change` and `dispose` events.
+
+Resolves: https://github.com/podium-lib/issues/issues/24
+
+* chore: lint love
+
+Co-authored-by: Trygve Lie <trygve.lie@finn.no>
+
+# [5.0.0-next.3](https://github.com/podium-lib/client/compare/v5.0.0-next.2...v5.0.0-next.3) (2020-07-16)
+
+
+### Features
+
+* Remove .js() and .css() methods ([#128](https://github.com/podium-lib/client/issues/128)) ([db6d306](https://github.com/podium-lib/client/commit/db6d30617160db76d85e8839c7f896ef3dc97b41))
+
+
+### BREAKING CHANGES
+
+* Remove .js() and .css() methods to retrieve fetched js and css for all podlets. Also removes the `resolveJs` and `resolveCss` arguments when registering a podlet.
+
+Resolves: https://github.com/podium-lib/issues/issues/25
+
+Co-authored-by: Trygve Lie <trygve.lie@finn.no>
+
+# [5.0.0-next.2](https://github.com/podium-lib/client/compare/v5.0.0-next.1...v5.0.0-next.2) (2020-07-12)
+
+
+### Features
+
+* Drop node 10.x support ([a71c3b0](https://github.com/podium-lib/client/commit/a71c3b08198f9a20de5e6af042d5a78f85c33c4f))
+
+
+### BREAKING CHANGES
+
+* Only support node 12 and 14.
+
+# [5.0.0-next.1](https://github.com/podium-lib/client/compare/v4.4.2...v5.0.0-next.1) (2020-07-12)
+
+
+### Features
+
+* Make HttpIncoming required first argument to .fetch() and .stream() ([9b80ee7](https://github.com/podium-lib/client/commit/9b80ee715397e780d2df267483b6bc2db32b1c62))
+
+
+### BREAKING CHANGES
+
+* `HttpIncoming` must now be passed as the first argument to .fetch() and .stream()
 * **deps:** update dependency @podium/utils to v4.4.17 ([a57669c](https://github.com/podium-lib/client/commit/a57669c5e26745a04b5e7b453db41049d7aea8c7))
 
 ## [4.4.18](https://github.com/podium-lib/client/compare/v4.4.17...v4.4.18) (2021-04-27)

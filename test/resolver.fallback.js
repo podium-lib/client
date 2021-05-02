@@ -5,8 +5,12 @@
 
 const { test } = require('tap');
 const { PodletServer } = require('@podium/test-utils');
+const { HttpIncoming } = require('@podium/utils');
 const HttpOutgoing = require('../lib/http-outgoing');
 const Fallback = require('../lib/resolver.fallback');
+
+// Fake headers
+const headers = {};
 
 test('resolver.fallback() - object tag - should be PodletClientFallbackResolver', t => {
     const fallback = new Fallback();
@@ -22,7 +26,7 @@ test('resolver.fallback() - fallback field is empty - should set value on "outgo
     const manifest = server.manifest;
     manifest.fallback = '';
 
-    const outgoing = new HttpOutgoing({ uri: 'http://example.com' });
+    const outgoing = new HttpOutgoing({ uri: 'http://example.com' }, {}, new HttpIncoming({ headers }));
     outgoing.manifest = manifest;
 
     const fallback = new Fallback();
@@ -36,7 +40,7 @@ test('resolver.fallback() - fallback field contains invalid value - should set v
     const manifest = server.manifest;
     manifest.fallback = 'ht++ps://blæ.finn.no/fallback.html';
 
-    const outgoing = new HttpOutgoing({ uri: 'http://example.com' });
+    const outgoing = new HttpOutgoing({ uri: 'http://example.com' }, {}, new HttpIncoming({ headers }));
     outgoing.manifest = manifest;
 
     const fallback = new Fallback();
@@ -52,7 +56,7 @@ test('resolver.fallback() - fallback field is a URI - should fetch fallback and 
     const manifest = server.manifest;
     manifest.fallback = `${service.address}/fallback.html`;
 
-    const outgoing = new HttpOutgoing({ uri: service.options.uri });
+    const outgoing = new HttpOutgoing({ uri: service.options.uri }, {}, new HttpIncoming({ headers }));
     outgoing.manifest = manifest;
 
     const fallback = new Fallback();
@@ -70,7 +74,7 @@ test('resolver.fallback() - fallback field is a URI - should fetch fallback and 
     const manifest = server.manifest;
     manifest.fallback = `${service.address}/fallback.html`;
 
-    const outgoing = new HttpOutgoing({ uri: service.options.uri });
+    const outgoing = new HttpOutgoing({ uri: service.options.uri }, {}, new HttpIncoming({ headers }));
     outgoing.manifest = manifest;
 
     const fallback = new Fallback();
@@ -85,7 +89,7 @@ test('resolver.fallback() - remote can not be resolved - "outgoing.manifest" sho
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     outgoing.manifest = {
         fallback: 'http://does.not.exist.finn.no/fallback.html',
@@ -104,7 +108,7 @@ test('resolver.fallback() - remote responds with http 500 - "outgoing.manifest" 
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     outgoing.manifest = {
         fallback: service.error,

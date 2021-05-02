@@ -4,6 +4,7 @@
 
 const { test } = require('tap');
 const HttpOutgoing = require('../lib/http-outgoing');
+const { HttpIncoming } = require('@podium/utils');
 const Content = require('../lib/resolver.content');
 const utils = require('@podium/utils');
 const {
@@ -11,6 +12,9 @@ const {
     PodletServer,
     HttpServer,
 } = require('@podium/test-utils');
+
+// Fake headers
+const headers = {};
 
 /**
  * TODO I:
@@ -34,7 +38,7 @@ test('resolver.content() - object tag - should be PodletClientContentResolver', 
 test('resolver.content() - "podlet-version" header is same as manifest.version - should keep manifest on outgoing.manifest', async t => {
     const server = new PodletServer();
     const service = await server.listen();
-    const outgoing = new HttpOutgoing({ uri: service.options.uri });
+    const outgoing = new HttpOutgoing({ uri: service.options.uri }, {}, new HttpIncoming({ headers }));
 
     // See TODO II
     const { manifest } = server;
@@ -64,7 +68,7 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
         'podlet-version': '',
     };
 
-    const outgoing = new HttpOutgoing({ uri: service.options.uri });
+    const outgoing = new HttpOutgoing({ uri: service.options.uri }, {}, new HttpIncoming({ headers }));
 
     // See TODO II
     const { manifest } = server;
@@ -94,7 +98,7 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
         'podlet-version': '2.0.0',
     };
 
-    const outgoing = new HttpOutgoing({ uri: service.options.uri });
+    const outgoing = new HttpOutgoing({ uri: service.options.uri }, {}, new HttpIncoming({ headers }));
 
     // See TODO II
     const { manifest } = server;
@@ -119,12 +123,10 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
 });
 
 test('resolver.content() - throwable:true - remote can not be resolved - should throw', async t => {
-    t.plan(2);
-
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: true,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
@@ -146,15 +148,13 @@ test('resolver.content() - throwable:true - remote can not be resolved - should 
 });
 
 test('resolver.content() - throwable:true - remote responds with http 500 - should throw', async t => {
-    t.plan(4);
-
     const server = new PodletServer();
     const service = await server.listen();
 
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         throwable: true,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
@@ -180,15 +180,13 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
 });
 
 test('resolver.content() - throwable:true - remote responds with http 404 - should throw with error object reflecting status code podlet responded with', async t => {
-    t.plan(4);
-
     const server = new PodletServer();
     const service = await server.listen();
 
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         throwable: true,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
@@ -214,12 +212,10 @@ test('resolver.content() - throwable:true - remote responds with http 404 - shou
 });
 
 test('resolver.content() - throwable:false - remote can not be resolved - "outgoing" should stream empty string', async t => {
-    t.plan(2);
-
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
@@ -242,12 +238,10 @@ test('resolver.content() - throwable:false - remote can not be resolved - "outgo
 });
 
 test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "outgoing" should stream fallback', async t => {
-    t.plan(2);
-
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
@@ -271,15 +265,13 @@ test('resolver.content() - throwable:false with fallback set - remote can not be
 });
 
 test('resolver.content() - throwable:false - remote responds with http 500 - "outgoing" should stream empty string', async t => {
-    t.plan(2);
-
     const server = new PodletServer();
     const service = await server.listen();
 
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
@@ -304,15 +296,13 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "ou
 });
 
 test('resolver.content() - throwable:false with fallback set - remote responds with http 500 - "outgoing" should stream fallback', async t => {
-    t.plan(2);
-
     const server = new PodletServer();
     const service = await server.listen();
 
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
@@ -338,12 +328,10 @@ test('resolver.content() - throwable:false with fallback set - remote responds w
 });
 
 test('resolver.content() - kill switch - throwable:true - recursions equals threshold - should throw', async t => {
-    t.plan(2);
-
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: true,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
@@ -369,12 +357,10 @@ test('resolver.content() - kill switch - throwable:true - recursions equals thre
 });
 
 test('resolver.content() - kill switch - throwable:false - recursions equals threshold - "outgoing.success" should be true', async t => {
-    t.plan(1);
-
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO I
     outgoing.reqOptions.podiumContext = {};
@@ -393,7 +379,6 @@ test('resolver.content() - kill switch - throwable:false - recursions equals thr
 });
 
 test('resolver.content() - "redirects" 302 response should include redirect object', async t => {
-    t.plan(1);
     const server = new PodletServer();
     server.headersContent = {
         location: 'http://redirects.are.us.com',
@@ -403,7 +388,7 @@ test('resolver.content() - "redirects" 302 response should include redirect obje
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         redirectable: true,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO II
     const { manifest } = server;
@@ -431,13 +416,12 @@ test('resolver.content() - "redirects" 302 response should include redirect obje
 });
 
 test('resolver.content() - "redirectable" 200 response should not respond with redirect properties', async t => {
-    t.plan(1);
     const server = new PodletServer();
     const service = await server.listen();
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         redirectable: true,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO II
     const { manifest } = server;
@@ -462,7 +446,6 @@ test('resolver.content() - "redirectable" 200 response should not respond with r
 });
 
 test('resolver.content() - "redirects" 302 response should not throw', async t => {
-    t.plan(1);
     const server = new PodletServer();
     server.headersContent = {
         location: 'http://redirects.are.us.com',
@@ -473,7 +456,7 @@ test('resolver.content() - "redirects" 302 response should not throw', async t =
         uri: service.options.uri,
         redirectable: true,
         throwable: true,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO II
     const { manifest } = server;
@@ -501,8 +484,6 @@ test('resolver.content() - "redirects" 302 response should not throw', async t =
 });
 
 test('resolver.content() - "redirects" 302 response - client should follow redirect by default', async t => {
-    t.plan(5);
-
     const externalService = new HttpServer();
     externalService.request = (req, res) => {
         res.statusCode = 200;
@@ -519,7 +500,7 @@ test('resolver.content() - "redirects" 302 response - client should follow redir
     const service = await server.listen();
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     // See TODO II
     const { manifest } = server;

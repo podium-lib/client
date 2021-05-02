@@ -1,4 +1,4 @@
-# @podium/client
+# @podium/client v5
 
 Client for fetching podium component fragments over HTTP.
 

@@ -1,17 +1,14 @@
 {
-  "root": true,
   "extends": ["airbnb-base", "prettier"],
-  "overrides": [
-    {
-      "files": "__tests__/**/*",
-      "env": {
-        "jest": true
-      }
-    }
-  ],
   "plugins": ["prettier"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+      "ecmaVersion": 11,
+      "sourceType": "module"
+  },
   "rules": {
-    "strict": [0, "global"],
-    "class-methods-use-this": [0]
+      "lines-between-class-members": [0],
+      "class-methods-use-this": [0],
+      "strict": [0, "global"]
   }
 }

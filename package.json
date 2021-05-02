@@ -1,6 +1,6 @@
 {
   "name": "@podium/client",
-  "version": "4.4.19",
+  "version": "5.0.0-next.6",
   "main": "lib/client.js",
   "license": "MIT",
   "keywords": [
@@ -30,15 +30,14 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "tap test/*.js",
-    "lint:format": "eslint --fix .",
+    "test": "tap --no-esm --no-cov --no-ts --no-jsx test/*.js",
     "precommit": "lint-staged"
   },
   "dependencies": {
     "@hapi/boom": "^9.0.0",
     "@metrics/client": "2.5.0",
-    "@podium/schemas": "4.1.16",
-    "@podium/utils": "4.4.17",
+    "@podium/schemas": "5.0.0-next.1",
+    "@podium/utils": "5.0.0-next.2",
     "abslog": "2.4.0",
     "http-cache-semantics": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",

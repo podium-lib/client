@@ -97,35 +97,3 @@ test('HttpOutgoing() - "options.throwable" is defined to be true - "this.throwab
     t.ok(outgoing.throwable);
     t.end();
 });
-
-test('HttpOutgoing() - "options.resolveCss" is not defined - "this.resolveCss" should be "false"', t => {
-    const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
-    t.notOk(outgoing.resolveCss);
-    t.end();
-});
-
-test('HttpOutgoing() - "options.resolveCss" is defined to be true - "this.resolveCss" should be "true"', t => {
-    const options = {
-        uri: 'http://example.org',
-        resolveCss: true,
-    };
-    const outgoing = new HttpOutgoing(options, REQ_OPTIONS);
-    t.ok(outgoing.resolveCss);
-    t.end();
-});
-
-test('HttpOutgoing() - "options.resolveJs" is not defined - "this.resolveJs" should be "false"', t => {
-    const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
-    t.notOk(outgoing.resolveJs);
-    t.end();
-});
-
-test('HttpOutgoing() - "options.resolveJs" is defined to be true - "this.resolveJs" should be "true"', t => {
-    const options = {
-        uri: 'http://example.org',
-        resolveJs: true,
-    };
-    const outgoing = new HttpOutgoing(options, REQ_OPTIONS);
-    t.ok(outgoing.resolveJs);
-    t.end();
-});

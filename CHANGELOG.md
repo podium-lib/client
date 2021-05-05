@@ -1,3 +1,40 @@
+# [5.0.0-next.7](https://github.com/podium-lib/client/compare/v5.0.0-next.6...v5.0.0-next.7) (2021-05-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.0.4 ([#136](https://github.com/podium-lib/client/issues/136)) ([9f71f0f](https://github.com/podium-lib/client/commit/9f71f0fe3c579d58c6a3b5376f8d9a0f3165867e)), closes [#142](https://github.com/podium-lib/client/issues/142)
+* **deps:** update dependency @podium/schemas to v4.0.5 ([e9263c9](https://github.com/podium-lib/client/commit/e9263c9c7d7a890bd913249ea29adce9ed786ea3))
+* **deps:** update dependency @podium/schemas to v4.1.10 ([8f12c52](https://github.com/podium-lib/client/commit/8f12c52ed6e3f0e214e66ee4c293e65422a0b9f2))
+* **deps:** update dependency @podium/schemas to v4.1.11 ([4f136aa](https://github.com/podium-lib/client/commit/4f136aa20e99537dc8e4633133325b95a035640f))
+* **deps:** update dependency @podium/schemas to v4.1.14 ([3870a77](https://github.com/podium-lib/client/commit/3870a77ccd7d03f05f051e42c49dfa4b1cd25e14))
+* **deps:** update dependency @podium/schemas to v4.1.15 ([f9eea3f](https://github.com/podium-lib/client/commit/f9eea3faa87047316ace92382780899fc6d1533e))
+* **deps:** update dependency @podium/schemas to v4.1.16 ([2156ae4](https://github.com/podium-lib/client/commit/2156ae49c6832a9d9895bdb4d506b83c5c67205e))
+* **deps:** update dependency @podium/utils to v4.3.1 ([f5483b6](https://github.com/podium-lib/client/commit/f5483b6445baf36e6d1d33daa59da564a42ef33e))
+* **deps:** update dependency @podium/utils to v4.3.3 ([f4ee3a2](https://github.com/podium-lib/client/commit/f4ee3a2d6e821cfd9033deac4ed5661c0eb5fbf8))
+* **deps:** update dependency @podium/utils to v4.4.0 ([f3712b3](https://github.com/podium-lib/client/commit/f3712b3be5e17d0e2956e9e4cae3cf79696a3634))
+* **deps:** update dependency @podium/utils to v4.4.1 ([3f0dddc](https://github.com/podium-lib/client/commit/3f0dddcf3b203d1903dc13fa4522c632459ae48b))
+* **deps:** update dependency @podium/utils to v4.4.13 ([6771733](https://github.com/podium-lib/client/commit/67717335c91b5366c2931cbf8d34e5d62c720678))
+* **deps:** update dependency @podium/utils to v4.4.14 ([cd7ed39](https://github.com/podium-lib/client/commit/cd7ed39fadf12232a6fc67678815dd30c8a076ac))
+* **deps:** update dependency @podium/utils to v4.4.15 ([ce00590](https://github.com/podium-lib/client/commit/ce00590e5c5eb23ca138f4337605b8a84787e01c))
+* **deps:** update dependency @podium/utils to v4.4.16 ([f0bfe5f](https://github.com/podium-lib/client/commit/f0bfe5f24d4fc0a69e36cab7e80b0d8d11415aca))
+* **deps:** update dependency @podium/utils to v4.4.17 ([a57669c](https://github.com/podium-lib/client/commit/a57669c5e26745a04b5e7b453db41049d7aea8c7))
+* Update @podium/schema to version 4.1.9 to fix ajv error ([#188](https://github.com/podium-lib/client/issues/188)) ([1b03065](https://github.com/podium-lib/client/commit/1b0306562a15e0fe496adb22bf9b2aa76ac26436))
+
+
+### Features
+
+* Convert to ESM ([#206](https://github.com/podium-lib/client/issues/206)) ([d31298f](https://github.com/podium-lib/client/commit/d31298fac7e1b84dc401c5832bce132a68a84943))
+
+
+### BREAKING CHANGES
+
+* Convert from CommonJS to ESM
+
+* fix: Remove outcommented code
+
+Co-authored-by: Trygve Lie <trygve.lie@finn.no>
+
 # [5.0.0-next.6](https://github.com/podium-lib/client/compare/v5.0.0-next.5...v5.0.0-next.6) (2020-10-06)
 ## [4.4.19](https://github.com/podium-lib/client/compare/v4.4.18...v4.4.19) (2021-04-27)
 

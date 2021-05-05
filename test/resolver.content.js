@@ -1,17 +1,15 @@
 /* eslint-disable import/order */
 
-'use strict';
-
-const { test } = require('tap');
-const HttpOutgoing = require('../lib/http-outgoing');
-const { HttpIncoming } = require('@podium/utils');
-const Content = require('../lib/resolver.content');
-const utils = require('@podium/utils');
-const {
+import tap from 'tap';
+import HttpOutgoing from '../lib/http-outgoing.js';
+import { HttpIncoming } from '@podium/utils';
+import Content from '../lib/resolver.content.js';
+import * as utils from '@podium/utils';
+import { 
     destinationBufferStream,
     PodletServer,
     HttpServer,
-} = require('@podium/test-utils');
+} from '@podium/test-utils';
 
 // Fake headers
 const headers = {};
@@ -26,7 +24,7 @@ const headers = {};
  * Resolving URI's should happen in outgoing object and not in manifest resolver.
  */
 
-test('resolver.content() - object tag - should be PodletClientContentResolver', t => {
+tap.test('resolver.content() - object tag - should be PodletClientContentResolver', t => {
     const content = new Content();
     t.equal(
         Object.prototype.toString.call(content),
@@ -35,7 +33,7 @@ test('resolver.content() - object tag - should be PodletClientContentResolver', 
     t.end();
 });
 
-test('resolver.content() - "podlet-version" header is same as manifest.version - should keep manifest on outgoing.manifest', async t => {
+tap.test('resolver.content() - "podlet-version" header is same as manifest.version - should keep manifest on outgoing.manifest', async t => {
     const server = new PodletServer();
     const service = await server.listen();
     const outgoing = new HttpOutgoing({ uri: service.options.uri }, {}, new HttpIncoming({ headers }));
@@ -61,7 +59,7 @@ test('resolver.content() - "podlet-version" header is same as manifest.version -
     t.end();
 });
 
-test('resolver.content() - "podlet-version" header is empty - should keep manifest on outgoing.manifest', async t => {
+tap.test('resolver.content() - "podlet-version" header is empty - should keep manifest on outgoing.manifest', async t => {
     const server = new PodletServer();
     const service = await server.listen();
     server.headersContent = {
@@ -91,7 +89,7 @@ test('resolver.content() - "podlet-version" header is empty - should keep manife
     t.end();
 });
 
-test('resolver.content() - "podlet-version" header is different than manifest.version - should set outgoing.status to "stale" and keep manifest', async t => {
+tap.test('resolver.content() - "podlet-version" header is different than manifest.version - should set outgoing.status to "stale" and keep manifest', async t => {
     const server = new PodletServer();
     const service = await server.listen();
     server.headersContent = {
@@ -122,7 +120,7 @@ test('resolver.content() - "podlet-version" header is different than manifest.ve
     t.end();
 });
 
-test('resolver.content() - throwable:true - remote can not be resolved - should throw', async t => {
+tap.test('resolver.content() - throwable:true - remote can not be resolved - should throw', async t => {
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: true,
@@ -147,7 +145,7 @@ test('resolver.content() - throwable:true - remote can not be resolved - should 
     t.end();
 });
 
-test('resolver.content() - throwable:true - remote responds with http 500 - should throw', async t => {
+tap.test('resolver.content() - throwable:true - remote responds with http 500 - should throw', async t => {
     const server = new PodletServer();
     const service = await server.listen();
 
@@ -179,7 +177,7 @@ test('resolver.content() - throwable:true - remote responds with http 500 - shou
     t.end();
 });
 
-test('resolver.content() - throwable:true - remote responds with http 404 - should throw with error object reflecting status code podlet responded with', async t => {
+tap.test('resolver.content() - throwable:true - remote responds with http 404 - should throw with error object reflecting status code podlet responded with', async t => {
     const server = new PodletServer();
     const service = await server.listen();
 
@@ -211,7 +209,7 @@ test('resolver.content() - throwable:true - remote responds with http 404 - shou
     t.end();
 });
 
-test('resolver.content() - throwable:false - remote can not be resolved - "outgoing" should stream empty string', async t => {
+tap.test('resolver.content() - throwable:false - remote can not be resolved - "outgoing" should stream empty string', async t => {
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
@@ -237,7 +235,7 @@ test('resolver.content() - throwable:false - remote can not be resolved - "outgo
     t.end();
 });
 
-test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "outgoing" should stream fallback', async t => {
+tap.test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "outgoing" should stream fallback', async t => {
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
@@ -264,7 +262,7 @@ test('resolver.content() - throwable:false with fallback set - remote can not be
     t.end();
 });
 
-test('resolver.content() - throwable:false - remote responds with http 500 - "outgoing" should stream empty string', async t => {
+tap.test('resolver.content() - throwable:false - remote responds with http 500 - "outgoing" should stream empty string', async t => {
     const server = new PodletServer();
     const service = await server.listen();
 
@@ -295,7 +293,7 @@ test('resolver.content() - throwable:false - remote responds with http 500 - "ou
     t.end();
 });
 
-test('resolver.content() - throwable:false with fallback set - remote responds with http 500 - "outgoing" should stream fallback', async t => {
+tap.test('resolver.content() - throwable:false with fallback set - remote responds with http 500 - "outgoing" should stream fallback', async t => {
     const server = new PodletServer();
     const service = await server.listen();
 
@@ -327,7 +325,7 @@ test('resolver.content() - throwable:false with fallback set - remote responds w
     t.end();
 });
 
-test('resolver.content() - kill switch - throwable:true - recursions equals threshold - should throw', async t => {
+tap.test('resolver.content() - kill switch - throwable:true - recursions equals threshold - should throw', async t => {
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: true,
@@ -356,7 +354,7 @@ test('resolver.content() - kill switch - throwable:true - recursions equals thre
     t.end();
 });
 
-test('resolver.content() - kill switch - throwable:false - recursions equals threshold - "outgoing.success" should be true', async t => {
+tap.test('resolver.content() - kill switch - throwable:false - recursions equals threshold - "outgoing.success" should be true', async t => {
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
@@ -378,7 +376,7 @@ test('resolver.content() - kill switch - throwable:false - recursions equals thr
     t.end();
 });
 
-test('resolver.content() - "redirects" 302 response should include redirect object', async t => {
+tap.test('resolver.content() - "redirects" 302 response should include redirect object', async t => {
     const server = new PodletServer();
     server.headersContent = {
         location: 'http://redirects.are.us.com',
@@ -415,7 +413,7 @@ test('resolver.content() - "redirects" 302 response should include redirect obje
     t.end();
 });
 
-test('resolver.content() - "redirectable" 200 response should not respond with redirect properties', async t => {
+tap.test('resolver.content() - "redirectable" 200 response should not respond with redirect properties', async t => {
     const server = new PodletServer();
     const service = await server.listen();
     const outgoing = new HttpOutgoing({
@@ -445,7 +443,7 @@ test('resolver.content() - "redirectable" 200 response should not respond with r
     t.end();
 });
 
-test('resolver.content() - "redirects" 302 response should not throw', async t => {
+tap.test('resolver.content() - "redirects" 302 response should not throw', async t => {
     const server = new PodletServer();
     server.headersContent = {
         location: 'http://redirects.are.us.com',
@@ -483,7 +481,7 @@ test('resolver.content() - "redirects" 302 response should not throw', async t =
     t.end();
 });
 
-test('resolver.content() - "redirects" 302 response - client should follow redirect by default', async t => {
+tap.test('resolver.content() - "redirects" 302 response - client should follow redirect by default', async t => {
     const externalService = new HttpServer();
     externalService.request = (req, res) => {
         res.statusCode = 200;

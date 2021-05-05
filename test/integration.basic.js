@@ -1,14 +1,12 @@
-'use strict';
-
-const { test } = require('tap');
-const { PodletServer } = require('@podium/test-utils');
-const { HttpIncoming } = require('@podium/utils');
-const Client = require("..");
+import tap from 'tap';
+import { PodletServer } from '@podium/test-utils';
+import { HttpIncoming } from '@podium/utils';
+import Client from '../lib/client.js';
 
 // Fake headers
 const headers = {};
 
-test('integration basic', async t => {
+tap.test('integration basic', async t => {
     const serverA = new PodletServer({ name: 'aa' });
     const serverB = new PodletServer({ name: 'bb' });
     const [serviceA, serviceB] = await Promise.all([
@@ -62,7 +60,7 @@ test('integration basic', async t => {
     await Promise.all([serverA.close(), serverB.close()]);
 });
 
-test('integration - throwable:true - remote manifest can not be resolved - should throw', async t => {
+tap.test('integration - throwable:true - remote manifest can not be resolved - should throw', async t => {
     const client = new Client({ name: 'podiumClient' });
     const component = client.register({
         throwable: true,
@@ -79,7 +77,7 @@ test('integration - throwable:true - remote manifest can not be resolved - shoul
     t.end();
 });
 
-test('integration - throwable:false - remote manifest can not be resolved - should resolve with empty string', async t => {
+tap.test('integration - throwable:false - remote manifest can not be resolved - should resolve with empty string', async t => {
     const client = new Client({ name: 'podiumClient' });
     const component = client.register({
         name: 'component',
@@ -90,7 +88,7 @@ test('integration - throwable:false - remote manifest can not be resolved - shou
     t.equal(result.content, '');
 });
 
-test('integration - throwable:false - remote fallback can not be resolved - should resolve with empty string', async t => {
+tap.test('integration - throwable:false - remote fallback can not be resolved - should resolve with empty string', async t => {
     const server = new PodletServer({
         fallback: 'http://does.not.exist.finn.no/fallback.html',
         content: '/error', // set to trigger fallback senario
@@ -107,7 +105,7 @@ test('integration - throwable:false - remote fallback can not be resolved - shou
     await server.close();
 });
 
-test('integration - throwable:false - remote fallback responds with http 500 - should resolve with empty string', async t => {
+tap.test('integration - throwable:false - remote fallback responds with http 500 - should resolve with empty string', async t => {
     const server = new PodletServer({
         fallback: 'error',
         content: '/error', // set to trigger fallback senario
@@ -124,7 +122,7 @@ test('integration - throwable:false - remote fallback responds with http 500 - s
     await server.close();
 });
 
-test('integration - throwable:true - remote content can not be resolved - should throw', async t => {
+tap.test('integration - throwable:true - remote content can not be resolved - should throw', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
         content: 'http://does.not.exist.finn.no/content.html',
@@ -150,7 +148,7 @@ test('integration - throwable:true - remote content can not be resolved - should
     t.end();
 });
 
-test('integration - throwable:false - remote content can not be resolved - should resolve with fallback', async t => {
+tap.test('integration - throwable:false - remote content can not be resolved - should resolve with fallback', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
         content: 'http://does.not.exist.finn.no/content.html',
@@ -170,7 +168,7 @@ test('integration - throwable:false - remote content can not be resolved - shoul
     await server.close();
 });
 
-test('integration - throwable:true - remote content responds with http 500 - should throw', async t => {
+tap.test('integration - throwable:true - remote content responds with http 500 - should throw', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
         content: '/error',
@@ -196,7 +194,7 @@ test('integration - throwable:true - remote content responds with http 500 - sho
     t.end();
 });
 
-test('integration - throwable:false - remote content responds with http 500 - should resolve with fallback', async t => {
+tap.test('integration - throwable:false - remote content responds with http 500 - should resolve with fallback', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
         content: '/error',
@@ -216,7 +214,7 @@ test('integration - throwable:false - remote content responds with http 500 - sh
     await server.close();
 });
 
-test('integration - throwable:false - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and resolve with fallback', async t => {
+tap.test('integration - throwable:false - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and resolve with fallback', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
     });
@@ -247,7 +245,7 @@ test('integration - throwable:false - manifest / content fetching goes into recu
     await server.close();
 });
 
-test('integration - throwable:true - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and then throw', async t => {
+tap.test('integration - throwable:true - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and then throw', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
     });
@@ -287,7 +285,7 @@ test('integration - throwable:true - manifest / content fetching goes into recur
     t.end();
 });
 
-test('integration basic - set headers argument - should pass on headers to request', async t => {
+tap.test('integration basic - set headers argument - should pass on headers to request', async t => {
     const server = new PodletServer({ name: 'podlet' });
     const service = await server.listen();
     server.on('req:content', (content, req) => {
@@ -314,7 +312,7 @@ test('integration basic - set headers argument - should pass on headers to reque
     await server.close();
 });
 
-test('integration basic - set headers argument - header has a "user-agent" - should override "user-agent" with podium agent', async t => {
+tap.test('integration basic - set headers argument - header has a "user-agent" - should override "user-agent" with podium agent', async t => {
     const server = new PodletServer({ name: 'podlet' });
     const service = await server.listen();
     server.on('req:content', (content, req) => {
@@ -340,7 +338,7 @@ test('integration basic - set headers argument - header has a "user-agent" - sho
     await server.close();
 });
 
-test('integration basic - metrics stream objects created', async (t) => {
+tap.test('integration basic - metrics stream objects created', async (t) => {
     const server = new PodletServer({ name: 'podlet' });
     const client = new Client({ name: 'clientName' });
 
@@ -383,7 +381,7 @@ test('integration basic - metrics stream objects created', async (t) => {
     await server.close()
 });
 
-test('integration basic - "pathname" is called with different values - should append the different pathnames to the content URL', async t => {
+tap.test('integration basic - "pathname" is called with different values - should append the different pathnames to the content URL', async t => {
     const server = new PodletServer({ name: 'podlet', content: '/index' });
     const service = await server.listen();
     const results = [];

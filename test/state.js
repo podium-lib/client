@@ -1,12 +1,10 @@
 /* eslint-disable no-plusplus */
 
-'use strict';
+import tap from 'tap';
+import lolex from '@sinonjs/fake-timers';
+import State from '../lib/state.js';
 
-const { test } = require('tap');
-const lolex = require('@sinonjs/fake-timers');
-const State = require('../lib/state');
-
-test('State() - object tag - should be PodiumClientState', t => {
+tap.test('State() - object tag - should be PodiumClientState', t => {
     const state = new State();
     t.equal(
         Object.prototype.toString.call(state),
@@ -15,7 +13,7 @@ test('State() - object tag - should be PodiumClientState', t => {
     t.end();
 });
 
-test('State() - "threshold" is larger than "max" - should throw', t => {
+tap.test('State() - "threshold" is larger than "max" - should throw', t => {
     t.throws(() => {
         // eslint-disable-next-line no-unused-vars
         const state = new State({ resolveThreshold: 6000, resolveMax: 4000 });
@@ -23,20 +21,20 @@ test('State() - "threshold" is larger than "max" - should throw', t => {
     t.end();
 });
 
-test('State() - default state - should be "instantiated"', t => {
+tap.test('State() - default state - should be "instantiated"', t => {
     const state = new State();
     t.equal(state.status, 'instantiated');
     t.end();
 });
 
-test('State.setInitializingState() - call method when object is in "registered" state - should set state to "initializing"', t => {
+tap.test('State.setInitializingState() - call method when object is in "registered" state - should set state to "initializing"', t => {
     const state = new State();
     state.setInitializingState();
     t.equal(state.status, 'initializing');
     t.end();
 });
 
-test('State.setInitializingState() - call method when object is in "registered" state - should emit "initializing" event once', t => {
+tap.test('State.setInitializingState() - call method when object is in "registered" state - should emit "initializing" event once', t => {
     t.plan(1);
 
     const state = new State();
@@ -49,7 +47,7 @@ test('State.setInitializingState() - call method when object is in "registered" 
     state.setInitializingState();
 });
 
-test('State.setStableState() - call method - should set state to "stable"', t => {
+tap.test('State.setStableState() - call method - should set state to "stable"', t => {
     const state = new State();
     state.setInitializingState();
     state.setUnstableState();
@@ -59,7 +57,7 @@ test('State.setStableState() - call method - should set state to "stable"', t =>
     t.end();
 });
 
-test('State.setStableState() - call method multiple times - should emit "stable" event once', t => {
+tap.test('State.setStableState() - call method multiple times - should emit "stable" event once', t => {
     t.plan(1);
 
     const state = new State();
@@ -73,7 +71,7 @@ test('State.setStableState() - call method multiple times - should emit "stable"
     t.end();
 });
 
-test('State.setUnstableState() - call method when object is in "initializing" state - should set state to "unstable"', t => {
+tap.test('State.setUnstableState() - call method when object is in "initializing" state - should set state to "unstable"', t => {
     const state = new State();
     state.setInitializingState();
     state.setUnstableState();
@@ -82,7 +80,7 @@ test('State.setUnstableState() - call method when object is in "initializing" st
     t.end();
 });
 
-test('State.setUnstableState() - call method multiple times - should emit "unstable" event once', t => {
+tap.test('State.setUnstableState() - call method multiple times - should emit "unstable" event once', t => {
     t.plan(1);
 
     const state = new State();
@@ -98,7 +96,7 @@ test('State.setUnstableState() - call method multiple times - should emit "unsta
     t.end();
 });
 
-test('State() - threshold is 2 seconds - .setUnstableState() is called - should set state to "stable" after threshold is passed', t => {
+tap.test('State() - threshold is 2 seconds - .setUnstableState() is called - should set state to "stable" after threshold is passed', t => {
     const clock = lolex.install();
 
     const state = new State({ resolveThreshold: 2000 });
@@ -127,7 +125,7 @@ test('State() - threshold is 2 seconds - .setUnstableState() is called - should 
     t.end();
 });
 
-test('State() - threshold is 2 seconds - .setUnstableState() is called - should emit "stable" event once when threshold is passed', t => {
+tap.test('State() - threshold is 2 seconds - .setUnstableState() is called - should emit "stable" event once when threshold is passed', t => {
     t.plan(1);
 
     const clock = lolex.install();
@@ -155,7 +153,7 @@ test('State() - threshold is 2 seconds - .setUnstableState() is called - should 
     t.end();
 });
 
-test('State() - exceed max value - should set state to "unhealthy" after max is passed', t => {
+tap.test('State() - exceed max value - should set state to "unhealthy" after max is passed', t => {
     const clock = lolex.install();
 
     const state = new State({ resolveThreshold: 1000, resolveMax: 2000 });
@@ -185,7 +183,7 @@ test('State() - exceed max value - should set state to "unhealthy" after max is 
     t.end();
 });
 
-test('State() - exceed max value - then continue to call .setUnstableState() within threshold - should keep state as "unhealthy"', t => {
+tap.test('State() - exceed max value - then continue to call .setUnstableState() within threshold - should keep state as "unhealthy"', t => {
     const clock = lolex.install();
 
     const state = new State({ resolveThreshold: 1000, resolveMax: 2000 });
@@ -227,7 +225,7 @@ test('State() - exceed max value - then continue to call .setUnstableState() wit
     t.end();
 });
 
-test('State() - exceed max value - then continue to call .setUnstableState() - then let threshold timeout - should set state to "stable"', t => {
+tap.test('State() - exceed max value - then continue to call .setUnstableState() - then let threshold timeout - should set state to "stable"', t => {
     const clock = lolex.install();
 
     const state = new State({ resolveThreshold: 1000, resolveMax: 2000 });
@@ -270,7 +268,7 @@ test('State() - exceed max value - then continue to call .setUnstableState() - t
     t.end();
 });
 
-test('State() - exceed max value - then continue to call .setUnstableState() within threshold - should emit "unhealthy" event once', t => {
+tap.test('State() - exceed max value - then continue to call .setUnstableState() within threshold - should emit "unhealthy" event once', t => {
     t.plan(1);
 
     const clock = lolex.install();
@@ -312,7 +310,7 @@ test('State() - exceed max value - then continue to call .setUnstableState() wit
     t.end();
 });
 
-test('State() - exceed max value - then continue to call .setUnstableState() - then let threshold timeout - should emit state events only once', t => {
+tap.test('State() - exceed max value - then continue to call .setUnstableState() - then let threshold timeout - should emit state events only once', t => {
     t.plan(3);
 
     const clock = lolex.install();
@@ -361,7 +359,7 @@ test('State() - exceed max value - then continue to call .setUnstableState() - t
     t.end();
 });
 
-test('State.reset() - call method - should clear timers and reset state to initial value', t => {
+tap.test('State.reset() - call method - should clear timers and reset state to initial value', t => {
     const clock = lolex.install();
 
     const state = new State({ resolveThreshold: 2000 });

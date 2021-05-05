@@ -1,9 +1,7 @@
-'use strict';
-
-const { test } = require('tap');
-const { destinationBufferStream } = require('@podium/test-utils');
-const isStream = require('is-stream');
-const HttpOutgoing = require('../lib/http-outgoing');
+import tap from 'tap';
+import { destinationBufferStream } from '@podium/test-utils';
+import isStream from 'is-stream';
+import HttpOutgoing from '../lib/http-outgoing.js';
 
 const REQ_OPTIONS = {
     pathname: 'a',
@@ -17,7 +15,7 @@ const RESOURCE_OPTIONS = {
  * Constructor
  */
 
-test('HttpOutgoing() - object tag - should be PodletClientHttpOutgoing', t => {
+tap.test('HttpOutgoing() - object tag - should be PodletClientHttpOutgoing', t => {
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS);
     t.equal(
         Object.prototype.toString.call(outgoing),
@@ -26,7 +24,7 @@ test('HttpOutgoing() - object tag - should be PodletClientHttpOutgoing', t => {
     t.end();
 });
 
-test('HttpOutgoing() - "options.uri" not provided to constructor - should throw', t => {
+tap.test('HttpOutgoing() - "options.uri" not provided to constructor - should throw', t => {
     t.throws(() => {
         // eslint-disable-next-line no-unused-vars
         const outgoing = new HttpOutgoing();
@@ -34,39 +32,39 @@ test('HttpOutgoing() - "options.uri" not provided to constructor - should throw'
     t.end();
 });
 
-test('HttpOutgoing() - should be a PassThrough stream', t => {
+tap.test('HttpOutgoing() - should be a PassThrough stream', t => {
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
     // NOTE: PassThrough is just a transform stream pushing all chunks through. is-stream has no PassThrough check.
     t.ok(isStream.transform(outgoing));
     t.end();
 });
 
-test('HttpOutgoing() - set "uri" - should be accessable on "this.manifestUri"', t => {
+tap.test('HttpOutgoing() - set "uri" - should be accessable on "this.manifestUri"', t => {
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS);
     t.equal(outgoing.manifestUri, RESOURCE_OPTIONS.uri);
     t.end();
 });
 
-test('HttpOutgoing() - set "reqOptions" - should be persisted on "this.reqOptions"', t => {
+tap.test('HttpOutgoing() - set "reqOptions" - should be persisted on "this.reqOptions"', t => {
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
     t.equal(outgoing.reqOptions.pathname, 'a');
     t.equal(outgoing.reqOptions.query.b, 'c');
     t.end();
 });
 
-test('HttpOutgoing() - "this.manifest" should be {_fallback: ""}', t => {
+tap.test('HttpOutgoing() - "this.manifest" should be {_fallback: ""}', t => {
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
     t.same(outgoing.manifest, { _fallback: '' });
     t.end();
 });
 
-test('HttpOutgoing() - get manifestUri - should return URI to manifest', t => {
+tap.test('HttpOutgoing() - get manifestUri - should return URI to manifest', t => {
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS);
     t.equal(outgoing.manifestUri, RESOURCE_OPTIONS.uri);
     t.end();
 });
 
-test('HttpOutgoing() - call .pushFallback() - should push the fallback content on the stream', t => {
+tap.test('HttpOutgoing() - call .pushFallback() - should push the fallback content on the stream', t => {
     t.plan(1);
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
     outgoing.manifest = {};
@@ -82,13 +80,13 @@ test('HttpOutgoing() - call .pushFallback() - should push the fallback content o
     outgoing.pushFallback();
 });
 
-test('HttpOutgoing() - "options.throwable" is not defined - "this.throwable" should be "false"', t => {
+tap.test('HttpOutgoing() - "options.throwable" is not defined - "this.throwable" should be "false"', t => {
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
     t.notOk(outgoing.throwable);
     t.end();
 });
 
-test('HttpOutgoing() - "options.throwable" is defined to be true - "this.throwable" should be "true"', t => {
+tap.test('HttpOutgoing() - "options.throwable" is defined to be true - "this.throwable" should be "true"', t => {
     const options = {
         uri: 'http://example.org',
         throwable: true,

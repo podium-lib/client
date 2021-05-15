@@ -1,6 +1,6 @@
 import tap from 'tap';
 import { destinationBufferStream } from '@podium/test-utils';
-import isStream from 'is-stream';
+import { PassThrough } from 'stream';
 import HttpOutgoing from '../lib/http-outgoing.js';
 
 const REQ_OPTIONS = {
@@ -34,8 +34,7 @@ tap.test('HttpOutgoing() - "options.uri" not provided to constructor - should th
 
 tap.test('HttpOutgoing() - should be a PassThrough stream', t => {
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
-    // NOTE: PassThrough is just a transform stream pushing all chunks through. is-stream has no PassThrough check.
-    t.ok(isStream.transform(outgoing));
+    t.ok(outgoing instanceof PassThrough);
     t.end();
 });
 

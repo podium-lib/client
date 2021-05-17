@@ -3,7 +3,7 @@
 
 import tap from 'tap';
 import getStream from 'get-stream';
-import stream from 'readable-stream';
+import stream from 'stream';
 import Cache from 'ttl-mem-cache';
 
 import { HttpIncoming } from '@podium/utils';

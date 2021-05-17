@@ -48,7 +48,6 @@
     "abslog": "2.4.0",
     "http-cache-semantics": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",
-    "readable-stream": "^3.4.0",
     "request": "^2.88.0",
     "ttl-mem-cache": "4.1.0"
   },
@@ -71,7 +70,6 @@
     "express": "4.17.1",
     "get-stream": "6.0.1",
     "http-proxy": "1.18.1",
-    "is-stream": "2.0.0",
     "prettier": "2.2.1",
     "rollup": "2.46.0",
     "semantic-release": "17.4.2",

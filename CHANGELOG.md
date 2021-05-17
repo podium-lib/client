@@ -1,3 +1,10 @@
+# [5.0.0-next.8](https://github.com/podium-lib/client/compare/v5.0.0-next.7...v5.0.0-next.8) (2021-05-17)
+
+
+### Features
+
+* Use native streams ([#215](https://github.com/podium-lib/client/issues/215)) ([f949c9c](https://github.com/podium-lib/client/commit/f949c9cc0d66431685138ca2c0367aec622bce78))
+
 # [5.0.0-next.7](https://github.com/podium-lib/client/compare/v5.0.0-next.6...v5.0.0-next.7) (2021-05-05)
 
 

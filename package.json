@@ -1,6 +1,6 @@
 {
   "name": "@podium/client",
-  "version": "4.4.31",
+  "version": "4.4.33",
   "main": "lib/client.js",
   "license": "MIT",
   "keywords": [
@@ -37,8 +37,8 @@
   "dependencies": {
     "@hapi/boom": "^9.0.0",
     "@metrics/client": "2.5.0",
-    "@podium/schemas": "4.1.22",
-    "@podium/utils": "4.4.23",
+    "@podium/schemas": "4.1.23",
+    "@podium/utils": "4.4.24",
     "abslog": "2.4.0",
     "http-cache-semantics": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",
@@ -54,6 +54,7 @@
     "@semantic-release/github": "7.2.3",
     "@semantic-release/npm": "7.1.3",
     "@semantic-release/release-notes-generator": "9.0.3",
+    "semantic-release": "17.4.2",
     "@sinonjs/fake-timers": "7.1.2",
     "benchmark": "2.1.4",
     "eslint": "7.30.0",
@@ -66,7 +67,6 @@
     "http-proxy": "1.18.1",
     "is-stream": "2.0.0",
     "prettier": "2.3.2",
-    "selfsigned": "1.10.11",
     "semantic-release": "17.4.4",
     "tap": "15.0.9"
   }

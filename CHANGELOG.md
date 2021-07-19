@@ -1,3 +1,10 @@
+# [4.5.0](https://github.com/podium-lib/client/compare/v4.4.33...v4.5.0) (2021-07-19)
+
+
+### Features
+
+* Support mixed protocols ([#228](https://github.com/podium-lib/client/issues/228)) ([f1e42fe](https://github.com/podium-lib/client/commit/f1e42feb298e755b1274e5cf79cf77243457c538))
+
 ## [4.4.33](https://github.com/podium-lib/client/compare/v4.4.32...v4.4.33) (2021-07-16)
 
 

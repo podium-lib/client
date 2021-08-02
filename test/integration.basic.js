@@ -1,5 +1,5 @@
 import tap from 'tap';
-import { PodletServer } from '@podium/test-utils';
+import { PodletServer, HttpServer, HttpsServer } from '@podium/test-utils';
 import { HttpIncoming } from '@podium/utils';
 import Client from '../lib/client.js';
 
@@ -403,4 +403,70 @@ tap.test('integration basic - "pathname" is called with different values - shoul
     await a.fetch(new HttpIncoming({ headers }), { pathname: '/bar' });
 
     await server.close();
+});
+
+test('integration basic - multiple hosts - mainfest is on one host but content on fallbacks on different hosts', async t => {
+    const contentServer = new HttpServer();
+    contentServer.request = (req, res) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/plain');
+        res.end('<p>content</p>');
+    };
+    
+    const fallbackServer = new HttpServer();
+    fallbackServer.request = (req, res) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/plain');
+        res.end('<p>fallback</p>');
+    };
+
+    const [contentUrl, fallbackUrl] = await Promise.all([contentServer.listen(), fallbackServer.listen()]);
+
+    const podletServer = new PodletServer({ name: 'aa', content: contentUrl, fallback: fallbackUrl });
+    const podletUrl = await podletServer.listen();
+
+    const client = new Client({ name: 'podiumClient' });
+    const podlet = client.register(podletUrl.options);
+
+    const responseA = await podlet.fetch();
+    t.same(responseA.content, '<p>content</p>');
+
+    // Close all services to trigger fallback
+    await Promise.all([podletServer.close(), contentServer.close(), fallbackServer.close()]);
+
+    const responseB = await podlet.fetch();
+    t.same(responseB.content, '<p>fallback</p>');
+});
+
+test('integration basic - multiple protocols - mainfest is on a http host but content on fallbacks on https hosts', async t => {
+    const contentServer = new HttpsServer();
+    contentServer.request = (req, res) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/plain');
+        res.end('<p>content</p>');
+    };
+    
+    const fallbackServer = new HttpsServer();
+    fallbackServer.request = (req, res) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/plain');
+        res.end('<p>fallback</p>');
+    };
+
+    const [contentUrl, fallbackUrl] = await Promise.all([contentServer.listen(), fallbackServer.listen()]);
+
+    const podletServer = new PodletServer({ name: 'aa', content: contentUrl, fallback: fallbackUrl });
+    const podletUrl = await podletServer.listen();
+
+    const client = new Client({ name: 'podiumClient', rejectUnauthorized: false });
+    const podlet = client.register(podletUrl.options);
+
+    const responseA = await podlet.fetch();
+    t.same(responseA.content, '<p>content</p>');
+
+    // Close all services to trigger fallback
+    await Promise.all([podletServer.close(), contentServer.close(), fallbackServer.close()]);
+
+    const responseB = await podlet.fetch();
+    t.same(responseB.content, '<p>fallback</p>');
 });

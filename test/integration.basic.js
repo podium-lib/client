@@ -405,7 +405,7 @@ tap.test('integration basic - "pathname" is called with different values - shoul
     await server.close();
 });
 
-test('integration basic - multiple hosts - mainfest is on one host but content on fallbacks on different hosts', async t => {
+tap.test('integration basic - multiple hosts - mainfest is on one host but content on fallbacks on different hosts', async t => {
     const contentServer = new HttpServer();
     contentServer.request = (req, res) => {
         res.statusCode = 200;
@@ -427,18 +427,18 @@ test('integration basic - multiple hosts - mainfest is on one host but content o
 
     const client = new Client({ name: 'podiumClient' });
     const podlet = client.register(podletUrl.options);
-
-    const responseA = await podlet.fetch();
+    
+    const responseA = await podlet.fetch(new HttpIncoming({ headers }));
     t.same(responseA.content, '<p>content</p>');
 
     // Close all services to trigger fallback
     await Promise.all([podletServer.close(), contentServer.close(), fallbackServer.close()]);
 
-    const responseB = await podlet.fetch();
+    const responseB = await podlet.fetch(new HttpIncoming({ headers }));
     t.same(responseB.content, '<p>fallback</p>');
 });
 
-test('integration basic - multiple protocols - mainfest is on a http host but content on fallbacks on https hosts', async t => {
+tap.test('integration basic - multiple protocols - mainfest is on a http host but content on fallbacks on https hosts', async t => {
     const contentServer = new HttpsServer();
     contentServer.request = (req, res) => {
         res.statusCode = 200;
@@ -461,12 +461,12 @@ test('integration basic - multiple protocols - mainfest is on a http host but co
     const client = new Client({ name: 'podiumClient', rejectUnauthorized: false });
     const podlet = client.register(podletUrl.options);
 
-    const responseA = await podlet.fetch();
+    const responseA = await podlet.fetch(new HttpIncoming({ headers }));
     t.same(responseA.content, '<p>content</p>');
 
     // Close all services to trigger fallback
     await Promise.all([podletServer.close(), contentServer.close(), fallbackServer.close()]);
 
-    const responseB = await podlet.fetch();
+    const responseB = await podlet.fetch(new HttpIncoming({ headers }));
     t.same(responseB.content, '<p>fallback</p>');
 });

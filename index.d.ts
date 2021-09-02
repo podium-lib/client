@@ -8,6 +8,7 @@ declare interface PodiumClientResourceOptions {
 }
 
 declare interface PodiumClientResponse {
+    readonly redirect: PodiumRedirect;
     readonly content: string;
     readonly headers: IncomingHttpHeaders;
     readonly js: Array<AssetJs>;
@@ -41,6 +42,11 @@ declare interface RegisterOptions {
     redirectable?: boolean;
     resolveJs?: boolean;
     resolveCss?: boolean;
+}
+
+declare interface PodiumRedirect {
+    readonly statusCode: number;
+    readonly location: string;
 }
 
 export default class PodiumClient {

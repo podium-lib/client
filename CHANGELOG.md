@@ -1,3 +1,10 @@
+## [4.5.5](https://github.com/podium-lib/client/compare/v4.5.4...v4.5.5) (2021-10-27)
+
+
+### Bug Fixes
+
+* add 'redirect' to 'PodiumClientResponse' interface ([#235](https://github.com/podium-lib/client/issues/235)) ([6670007](https://github.com/podium-lib/client/commit/667000727187402d112c1087a4356492489a4003))
+
 ## [4.5.4](https://github.com/podium-lib/client/compare/v4.5.3...v4.5.4) (2021-09-13)
 
 

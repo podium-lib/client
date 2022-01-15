@@ -1,3 +1,10 @@
+## [4.5.17](https://github.com/podium-lib/client/compare/v4.5.16...v4.5.17) (2022-01-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.1.30 ([1a1c18e](https://github.com/podium-lib/client/commit/1a1c18e63a7a8130fcd450ffd9a03c11967d7416))
+
 ## [4.5.16](https://github.com/podium-lib/client/compare/v4.5.15...v4.5.16) (2022-01-02)
 
 

@@ -67,6 +67,6 @@
     "is-stream": "2.0.1",
     "prettier": "2.3.2",
     "semantic-release": "18.0.1",
-    "tap": "15.0.9"
+    "tap": "15.1.6"
   }
 }

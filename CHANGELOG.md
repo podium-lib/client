@@ -1,3 +1,50 @@
+# [5.0.0-next.9](https://github.com/podium-lib/client/compare/v5.0.0-next.8...v5.0.0-next.9) (2022-05-09)
+
+
+### Bug Fixes
+
+* add 'redirect' to 'PodiumClientResponse' interface ([#235](https://github.com/podium-lib/client/issues/235)) ([6670007](https://github.com/podium-lib/client/commit/667000727187402d112c1087a4356492489a4003))
+* **deps:** update dependency @podium/schemas to v4.1.17 ([6d249ed](https://github.com/podium-lib/client/commit/6d249ed8c3718642e78e71be6022feb113635ba8))
+* **deps:** update dependency @podium/schemas to v4.1.18 ([36ca4a1](https://github.com/podium-lib/client/commit/36ca4a1425e227e30fd487a7e60908075628c32b))
+* **deps:** update dependency @podium/schemas to v4.1.19 ([8a7f288](https://github.com/podium-lib/client/commit/8a7f288a57ce2d09d4cace08b836ef6c934a802c))
+* **deps:** update dependency @podium/schemas to v4.1.20 ([b9c7ef4](https://github.com/podium-lib/client/commit/b9c7ef4665eb7aa852e9e3576bf89a0ee45c5fee))
+* **deps:** update dependency @podium/schemas to v4.1.21 ([5a12fbd](https://github.com/podium-lib/client/commit/5a12fbdadd9a0f8ae1b4343ca33267852aa49aa0))
+* **deps:** update dependency @podium/schemas to v4.1.22 ([a6ca70a](https://github.com/podium-lib/client/commit/a6ca70a87fdd264cfbefb0f5ecbe60c871606b00))
+* **deps:** update dependency @podium/schemas to v4.1.23 ([0ad1042](https://github.com/podium-lib/client/commit/0ad104279a9a299737db5bbc5c2e65e43bacbc03))
+* **deps:** update dependency @podium/schemas to v4.1.24 ([4cbad88](https://github.com/podium-lib/client/commit/4cbad88fc1a6b79627d0901e877fa9422292161d))
+* **deps:** update dependency @podium/schemas to v4.1.25 ([8a8caa1](https://github.com/podium-lib/client/commit/8a8caa1c114c49b48a91383d45a75eb157e30140))
+* **deps:** update dependency @podium/schemas to v4.1.26 ([a11d701](https://github.com/podium-lib/client/commit/a11d7019f9faeba1327af6df1b8377ae464c71b2))
+* **deps:** update dependency @podium/schemas to v4.1.27 ([9b1d8d7](https://github.com/podium-lib/client/commit/9b1d8d711b435af1d517dc5d8e924d257cef529b))
+* **deps:** update dependency @podium/schemas to v4.1.28 ([36e5398](https://github.com/podium-lib/client/commit/36e539822af10998a16c332b1303e1c8919f0ab3))
+* **deps:** update dependency @podium/schemas to v4.1.29 ([7664934](https://github.com/podium-lib/client/commit/7664934071f7244a6c0213ea6c0a64153c435ed9))
+* **deps:** update dependency @podium/schemas to v4.1.30 ([1a1c18e](https://github.com/podium-lib/client/commit/1a1c18e63a7a8130fcd450ffd9a03c11967d7416))
+* **deps:** update dependency @podium/schemas to v4.1.31 ([563ebb7](https://github.com/podium-lib/client/commit/563ebb7c731f962250b56ba75d85689ebd92241e))
+* **deps:** update dependency @podium/schemas to v4.1.32 ([fc13291](https://github.com/podium-lib/client/commit/fc13291ca3b6366d878bdd6bfdf10406dff11e74))
+* **deps:** update dependency @podium/utils to v4.4.18 ([0448d3e](https://github.com/podium-lib/client/commit/0448d3ef39bfef8715b4e66ef8dc41a9634cd4cb))
+* **deps:** update dependency @podium/utils to v4.4.19 ([e0c2c34](https://github.com/podium-lib/client/commit/e0c2c349fbf4d2db4efe060c0b883b07d6f0bcd8))
+* **deps:** update dependency @podium/utils to v4.4.20 ([6b9b3f6](https://github.com/podium-lib/client/commit/6b9b3f630d521c189dca3b0acaecc46afe995036))
+* **deps:** update dependency @podium/utils to v4.4.21 ([c007b67](https://github.com/podium-lib/client/commit/c007b67d118f3b88a8f91b915173dadb2b9026d0))
+* **deps:** update dependency @podium/utils to v4.4.22 ([f65fbd0](https://github.com/podium-lib/client/commit/f65fbd00f2fe8256cc6290193dabd346907a1bda))
+* **deps:** update dependency @podium/utils to v4.4.23 ([81200ea](https://github.com/podium-lib/client/commit/81200eabf600006f5c208e984acb4b81b28a725e))
+* **deps:** update dependency @podium/utils to v4.4.24 ([747e73a](https://github.com/podium-lib/client/commit/747e73a7e737734b28520546bd6d449ab05497c8))
+* **deps:** update dependency @podium/utils to v4.4.25 ([8e82542](https://github.com/podium-lib/client/commit/8e8254212ee69a01ba5b35c39aca2a2f558491b9))
+* **deps:** update dependency @podium/utils to v4.4.26 ([9487380](https://github.com/podium-lib/client/commit/948738052a9d34294d52a0651c46b01043fa7852))
+* **deps:** update dependency @podium/utils to v4.4.27 ([556a158](https://github.com/podium-lib/client/commit/556a158d1a341cca6f5e550de5882719b5169ac0))
+* **deps:** update dependency @podium/utils to v4.4.28 ([581bdc6](https://github.com/podium-lib/client/commit/581bdc667d09d2b71e899691109a88b39b2b6847))
+* **deps:** update dependency @podium/utils to v4.4.29 ([f33f1d9](https://github.com/podium-lib/client/commit/f33f1d93c33c7984b413b4781663a80c5dc52237))
+* **deps:** update dependency @podium/utils to v4.4.30 ([954b607](https://github.com/podium-lib/client/commit/954b60788ca1d5677b143a473058e92c7ffcfef1))
+* **deps:** update dependency @podium/utils to v4.4.31 ([0afdb26](https://github.com/podium-lib/client/commit/0afdb2648742e78b25e72bd46b6d345675574993))
+* **deps:** update dependency @podium/utils to v4.4.32 ([798ed3a](https://github.com/podium-lib/client/commit/798ed3a5a89ccc046240f61f7bb85cc21045d0cf))
+* **deps:** update dependency @podium/utils to v4.4.33 ([1136b6f](https://github.com/podium-lib/client/commit/1136b6f76d28229746f91b2fb1d44945c469dfd4))
+* **deps:** update dependency @podium/utils to v4.4.34 ([81967fc](https://github.com/podium-lib/client/commit/81967fce15722ccfaab1ea64a6da475a319c5ab3))
+* **deps:** update dependency @podium/utils to v4.4.35 ([9ba9720](https://github.com/podium-lib/client/commit/9ba9720698f1ce8548e8f76c07636a9f1ad44ac1))
+* **deps:** update dependency @podium/utils to v4.4.36 ([6ca8bee](https://github.com/podium-lib/client/commit/6ca8bee3a3e49cfc10b55116ea8dd359ac3d2ebc))
+
+
+### Features
+
+* Support mixed protocols ([#228](https://github.com/podium-lib/client/issues/228)) ([f1e42fe](https://github.com/podium-lib/client/commit/f1e42feb298e755b1274e5cf79cf77243457c538))
+
 # [5.0.0-next.8](https://github.com/podium-lib/client/compare/v5.0.0-next.7...v5.0.0-next.8) (2021-05-17)
 ## [4.5.22](https://github.com/podium-lib/client/compare/v4.5.21...v4.5.22) (2022-03-23)
 

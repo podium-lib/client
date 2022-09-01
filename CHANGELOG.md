@@ -1,3 +1,10 @@
+## [4.5.23](https://github.com/podium-lib/client/compare/v4.5.22...v4.5.23) (2022-09-01)
+
+
+### Bug Fixes
+
+* Lower log level when throwable is true ([#291](https://github.com/podium-lib/client/issues/291)) ([c0d779b](https://github.com/podium-lib/client/commit/c0d779b3e22b671e5f7c6496c504b38cd9da5125))
+
 ## [4.5.22](https://github.com/podium-lib/client/compare/v4.5.21...v4.5.22) (2022-03-23)
 
 

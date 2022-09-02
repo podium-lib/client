@@ -43,14 +43,15 @@
     "http-cache-semantics": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",
     "request": "^2.88.0",
-    "ttl-mem-cache": "4.1.0"
+    "ttl-mem-cache": "4.1.0",
+    "undici": "^5.10.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "7.17.0",
     "@podium/test-utils": "2.5.2",
     "@semantic-release/changelog": "6.0.1",
     "@semantic-release/git": "10.0.1",
     "@sinonjs/fake-timers": "9.1.2",
-    "@babel/eslint-parser": "7.17.0",
     "benchmark": "2.1.4",
     "eslint": "8.15.0",
     "eslint-config-airbnb-base": "15.0.0",

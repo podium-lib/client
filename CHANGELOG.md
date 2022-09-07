@@ -1,3 +1,9 @@
+# [5.0.0-next.10](https://github.com/podium-lib/client/compare/v5.0.0-next.9...v5.0.0-next.10) (2022-09-07)
+
+
+### Bug Fixes
+
+* Lower log level when throwable is true ([#291](https://github.com/podium-lib/client/issues/291)) ([c0d779b](https://github.com/podium-lib/client/commit/c0d779b3e22b671e5f7c6496c504b38cd9da5125))
 
 # [5.0.0-next.9](https://github.com/podium-lib/client/compare/v5.0.0-next.8...v5.0.0-next.9) (2022-05-09)
 ## [4.5.23](https://github.com/podium-lib/client/compare/v4.5.22...v4.5.23) (2022-09-01)

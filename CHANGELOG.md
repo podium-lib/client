@@ -1,4 +1,6 @@
+
 # [5.0.0-next.9](https://github.com/podium-lib/client/compare/v5.0.0-next.8...v5.0.0-next.9) (2022-05-09)
+## [4.5.23](https://github.com/podium-lib/client/compare/v4.5.22...v4.5.23) (2022-09-01)
 
 
 ### Bug Fixes
@@ -46,6 +48,9 @@
 * Support mixed protocols ([#228](https://github.com/podium-lib/client/issues/228)) ([f1e42fe](https://github.com/podium-lib/client/commit/f1e42feb298e755b1274e5cf79cf77243457c538))
 
 # [5.0.0-next.8](https://github.com/podium-lib/client/compare/v5.0.0-next.7...v5.0.0-next.8) (2021-05-17)
+
+* Lower log level when throwable is true ([#291](https://github.com/podium-lib/client/issues/291)) ([c0d779b](https://github.com/podium-lib/client/commit/c0d779b3e22b671e5f7c6496c504b38cd9da5125))
+
 ## [4.5.22](https://github.com/podium-lib/client/compare/v4.5.21...v4.5.22) (2022-03-23)
 
 

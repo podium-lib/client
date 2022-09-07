@@ -440,7 +440,7 @@ tap.test('integration basic - multiple hosts - mainfest is on one host but conte
 
 tap.test('integration basic - multiple protocols - mainfest is on a http host but content on fallbacks on https hosts', async t => {
     // Undici rejects self signed SSL certs so we need to disable that for tests
-    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
     const contentServer = new HttpsServer();
     contentServer.request = (req, res) => {
         res.statusCode = 200;

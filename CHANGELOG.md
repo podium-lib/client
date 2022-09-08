@@ -1,3 +1,10 @@
+# [5.0.0-next.11](https://github.com/podium-lib/client/compare/v5.0.0-next.10...v5.0.0-next.11) (2022-09-08)
+
+
+### Bug Fixes
+
+* Fix inspect method on response object ([#294](https://github.com/podium-lib/client/issues/294)) ([94d1485](https://github.com/podium-lib/client/commit/94d14856ca2280888aa50e9cb7e7f782cd49666a))
+
 # [5.0.0-next.10](https://github.com/podium-lib/client/compare/v5.0.0-next.9...v5.0.0-next.10) (2022-09-07)
 
 

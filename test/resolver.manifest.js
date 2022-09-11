@@ -305,7 +305,9 @@ tap.test('resolver.manifest() - a "proxy" target in manifest is relative - shoul
     }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
-    t.equal(outgoing.manifest.proxy.foo, `${service.address}/api/foo`);
+
+    t.equal(outgoing.manifest.proxy[0].target, `${service.address}/api/foo`);
+    t.equal(outgoing.manifest.proxy[0].name, 'foo');
 
     await server.close();
     t.end();
@@ -325,7 +327,9 @@ tap.test('resolver.manifest() - a "proxy" target in manifest is absolute - shoul
     }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
-    t.equal(outgoing.manifest.proxy.bar, 'http://does.not.mather.com/api/bar');
+
+    t.equal(outgoing.manifest.proxy[0].target, 'http://does.not.mather.com/api/bar');
+    t.equal(outgoing.manifest.proxy[0].name, 'bar');
 
     await server.close();
     t.end();
@@ -346,8 +350,11 @@ tap.test('resolver.manifest() - "proxy" targets in manifest is both absolute and
     }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
-    t.equal(outgoing.manifest.proxy.bar, 'http://does.not.mather.com/api/bar');
-    t.equal(outgoing.manifest.proxy.foo, `${service.address}/api/foo`);
+
+    t.equal(outgoing.manifest.proxy[0].target, 'http://does.not.mather.com/api/bar');
+    t.equal(outgoing.manifest.proxy[0].name, 'bar');
+    t.equal(outgoing.manifest.proxy[1].target, `${service.address}/api/foo`);
+    t.equal(outgoing.manifest.proxy[1].name, 'foo');
 
     await server.close();
     t.end();

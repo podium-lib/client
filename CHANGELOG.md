@@ -1,3 +1,10 @@
+# [5.0.0-next.12](https://github.com/podium-lib/client/compare/v5.0.0-next.11...v5.0.0-next.12) (2022-09-20)
+
+
+### Features
+
+* replace request with undici for http requests ([31163db](https://github.com/podium-lib/client/commit/31163db538d87cb797135d7febcc6cc244eac17a))
+
 # [5.0.0-next.11](https://github.com/podium-lib/client/compare/v5.0.0-next.10...v5.0.0-next.11) (2022-09-08)
 
 

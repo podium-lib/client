@@ -106,7 +106,8 @@ tap.test('resource.fetch() - returns an object with content, headers, js and css
 
     t.equal(result.content, '<p>content component</p>');
     t.same(result.headers, {
-        connection: 'close',
+        connection: 'keep-alive',
+        'keep-alive': 'timeout=5',
         'content-length': '24',
         'content-type': 'text/html; charset=utf-8',
         date: '<replaced>',
@@ -139,7 +140,8 @@ tap.test('resource.fetch() - returns empty array for js and css when no assets a
 
     t.equal(result.content, '<p>content component</p>');
     t.same(result.headers, {
-        connection: 'close',
+        connection: 'keep-alive',
+        'keep-alive': 'timeout=5',
         'content-length': '24',
         'content-type': 'text/html; charset=utf-8',
         date: '<replaced>',
@@ -169,7 +171,8 @@ tap.test('resource.fetch() - redirectable flag - podlet responds with 302 redire
 
     t.equal(result.content, '');
     t.same(result.headers, {
-        connection: 'close',
+        connection: 'keep-alive',
+        'keep-alive': 'timeout=5',
         'content-length': '24',
         'content-type': 'text/html; charset=utf-8',
         date: '<replaced>',

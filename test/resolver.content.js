@@ -209,7 +209,7 @@ tap.test('resolver.content() - throwable:true - remote responds with http 404 - 
     t.end();
 });
 
-tap.test('resolver.content() - throwable:false - remote can not be resolved - "outgoing" should stream empty string', async t => {
+tap.test('resolver.content() - throwable:false - remote can not be resolved - "outgoing" should stream empty string', t => {
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
@@ -226,16 +226,16 @@ tap.test('resolver.content() - throwable:false - remote can not be resolved - "o
     const to = destinationBufferStream(result => {
         t.equal(result, '');
         t.ok(outgoing.success);
+        t.end();
     });
 
     outgoing.pipe(to);
 
     const content = new Content();
-    await content.resolve(outgoing);
-    t.end();
+    content.resolve(outgoing);
 });
 
-tap.test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "outgoing" should stream fallback', async t => {
+tap.test('resolver.content() - throwable:false with fallback set - remote can not be resolved - "outgoing" should stream fallback', t => {
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
@@ -253,13 +253,13 @@ tap.test('resolver.content() - throwable:false with fallback set - remote can no
     const to = destinationBufferStream(result => {
         t.equal(result, '<p>haz fallback</p>');
         t.ok(outgoing.success);
+        t.end();
     });
 
     outgoing.pipe(to);
 
     const content = new Content();
-    await content.resolve(outgoing);
-    t.end();
+    content.resolve(outgoing);
 });
 
 tap.test('resolver.content() - throwable:false - remote responds with http 500 - "outgoing" should stream empty string', async t => {

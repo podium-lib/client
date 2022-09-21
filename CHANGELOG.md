@@ -1,3 +1,10 @@
+# [5.0.0-next.13](https://github.com/podium-lib/client/compare/v5.0.0-next.12...v5.0.0-next.13) (2022-09-21)
+
+
+### Features
+
+* Support new proxy structure in manifest ([#295](https://github.com/podium-lib/client/issues/295)) ([d8aa28a](https://github.com/podium-lib/client/commit/d8aa28a59c8ab3fe66b146eecaaf487717599972))
+
 # [5.0.0-next.12](https://github.com/podium-lib/client/compare/v5.0.0-next.11...v5.0.0-next.12) (2022-09-20)
 
 

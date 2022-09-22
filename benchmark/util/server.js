@@ -31,6 +31,7 @@ http.createServer((req, res) => {
     if (u.pathname === '/manifest.json') {
         res.writeHead(200, {
             'Content-Type': 'application/json; charset=utf-8',
+            'podlet-version': '1.0.0',
         });
         res.end(
             '{ "name": "component", "version": "1.0.0", "content": "/index.html", "fallback": "/fallback.html" }',
@@ -41,6 +42,7 @@ http.createServer((req, res) => {
     if (u.pathname === '/index.html') {
         res.writeHead(200, {
             'Content-Type': 'text/html; charset=utf-8',
+            'podlet-version': '1.0.0',
         });
         res.end(`<section>Content: ${text}</section>`);
         return;
@@ -49,6 +51,7 @@ http.createServer((req, res) => {
     if (u.pathname === '/fallback.html') {
         res.writeHead(200, {
             'Content-Type': 'text/html; charset=utf-8',
+            'podlet-version': '1.0.0',
         });
         res.end(`<section>Fallback: ${text}</section>`);
         return;

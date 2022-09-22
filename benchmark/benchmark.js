@@ -4,44 +4,32 @@
 
 'use strict';
 
-const benchmark = require('benchmark');
+const Benchmark = require('benchmark');
 const Client = require("..");
 
-const suite = new benchmark.Suite();
+// Helper for wrapping async functions
+// Ref: https://github.com/bestiejs/benchmark.js/issues/176#issuecomment-812163728
+function p(fn) {
+    return {
+      defer: true,
+      async fn(deferred) {
+        await fn();
+        deferred.resolve();
+      }
+    }
+  }
 
-const add = (name, fn) => {
-    suite.add(name, fn);
-};
-
-const client = new Client();
+const client = new Client({name: 'bar'});
 const component = client.register({
     name: 'foo',
     uri: 'http://localhost:8100/manifest.json',
 });
 
-const times = 4;
-for (let i = 0; i < times; i++) {
-    add(`fetch() - Run ${i}`, {
-        defer: true,
-        fn(deferred) {
-            component
-                .fetch({})
-                .then(() => {
-                    deferred.resolve();
-                })
-                .catch(error => {
-                    console.log(error);
-                    deferred.resolve();
-                });
-        },
-    });
-}
+const suite = new Benchmark.Suite()
 
 suite
-    .on('cycle', ev => {
-        console.log(ev.target.toString());
-        if (ev.target.error) {
-            console.error(ev.target.error);
-        }
-    })
-    .run();
+  .add('.fetch()', p(async () => {
+    await component.fetch({});
+  }))
+  .on('cycle', ev => console.log(String(ev.target)))
+  .run({ delay: 0 });

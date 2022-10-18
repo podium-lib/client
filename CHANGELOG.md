@@ -1,3 +1,10 @@
+## [4.5.24](https://github.com/podium-lib/client/compare/v4.5.23...v4.5.24) (2022-10-18)
+
+
+### Bug Fixes
+
+* Set log level for network errors to debug when throwable ([#298](https://github.com/podium-lib/client/issues/298)) ([3ba5d67](https://github.com/podium-lib/client/commit/3ba5d67192f417b4627d9f411a1fe4ffd2c98775))
+
 ## [4.5.23](https://github.com/podium-lib/client/compare/v4.5.22...v4.5.23) (2022-09-01)
 
 

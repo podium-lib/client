@@ -59,5 +59,5 @@ export default class PodiumClient {
 
     register(options: RegisterOptions): PodiumClientResource;
 
-    refreshManifests(): void;
+    refreshManifests(): Promise<void>;
 }

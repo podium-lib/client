@@ -1,3 +1,10 @@
+## [4.5.30](https://github.com/podium-lib/client/compare/v4.5.29...v4.5.30) (2023-02-15)
+
+
+### Bug Fixes
+
+* return correct type in typescript definition. ([#311](https://github.com/podium-lib/client/issues/311)) ([e06f610](https://github.com/podium-lib/client/commit/e06f6103413b1c87761ad5cfde5fbb0488dd1099))
+
 ## [4.5.29](https://github.com/podium-lib/client/compare/v4.5.28...v4.5.29) (2023-01-04)
 
 

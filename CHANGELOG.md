@@ -1,3 +1,10 @@
+## [4.5.31](https://github.com/podium-lib/client/compare/v4.5.30...v4.5.31) (2023-05-11)
+
+
+### Bug Fixes
+
+* Replace .abort() with .destroy() ([a41f44a](https://github.com/podium-lib/client/commit/a41f44a6c4aff7aec8201d05ce220dbdbb648cfd))
+
 ## [4.5.30](https://github.com/podium-lib/client/compare/v4.5.29...v4.5.30) (2023-02-15)
 
 

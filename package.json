@@ -21,12 +21,12 @@
   "files": [
     "package.json",
     "CHANGELOG.md",
-    "index.d.ts",
+    "client.d.ts",
     "README.md",
     "LICENSE",
     "lib"
   ],
-  "types": "index.d.ts",
+  "types": "client.d.ts",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

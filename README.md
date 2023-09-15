@@ -31,12 +31,12 @@ const component = client.register({
 });
 
 const stream = component.stream(new HttpIncoming());
-stream.once('beforeStream', res => {
+stream.once('beforeStream', (res) => {
     console.log(res.headers);
     console.log(res.css);
     console.log(res.js);
 });
-stream.on('error', error => {
+stream.on('error', (error) => {
     console.log(error);
 });
 stream.pipe(process.stdout);
@@ -58,13 +58,13 @@ const component = client.register({
 
 component
     .fetch(new HttpIncoming())
-    .then(res => {
+    .then((res) => {
         console.log(res.content);
         console.log(res.headers);
         console.log(res.css);
         console.log(res.js);
     })
-    .catch(error => {
+    .catch((error) => {
         console.log(error);
     });
 ```
@@ -299,7 +299,7 @@ When there is a change in state. See the section
 
 ```js
 const client = new Client();
-client.on('state', state => {
+client.on('state', (state) => {
     console.log(state);
 });
 
@@ -330,7 +330,7 @@ Emits the new manifest.
 
 ```js
 const client = new Client();
-client.on('change', manifest => {
+client.on('change', (manifest) => {
     console.log(manifest);
 });
 
@@ -421,7 +421,7 @@ otherwise `css` will be an empty string.
 
 ```js
 const stream = component.stream();
-stream.once('beforeStream', data => {
+stream.once('beforeStream', (data) => {
     console.log(data.headers);
     console.log(data.css);
     console.log(data.js);
@@ -492,10 +492,10 @@ const bar = client.register({
 });
 
 Promise.all([foo.fetch(), bar.fetch()])
-    .then(res => {
+    .then((res) => {
         console.log(res.content);
     })
-    .catch(error => {
+    .catch((error) => {
         console.log(error);
     });
 ```

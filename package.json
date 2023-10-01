@@ -63,9 +63,16 @@
     "express": "4.18.2",
     "get-stream": "8.0.1",
     "http-proxy": "1.18.1",
+<<<<<<< HEAD
     "is-stream": "3.0.0",
     "prettier": "3.1.0",
     "semantic-release": "22.0.8",
     "tap": "18.6.1"
+=======
+    "is-stream": "2.0.1",
+    "prettier": "2.8.8",
+    "semantic-release": "19.0.3",
+    "tap": "16.3.9"
+>>>>>>> 87bcad3 (chore(deps): update dependency semantic-release to v19 [security])
   }
 }

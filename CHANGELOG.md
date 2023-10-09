@@ -1,3 +1,10 @@
+## [4.5.34](https://github.com/podium-lib/client/compare/v4.5.33...v4.5.34) (2023-10-09)
+
+
+### Bug Fixes
+
+* update type definitions ([d63a621](https://github.com/podium-lib/client/commit/d63a621762909e01acd6d29629c6061a757df146))
+
 ## [4.5.33](https://github.com/podium-lib/client/compare/v4.5.32...v4.5.33) (2023-09-19)
 
 

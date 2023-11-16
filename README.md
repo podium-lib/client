@@ -384,6 +384,8 @@ the content of the component. Before the stream starts flowing a `beforeStream`
 with a Response object, containing `headers`, `css` and `js` references is
 emitted.
 
+**Note:** If the podlet is unavailable, the client will not receive `headers` and therefore will not set `headers` on the response.
+
 #### incoming (required)
 
 A HttpIncoming object. See https://github.com/podium-lib/utils/blob/master/lib/http-incoming.js
@@ -427,6 +429,26 @@ stream.once('beforeStream', (data) => {
     console.log(data.js);
 });
 ```
+
+**Note:** If the podlet is unavailable, the client will not receive `headers` and therefore `data.headers` will be undefined.
+
+### Asset Scope
+
+Both the .fetch() method and the .stream() method give you access to podlet asset objects and these CSS and JS asset objects will be filtered if the asset objects contain a `scope` property and that `scope` property matches the current response type (either content or fallback).
+
+For example, if the podlet manifest contains a JavaScript asset definition of the form:
+```
+{
+	js: [{ value: "https://assets.com/path/to/file.js", scope: "content" }],
+}
+```
+And the client performs a fetch like so:
+```js
+const result = await component.fetch();
+```
+Then, if the podlet successfully responds from its content route, the `result.js` property will contain the asset defined above. If, however, the podlet's content route errors and the client is forced to use the podlet's fallback content, then `result.js` property will be an empty array.
+
+Possible `scope` values are `content`, `fallback` and `all`. For backwards compatibility reasons, when assets do not provide a `scope` property, they will always be included in both `content` and `fallback` responses.
 
 ## Controlling caching of the manifest
 

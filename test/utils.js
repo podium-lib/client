@@ -1,6 +1,7 @@
 'use strict';
 
 const { test } = require('tap');
+const { AssetJs } = require('@podium/utils');
 const utils = require('../lib/utils');
 
 /**
@@ -98,5 +99,35 @@ test('.hasManifestChange() - old value is not defined, new value is defined - sh
 test('.hasManifestChange() - both old and new value is not defined - should return false', t => {
     const item = {};
     t.notOk(utils.hasManifestChange(item));
+    t.end();
+});
+
+test('.filterAssets() - scope content - filters out fallback scoped scripts', t => {
+    const assets = utils.filterAssets("content", [
+      new AssetJs({ value: "/foo", scope: "content" }),
+      new AssetJs({ value: "/foo", scope: "all" }),
+      new AssetJs({ value: "/foo", scope: "fallback" }),
+      new AssetJs({ value: "/foo" }),
+    ]);
+
+    t.equal(assets.length, 3);
+    t.equal(assets[0].scope, "content");
+    t.equal(assets[1].scope, "all");
+    t.equal(assets[2].scope, undefined);
+    t.end();
+});
+
+test('.filterAssets() - scope fallback - filters out content scoped scripts', t => {
+    const assets = utils.filterAssets("fallback", [
+      new AssetJs({ value: "/foo", scope: "content" }),
+      new AssetJs({ value: "/foo", scope: "all" }),
+      new AssetJs({ value: "/foo", scope: "fallback" }),
+      new AssetJs({ value: "/foo" }),
+    ]);
+
+    t.equal(assets.length, 3);
+    t.equal(assets[0].scope, "all");
+    t.equal(assets[1].scope, "fallback");
+    t.equal(assets[2].scope, undefined);
     t.end();
 });

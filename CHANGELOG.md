@@ -1,3 +1,10 @@
+# [4.6.0](https://github.com/podium-lib/client/compare/v4.5.35...v4.6.0) (2023-11-16)
+
+
+### Features
+
+* use manifest asset scope field to filter assets ([fd83d64](https://github.com/podium-lib/client/commit/fd83d6486f9454f4fef2cdbcf3a05b86c81205c5))
+
 ## [4.5.35](https://github.com/podium-lib/client/compare/v4.5.34...v4.5.35) (2023-10-19)
 
 

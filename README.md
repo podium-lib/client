@@ -377,12 +377,31 @@ console.log(result.js);
 console.log(result.css);
 ```
 
+##### CSS and JS Assets
+
+CSS and JS asset objects may be filtered if the asset objects contain a `scope` property and that `scope` property matches the current response type (either content or fallback).
+For example, if the podlet manifest contains a JavaScript asset definition of the form:
+```
+{
+	js: [{ value: "https://assets.com/path/to/file.js", scope: "content" }],
+}
+```
+And the client performs a fetch like so:
+```js
+const result = await component.fetch();
+```
+Then if the podlet successfully responds from its content route then `result.js` will contain the asset defined above. If, however, the podlet's content route errors and the client is forced to use the podlet's fallback content, then `result.js` will be an empty array.
+
+Possible `scope` values are `content`, `fallback` and `all`. For backwards compatibility reasons, when assets do not provide a `scope` property, they will always be included in both `content` and `fallback` responses.
+
 ### .stream(incoming, options)
 
 Streams the content of the component. Returns a `ReadableStream` which streams
 the content of the component. Before the stream starts flowing a `beforeStream`
 with a Response object, containing `headers`, `css` and `js` references is
 emitted.
+
+**Note:** If the podlet is unavailable, the client will not receive `headers` and therefore will not set `headers` on the response.
 
 #### incoming (required)
 
@@ -427,6 +446,26 @@ stream.once('beforeStream', (data) => {
     console.log(data.js);
 });
 ```
+
+**Note:** If the podlet is unavailable, the client will not receive `headers` and therefore `data.headers` will be undefined.
+
+##### CSS and JS Assets
+
+CSS and JS asset objects may be filtered if the asset objects contain a `scope` property and that `scope` property matches the current response type (either content or fallback).
+For example, if the podlet manifest contains a JavaScript asset definition of the form:
+```
+{
+	js: [{ value: "https://assets.com/path/to/file.js", scope: "content" }],
+}
+```
+And the client uses the stream method like so:
+```js
+const stream = component.stream();
+stream.once('beforeStream', (data) => { ... });
+```
+Then if the podlet successfully responds from its content route then `data.js` will contain the asset defined above. If, however, the podlet's content route errors and the client is forced to use the podlet's fallback content, then `data.js` will be an empty array.
+
+Possible `scope` values are `content`, `fallback` and `all`. For backwards compatibility reasons, when assets do not provide a `scope` property, they will always be included in both `content` and `fallback` responses.
 
 ## Controlling caching of the manifest
 

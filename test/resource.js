@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable import/order */
 
 'use strict';
@@ -333,6 +334,7 @@ test('resource.stream() - should emit beforeStream event with filtered assets', 
         t.equal(css[2].scope, undefined);
     });
 
+    await getStream(strm);
     t.end();
 });
 

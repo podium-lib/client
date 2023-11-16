@@ -1,8 +1,8 @@
 'use strict';
 
 const { test } = require('tap');
-const utils = require('../lib/utils');
 const { AssetJs } = require('@podium/utils');
+const utils = require('../lib/utils');
 
 /**
  * .isHeaderDefined()

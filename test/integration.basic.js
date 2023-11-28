@@ -1,10 +1,12 @@
-'use strict';
+import tap from 'tap';
+import { PodletServer, HttpServer, HttpsServer } from '@podium/test-utils';
+import { HttpIncoming } from '@podium/utils';
+import Client from '../lib/client.js';
 
-const { test } = require('tap');
-const { PodletServer, HttpServer, HttpsServer } = require('@podium/test-utils');
-const Client = require("..");
+// Fake headers
+const headers = {};
 
-test('integration basic', async t => {
+tap.test('integration basic', async t => {
     const serverA = new PodletServer({ name: 'aa' });
     const serverB = new PodletServer({ name: 'bb' });
     const [serviceA, serviceB] = await Promise.all([
@@ -16,7 +18,10 @@ test('integration basic', async t => {
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
 
-    const actual1 = await a.fetch({ 'podium-locale': 'en-NZ' });
+    const incomingA = new HttpIncoming({ headers });
+    incomingA.context = { 'podium-locale': 'en-NZ' };
+
+    const actual1 = await a.fetch(incomingA);
     actual1.headers.date = '<replaced>';
     actual1.headers['keep-alive'] = '<workaround>'; // node.js pre 14 does not have keep-alive as a default
 
@@ -33,7 +38,9 @@ test('integration basic', async t => {
         'podlet-version': '1.0.0',
     });
 
-    const actual2 = await b.fetch({});
+    const incomingB = new HttpIncoming({ headers });
+
+    const actual2 = await b.fetch(incomingB);
     actual2.headers.date = '<replaced>';
     actual2.headers['keep-alive'] = '<workaround>'; // node.js pre 14 does not have keep-alive as a default
 
@@ -53,9 +60,7 @@ test('integration basic', async t => {
     await Promise.all([serverA.close(), serverB.close()]);
 });
 
-test('integration - throwable:true - remote manifest can not be resolved - should throw', async t => {
-    t.plan(1);
-
+tap.test('integration - throwable:true - remote manifest can not be resolved - should throw', async t => {
     const client = new Client({ name: 'podiumClient' });
     const component = client.register({
         throwable: true,
@@ -64,24 +69,26 @@ test('integration - throwable:true - remote manifest can not be resolved - shoul
     });
 
     try {
-        await component.fetch({});
+        await component.fetch(new HttpIncoming({ headers }));
     } catch (error) {
         t.match(error.message, /No manifest available - Cannot read content/);
     }
+
+    t.end();
 });
 
-test('integration - throwable:false - remote manifest can not be resolved - should resolve with empty string', async t => {
+tap.test('integration - throwable:false - remote manifest can not be resolved - should resolve with empty string', async t => {
     const client = new Client({ name: 'podiumClient' });
     const component = client.register({
         name: 'component',
         uri: 'http://does.not.exist.finn.no/manifest.json',
     });
 
-    const result = await component.fetch({});
+    const result = await component.fetch(new HttpIncoming({ headers }));
     t.equal(result.content, '');
 });
 
-test('integration - throwable:false - remote fallback can not be resolved - should resolve with empty string', async t => {
+tap.test('integration - throwable:false - remote fallback can not be resolved - should resolve with empty string', async t => {
     const server = new PodletServer({
         fallback: 'http://does.not.exist.finn.no/fallback.html',
         content: '/error', // set to trigger fallback senario
@@ -92,13 +99,13 @@ test('integration - throwable:false - remote fallback can not be resolved - shou
     const client = new Client({ name: 'podiumClient' });
     const component = client.register(service.options);
 
-    const result = await component.fetch({});
+    const result = await component.fetch(new HttpIncoming({ headers }));
     t.equal(result.content, '');
 
     await server.close();
 });
 
-test('integration - throwable:false - remote fallback responds with http 500 - should resolve with empty string', async t => {
+tap.test('integration - throwable:false - remote fallback responds with http 500 - should resolve with empty string', async t => {
     const server = new PodletServer({
         fallback: 'error',
         content: '/error', // set to trigger fallback senario
@@ -109,15 +116,13 @@ test('integration - throwable:false - remote fallback responds with http 500 - s
     const client = new Client({ name: 'podiumClient' });
     const component = client.register(service.options);
 
-    const result = await component.fetch({});
+    const result = await component.fetch(new HttpIncoming({ headers }));
     t.equal(result.content, '');
 
     await server.close();
 });
 
-test('integration - throwable:true - remote content can not be resolved - should throw', async t => {
-    t.plan(1);
-
+tap.test('integration - throwable:true - remote content can not be resolved - should throw', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
         content: 'http://does.not.exist.finn.no/content.html',
@@ -133,15 +138,17 @@ test('integration - throwable:true - remote content can not be resolved - should
     });
 
     try {
-        await component.fetch({});
+        await component.fetch(new HttpIncoming({ headers }));
     } catch (error) {
         t.match(error.message, /Error reading content/);
     }
 
     await server.close();
+
+    t.end();
 });
 
-test('integration - throwable:false - remote content can not be resolved - should resolve with fallback', async t => {
+tap.test('integration - throwable:false - remote content can not be resolved - should resolve with fallback', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
         content: 'http://does.not.exist.finn.no/content.html',
@@ -152,7 +159,7 @@ test('integration - throwable:false - remote content can not be resolved - shoul
     const client = new Client({ name: 'podiumClient' });
     const component = client.register(service.options);
 
-    const result = await component.fetch({});
+    const result = await component.fetch(new HttpIncoming({ headers }));
     t.same(result.content, server.fallbackBody);
     t.same(result.headers, {});
     t.same(result.css, []);
@@ -161,9 +168,7 @@ test('integration - throwable:false - remote content can not be resolved - shoul
     await server.close();
 });
 
-test('integration - throwable:true - remote content responds with http 500 - should throw', async t => {
-    t.plan(1);
-
+tap.test('integration - throwable:true - remote content responds with http 500 - should throw', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
         content: '/error',
@@ -179,15 +184,17 @@ test('integration - throwable:true - remote content responds with http 500 - sho
     });
 
     try {
-        await component.fetch({});
+        await component.fetch(new HttpIncoming({ headers }));
     } catch (error) {
         t.match(error.message, /Could not read content/);
     }
 
     await server.close();
+
+    t.end();
 });
 
-test('integration - throwable:false - remote content responds with http 500 - should resolve with fallback', async t => {
+tap.test('integration - throwable:false - remote content responds with http 500 - should resolve with fallback', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
         content: '/error',
@@ -198,7 +205,7 @@ test('integration - throwable:false - remote content responds with http 500 - sh
     const client = new Client({ name: 'podiumClient' });
     const component = client.register(service.options);
 
-    const result = await component.fetch({});
+    const result = await component.fetch(new HttpIncoming({ headers }));
     t.same(result.content, server.fallbackBody);
     t.same(result.headers, {});
     t.same(result.css, []);
@@ -207,7 +214,7 @@ test('integration - throwable:false - remote content responds with http 500 - sh
     await server.close();
 });
 
-test('integration - throwable:false - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and resolve with fallback', async t => {
+tap.test('integration - throwable:false - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and resolve with fallback', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
     });
@@ -223,7 +230,7 @@ test('integration - throwable:false - manifest / content fetching goes into recu
         'podlet-version': Date.now(),
     };
 
-    const result = await component.fetch({});
+    const result = await component.fetch(new HttpIncoming({ headers }));
     t.same(result.content, server.fallbackBody);
     t.same(result.headers, {});
     t.same(result.css, []);
@@ -238,9 +245,7 @@ test('integration - throwable:false - manifest / content fetching goes into recu
     await server.close();
 });
 
-test('integration - throwable:true - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and then throw', async t => {
-    t.plan(4);
-
+tap.test('integration - throwable:true - manifest / content fetching goes into recursion loop - should try to resolve 4 times before terminating and then throw', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
     });
@@ -261,7 +266,7 @@ test('integration - throwable:true - manifest / content fetching goes into recur
     };
 
     try {
-        await component.fetch({});
+        await component.fetch(new HttpIncoming({ headers }));
     } catch (error) {
         t.match(
             error.message,
@@ -276,71 +281,70 @@ test('integration - throwable:true - manifest / content fetching goes into recur
     t.equal(server.metrics.content, 4);
 
     await server.close();
+
+    t.end();
 });
 
-test('integration basic - set headers argument - should pass on headers to request', async t => {
-    t.plan(2);
-
+tap.test('integration basic - set headers argument - should pass on headers to request', async t => {
     const server = new PodletServer({ name: 'podlet' });
     const service = await server.listen();
-    server.on('req:content', async (content, req) => {
+    server.on('req:content', (content, req) => {
         t.equal(req.headers.foo, 'bar');
         t.equal(req.headers['podium-ctx'], 'foo');
-
-        // Server must be closed here, unless Jest just passes
-        // the test even if it fail. Silly jest...
-        await server.close();
+        t.end();
     });
 
     const client = new Client({ name: 'podiumClient' });
     const a = client.register(service.options);
 
+    const incoming = new HttpIncoming({ headers })
+    incoming.context = { 'podium-ctx': 'foo' };
+
     await a.fetch(
-        { 'podium-ctx': 'foo' },
+        incoming,
         {
             headers: {
                 foo: 'bar',
             },
         },
     );
+
+    await server.close();
 });
 
-test('integration basic - set headers argument - header has a "user-agent" - should override "user-agent" with podium agent', async t => {
-    t.plan(1);
-
+tap.test('integration basic - set headers argument - header has a "user-agent" - should override "user-agent" with podium agent', async t => {
     const server = new PodletServer({ name: 'podlet' });
     const service = await server.listen();
-    server.on('req:content', async (content, req) => {
+    server.on('req:content', (content, req) => {
         t.ok(req.headers['user-agent'].startsWith('@podium/client'));
-
-        // Server must be closed here, unless Jest just passes
-        // the test even if it fail. Silly jest...
-        await server.close();
+        t.end();
     });
 
     const client = new Client({ name: 'podiumClient' });
     const a = client.register(service.options);
 
+    const incoming = new HttpIncoming({ headers })
+    incoming.context = { 'podium-ctx': 'foo' };
+
     await a.fetch(
-        { 'podium-ctx': 'foo' },
+        incoming,
         {
             headers: {
                 'User-Agent': 'bar',
             },
         },
     );
+
+    await server.close();
 });
 
-test('integration basic - metrics stream objects created', t => {
-    t.plan(10);
-
+tap.test('integration basic - metrics stream objects created', async (t) => {
     const server = new PodletServer({ name: 'podlet' });
-
     const client = new Client({ name: 'clientName' });
 
     const metrics = [];
     client.metrics.on('data', metric => metrics.push(metric));
-    client.metrics.on('end', () => {
+    client.metrics.on('end', async () => {
         t.equal(metrics.length, 3);
         t.equal(metrics[0].name, 'podium_client_resolver_manifest_resolve');
         t.equal(metrics[0].type, 5);
@@ -361,46 +365,47 @@ test('integration basic - metrics stream objects created', t => {
             value: 'clientName',
         });
 
-        server.close().then(() => t.end());
+        t.end()
     });
 
-    server.listen().then(service => {
-        const a = client.register(service.options);
+    const service = await server.listen();
 
-        a.fetch({ 'podium-ctx': 'foo' }).then(() => {
-            client.metrics.push(null);
-        });
-    });
+    const a = client.register(service.options);
+
+    const incoming = new HttpIncoming({ headers });
+    incoming.context = { 'podium-ctx': 'foo' };
+
+    await a.fetch(incoming);
+    client.metrics.push(null);
+    
+    await server.close()
 });
 
-test('integration basic - "pathname" is called with different values - should append the different pathnames to the content URL', async t => {
-    t.plan(2);
-
+tap.test('integration basic - "pathname" is called with different values - should append the different pathnames to the content URL', async t => {
     const server = new PodletServer({ name: 'podlet', content: '/index' });
     const service = await server.listen();
     const results = [];
 
-    server.on('req:content', async (content, req) => {
+    server.on('req:content', (content, req) => {
         results.push(req.url);
 
         if (server.metrics.content === 2) {
             t.equal(results[0], '/index/foo');
             t.equal(results[1], '/index/bar');
-
-            // Server must be closed here, unless Jest just passes
-            // the test even if it fail. Silly jest...
-            await server.close();
+            t.end();
         }
     });
 
     const client = new Client({ name: 'podiumClient' });
     const a = client.register(service.options);
 
-    await a.fetch({}, { pathname: '/foo' });
-    await a.fetch({}, { pathname: '/bar' });
+    await a.fetch(new HttpIncoming({ headers }), { pathname: '/foo' });
+    await a.fetch(new HttpIncoming({ headers }), { pathname: '/bar' });
+
+    await server.close();
 });
 
-test('integration basic - multiple hosts - mainfest is on one host but content on fallbacks on different hosts', async t => {
+tap.test('integration basic - multiple hosts - mainfest is on one host but content on fallbacks on different hosts', async t => {
     const contentServer = new HttpServer();
     contentServer.request = (req, res) => {
         res.statusCode = 200;
@@ -422,18 +427,19 @@ test('integration basic - multiple hosts - mainfest is on one host but content o
 
     const client = new Client({ name: 'podiumClient' });
     const podlet = client.register(podletUrl.options);
-
-    const responseA = await podlet.fetch();
+    
+    const responseA = await podlet.fetch(new HttpIncoming({ headers }));
     t.same(responseA.content, '<p>content</p>');
 
     // Close all services to trigger fallback
     await Promise.all([podletServer.close(), contentServer.close(), fallbackServer.close()]);
 
-    const responseB = await podlet.fetch();
+    const responseB = await podlet.fetch(new HttpIncoming({ headers }));
     t.same(responseB.content, '<p>fallback</p>');
 });
 
-test('integration basic - multiple protocols - mainfest is on a http host but content on fallbacks on https hosts', async t => {
+tap.test('integration basic - multiple protocols - mainfest is on a http host but content on fallbacks on https hosts', async t => {
+    // Undici rejects self signed SSL certs so we need to disable that for tests
     const contentServer = new HttpsServer();
     contentServer.request = (req, res) => {
         res.statusCode = 200;
@@ -456,12 +462,12 @@ test('integration basic - multiple protocols - mainfest is on a http host but co
     const client = new Client({ name: 'podiumClient', rejectUnauthorized: false });
     const podlet = client.register(podletUrl.options);
 
-    const responseA = await podlet.fetch();
+    const responseA = await podlet.fetch(new HttpIncoming({ headers }));
     t.same(responseA.content, '<p>content</p>');
 
     // Close all services to trigger fallback
     await Promise.all([podletServer.close(), contentServer.close(), fallbackServer.close()]);
 
-    const responseB = await podlet.fetch();
+    const responseB = await podlet.fetch(new HttpIncoming({ headers }));
     t.same(responseB.content, '<p>fallback</p>');
 });

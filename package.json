@@ -1,7 +1,7 @@
 {
   "name": "@podium/client",
-  "version": "4.6.1",
-  "main": "lib/client.js",
+  "version": "5.0.0-next.15",
+  "type": "module",
   "license": "MIT",
   "keywords": [
     "micro services",
@@ -24,33 +24,32 @@
     "client.d.ts",
     "README.md",
     "LICENSE",
+    "dist",
     "lib"
   ],
-  "types": "client.d.ts",
+  "main": "./lib/client.js",
+  "types": "index.d.ts",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "tap --no-cov test/*.js",
-    "lint:format": "eslint --fix .",
-    "precommit": "lint-staged"
+    "test": "tap --disable-coverage --allow-empty-coverage"
   },
   "dependencies": {
-    "@hapi/boom": "^9.0.0",
+    "@hapi/boom": "^10.0.0",
     "@metrics/client": "2.5.2",
-    "@podium/schemas": "4.2.0",
-    "@podium/utils": "4.5.1",
+    "@podium/schemas": "5.0.0",
+    "@podium/utils": "5.0.0",
     "abslog": "2.4.0",
     "http-cache-semantics": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",
-    "readable-stream": "^4.0.0",
-    "request": "^2.88.0",
-    "ttl-mem-cache": "4.1.0"
+    "ttl-mem-cache": "4.1.0",
+    "undici": "^5.10.0"
   },
   "devDependencies": {
     "@podium/test-utils": "2.5.2",
     "@semantic-release/changelog": "6.0.3",
-    "@semantic-release/commit-analyzer": "9.0.2",
     "@semantic-release/git": "10.0.1",
+    "@babel/eslint-parser": "7.23.3",
     "@semantic-release/github": "8.1.0",
     "@semantic-release/npm": "8.0.3",
     "@semantic-release/release-notes-generator": "10.0.3",
@@ -62,11 +61,11 @@
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-prettier": "5.0.1",
     "express": "4.18.2",
-    "get-stream": "6.0.1",
+    "get-stream": "8.0.1",
     "http-proxy": "1.18.1",
-    "is-stream": "2.0.1",
+    "is-stream": "3.0.0",
     "prettier": "3.1.0",
-    "semantic-release": "19.0.3",
-    "tap": "16.3.9"
+    "semantic-release": "22.0.8",
+    "tap": "18.6.1"
   }
 }

@@ -1,29 +1,26 @@
-'use strict';
-
-const { test } = require('tap');
-const { AssetJs } = require('@podium/utils');
-const utils = require('../lib/utils');
-
+import tap from 'tap';
+import { AssetJs } from '@podium/utils';
+import * as utils from '../lib/utils.js';
 /**
  * .isHeaderDefined()
  */
 
-test('.isHeaderDefined() - header exist is headers object - should return true', t => {
+tap.test('.isHeaderDefined() - header exist is headers object - should return true', t => {
     t.ok(utils.isHeaderDefined({ foo: 'bar' }, 'foo'));
     t.end();
 });
 
-test('.isHeaderDefined() - header does not exist in headers object - should return false', t => {
+tap.test('.isHeaderDefined() - header does not exist in headers object - should return false', t => {
     t.notOk(utils.isHeaderDefined({}, 'foo'));
     t.end();
 });
 
-test('.isHeaderDefined() - header exist as empty string in headers object - should return false', t => {
+tap.test('.isHeaderDefined() - header exist as empty string in headers object - should return false', t => {
     t.notOk(utils.isHeaderDefined({ foo: '' }, 'foo'));
     t.end();
 });
 
-test('.isHeaderDefined() - header exist as whitespace in headers object - should return false', t => {
+tap.test('.isHeaderDefined() - header exist as whitespace in headers object - should return false', t => {
     t.notOk(utils.isHeaderDefined({ foo: '  ' }, 'foo'));
     t.end();
 });
@@ -32,7 +29,7 @@ test('.isHeaderDefined() - header exist as whitespace in headers object - should
  * .hasManifestChange()
  */
 
-test('.hasManifestChange() - new value is same as old value - should return false', t => {
+tap.test('.hasManifestChange() - new value is same as old value - should return false', t => {
     const item = {
         oldVal: {
             version: '1.0.0',
@@ -46,7 +43,7 @@ test('.hasManifestChange() - new value is same as old value - should return fals
     t.end();
 });
 
-test('.hasManifestChange() - new value is newer then old value - should return true', t => {
+tap.test('.hasManifestChange() - new value is newer then old value - should return true', t => {
     const item = {
         oldVal: {
             version: '1.0.0',
@@ -60,7 +57,7 @@ test('.hasManifestChange() - new value is newer then old value - should return t
     t.end();
 });
 
-test('.hasManifestChange() - old value is newer then new value - should return true', t => {
+tap.test('.hasManifestChange() - old value is newer then new value - should return true', t => {
     const item = {
         oldVal: {
             version: '2.0.0',
@@ -74,7 +71,7 @@ test('.hasManifestChange() - old value is newer then new value - should return t
     t.end();
 });
 
-test('.hasManifestChange() - new value is not defined, old value is defined - should return true', t => {
+tap.test('.hasManifestChange() - new value is not defined, old value is defined - should return true', t => {
     const item = {
         oldVal: {
             version: '2.0.0',
@@ -85,7 +82,7 @@ test('.hasManifestChange() - new value is not defined, old value is defined - sh
     t.end();
 });
 
-test('.hasManifestChange() - old value is not defined, new value is defined - should return true', t => {
+tap.test('.hasManifestChange() - old value is not defined, new value is defined - should return true', t => {
     const item = {
         newVal: {
             version: '2.0.0',
@@ -96,13 +93,13 @@ test('.hasManifestChange() - old value is not defined, new value is defined - sh
     t.end();
 });
 
-test('.hasManifestChange() - both old and new value is not defined - should return false', t => {
+tap.test('.hasManifestChange() - both old and new value is not defined - should return false', t => {
     const item = {};
     t.notOk(utils.hasManifestChange(item));
     t.end();
 });
 
-test('.filterAssets() - scope content - filters out fallback scoped scripts', t => {
+tap.test('.filterAssets() - scope content - filters out fallback scoped scripts', t => {
     const assets = utils.filterAssets("content", [
       new AssetJs({ value: "/foo", scope: "content" }),
       new AssetJs({ value: "/foo", scope: "all" }),
@@ -117,7 +114,7 @@ test('.filterAssets() - scope content - filters out fallback scoped scripts', t 
     t.end();
 });
 
-test('.filterAssets() - scope fallback - filters out content scoped scripts', t => {
+tap.test('.filterAssets() - scope fallback - filters out content scoped scripts', t => {
     const assets = utils.filterAssets("fallback", [
       new AssetJs({ value: "/foo", scope: "content" }),
       new AssetJs({ value: "/foo", scope: "all" }),

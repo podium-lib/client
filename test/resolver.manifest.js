@@ -1,13 +1,16 @@
 /* eslint-disable import/order */
 
-'use strict';
+import tap from 'tap';
+import { PodletServer } from '@podium/test-utils';
+import { HttpIncoming } from '@podium/utils';
+import HttpOutgoing from '../lib/http-outgoing.js';
+import Manifest from '../lib/resolver.manifest.js';
+import Client from '../lib/client.js';
+import lolex from '@sinonjs/fake-timers';
 
-const { test } = require('tap');
-const HttpOutgoing = require('../lib/http-outgoing');
-const Manifest = require('../lib/resolver.manifest');
-const Client = require("..");
-const { PodletServer } = require('@podium/test-utils');
-const lolex = require('@sinonjs/fake-timers');
+// Fake headers
+const headers = {};
+
 
 /**
  * NOTE I:
@@ -16,7 +19,7 @@ const lolex = require('@sinonjs/fake-timers');
  * check if cache time are within a range.
  */
 
-test('resolver.manifest() - object tag - should be PodletClientManifestResolver', t => {
+tap.test('resolver.manifest() - object tag - should be PodletClientManifestResolver', t => {
     const manifest = new Manifest();
     t.equal(
         Object.prototype.toString.call(manifest),
@@ -25,11 +28,11 @@ test('resolver.manifest() - object tag - should be PodletClientManifestResolver'
     t.end();
 });
 
-test('resolver.manifest() - "outgoing.manifest" holds a manifest - should resolve with same manifest', async t => {
+tap.test('resolver.manifest() - "outgoing.manifest" holds a manifest - should resolve with same manifest', async t => {
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.mather.com',
-    });
+    }, {}, new HttpIncoming({ headers }));
     outgoing.manifest = { name: 'component' };
 
     await manifest.resolve(outgoing);
@@ -38,7 +41,7 @@ test('resolver.manifest() - "outgoing.manifest" holds a manifest - should resolv
     t.end();
 });
 
-test('resolver.manifest() - remote has no cache header - should set outgoing.maxAge to default', async t => {
+tap.test('resolver.manifest() - remote has no cache header - should set outgoing.maxAge to default', async t => {
     const server = new PodletServer();
     const service = await server.listen();
 
@@ -46,7 +49,7 @@ test('resolver.manifest() - remote has no cache header - should set outgoing.max
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         maxAge: 40000,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -56,7 +59,7 @@ test('resolver.manifest() - remote has no cache header - should set outgoing.max
     t.end();
 });
 
-test('resolver.manifest() - remote has "cache-control: public, max-age=10" header - should set outgoing.maxAge to header value', async t => {
+tap.test('resolver.manifest() - remote has "cache-control: public, max-age=10" header - should set outgoing.maxAge to header value', async t => {
     const server = new PodletServer();
     const service = await server.listen();
     server.headersManifest = {
@@ -67,7 +70,7 @@ test('resolver.manifest() - remote has "cache-control: public, max-age=10" heade
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         maxAge: 40000,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -78,7 +81,7 @@ test('resolver.manifest() - remote has "cache-control: public, max-age=10" heade
     t.end();
 });
 
-test('resolver.manifest() - remote has "cache-control: no-cache" header - should set outgoing.maxAge to default', async t => {
+tap.test('resolver.manifest() - remote has "cache-control: no-cache" header - should set outgoing.maxAge to default', async t => {
     const server = new PodletServer();
     const service = await server.listen();
     server.headersManifest = {
@@ -89,7 +92,7 @@ test('resolver.manifest() - remote has "cache-control: no-cache" header - should
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         maxAge: 40000,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -99,7 +102,7 @@ test('resolver.manifest() - remote has "cache-control: no-cache" header - should
     t.end();
 });
 
-test('resolver.manifest() - remote has "expires" header - should set outgoing.maxAge to header value', async t => {
+tap.test('resolver.manifest() - remote has "expires" header - should set outgoing.maxAge to header value', async t => {
     const server = new PodletServer();
     const service = await server.listen();
 
@@ -112,7 +115,7 @@ test('resolver.manifest() - remote has "expires" header - should set outgoing.ma
     const outgoing = new HttpOutgoing({
         uri: service.options.uri,
         maxAge: 40000,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
 
@@ -122,7 +125,7 @@ test('resolver.manifest() - remote has "expires" header - should set outgoing.ma
     t.end();
 });
 
-test('resolver.manifest() - one remote has "expires" header second none - should set and timout one and use default for second', async t => {
+tap.test('resolver.manifest() - one remote has "expires" header second none - should set and timout one and use default for second', async t => {
     const now = Date.now();
     const clock = lolex.install({ now });
 
@@ -148,9 +151,9 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     });
     const a = client.register(serviceA.options);
     const b = client.register(serviceB.options);
-
-    await a.fetch({});
-    await b.fetch({});
+    
+    await a.fetch(new HttpIncoming({ headers }));
+    await b.fetch(new HttpIncoming({ headers }));
 
     t.equal(serverA.metrics.manifest, 1);
     t.equal(serverB.metrics.manifest, 1);
@@ -158,8 +161,8 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     // Tick clock three hours into future
     clock.tick(1000 * 60 * 60 * 3);
 
-    await a.fetch({});
-    await b.fetch({});
+    await a.fetch(new HttpIncoming({ headers }));
+    await b.fetch(new HttpIncoming({ headers }));
 
     // Cache for server A should now have timed out
     t.equal(serverA.metrics.manifest, 2);
@@ -171,19 +174,19 @@ test('resolver.manifest() - one remote has "expires" header second none - should
     t.end();
 });
 
-test('resolver.manifest() - remote can not be resolved - "outgoing.manifest" should be {_fallback: ""}', async t => {
+tap.test('resolver.manifest() - remote can not be resolved - "outgoing.manifest" should be {_fallback: ""}', async t => {
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: 'http://does.not.exist.finn.no/manifest.json',
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.same(outgoing.manifest, { _fallback: '' });
     t.end();
 });
 
-test('resolver.manifest() - remote responds with http 500 - "outgoing.manifest" should be {_fallback: ""}', async t => {
+tap.test('resolver.manifest() - remote responds with http 500 - "outgoing.manifest" should be {_fallback: ""}', async t => {
     const server = new PodletServer();
     const service = await server.listen();
 
@@ -191,7 +194,7 @@ test('resolver.manifest() - remote responds with http 500 - "outgoing.manifest" 
     const outgoing = new HttpOutgoing({
         uri: service.error,
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.same(outgoing.manifest, { _fallback: '' });
@@ -200,7 +203,7 @@ test('resolver.manifest() - remote responds with http 500 - "outgoing.manifest" 
     t.end();
 });
 
-test('resolver.manifest() - manifest is not valid - "outgoing.manifest" should be {_fallback: ""}', async t => {
+tap.test('resolver.manifest() - manifest is not valid - "outgoing.manifest" should be {_fallback: ""}', async t => {
     const server = new PodletServer();
     const service = await server.listen();
 
@@ -208,7 +211,7 @@ test('resolver.manifest() - manifest is not valid - "outgoing.manifest" should b
     const outgoing = new HttpOutgoing({
         uri: service.content,
         throwable: false,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.same(outgoing.manifest, { _fallback: '' });
@@ -217,14 +220,14 @@ test('resolver.manifest() - manifest is not valid - "outgoing.manifest" should b
     t.end();
 });
 
-test('resolver.manifest() - "content" in manifest is relative - "outgoing.manifest.content" should be absolute', async t => {
+tap.test('resolver.manifest() - "content" in manifest is relative - "outgoing.manifest.content" should be absolute', async t => {
     const server = new PodletServer();
     const service = await server.listen();
 
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.same(outgoing.manifest.content, service.content);
@@ -233,7 +236,7 @@ test('resolver.manifest() - "content" in manifest is relative - "outgoing.manife
     t.end();
 });
 
-test('resolver.manifest() - "content" in manifest is absolute - "outgoing.manifest.content" should be absolute', async t => {
+tap.test('resolver.manifest() - "content" in manifest is absolute - "outgoing.manifest.content" should be absolute', async t => {
     const server = new PodletServer({
         content: 'http://does.not.mather.com',
     });
@@ -242,7 +245,7 @@ test('resolver.manifest() - "content" in manifest is absolute - "outgoing.manife
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.equal(outgoing.manifest.content, 'http://does.not.mather.com');
@@ -251,7 +254,7 @@ test('resolver.manifest() - "content" in manifest is absolute - "outgoing.manife
     t.end();
 });
 
-test('resolver.manifest() - "fallback" in manifest is relative - "outgoing.manifest.fallback" should be absolute', async t => {
+tap.test('resolver.manifest() - "fallback" in manifest is relative - "outgoing.manifest.fallback" should be absolute', async t => {
     const server = new PodletServer({
         fallback: '/fallback.html',
     });
@@ -261,7 +264,7 @@ test('resolver.manifest() - "fallback" in manifest is relative - "outgoing.manif
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.equal(outgoing.manifest.fallback, `${service.address}/fallback.html`);
@@ -270,7 +273,7 @@ test('resolver.manifest() - "fallback" in manifest is relative - "outgoing.manif
     t.end();
 });
 
-test('resolver.manifest() - "fallback" in manifest is absolute - "outgoing.manifest.fallback" should be absolute', async t => {
+tap.test('resolver.manifest() - "fallback" in manifest is absolute - "outgoing.manifest.fallback" should be absolute', async t => {
     const server = new PodletServer({
         fallback: 'http://does.not.mather.com',
     });
@@ -279,7 +282,7 @@ test('resolver.manifest() - "fallback" in manifest is absolute - "outgoing.manif
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
     t.equal(outgoing.manifest.fallback, 'http://does.not.mather.com');
@@ -288,124 +291,7 @@ test('resolver.manifest() - "fallback" in manifest is absolute - "outgoing.manif
     t.end();
 });
 
-test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is unset - "outgoing.manifest.assets.css" should be relative', async t => {
-    const server = new PodletServer({ assets: { css: 'a.css' } });
-    const service = await server.listen();
-
-    const manifest = new Manifest();
-    const outgoing = new HttpOutgoing({
-        uri: service.manifest,
-    });
-
-    await manifest.resolve(outgoing);
-    t.same(outgoing.manifest.assets.css, server.assets.css);
-
-    await server.close();
-    t.end();
-});
-
-test('resolver.manifest() - "css" in manifest is relative, "resolveCss" is "true" - "outgoing.manifest.assets.css" should be absolute to podlet', async t => {
-    const server = new PodletServer({ assets: { css: 'a.css' } });
-    const service = await server.listen();
-
-    const manifest = new Manifest();
-    const outgoing = new HttpOutgoing({
-        uri: service.manifest,
-        resolveCss: true,
-    });
-
-    await manifest.resolve(outgoing);
-
-    t.same(outgoing.manifest.css, [
-        { value: `${service.address}/${server.assets.css}`, type: 'text/css' },
-    ]);
-
-    await server.close();
-    t.end();
-});
-
-test('resolver.manifest() - "css" in manifest is absolute, "resolveCss" is "true" - "outgoing.manifest.assets.css" should be absolute to whats in manifest', async t => {
-    const server = new PodletServer({
-        assets: { css: 'http://does.not.mather.com/a.css' },
-    });
-    const service = await server.listen();
-
-    const manifest = new Manifest();
-    const outgoing = new HttpOutgoing({
-        uri: service.manifest,
-        resolveCss: true,
-    });
-
-    await manifest.resolve(outgoing);
-
-    t.same(outgoing.manifest.css, [
-        { value: 'http://does.not.mather.com/a.css', type: 'text/css' },
-    ]);
-
-    await server.close();
-    t.end();
-});
-
-test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is unset - "outgoing.manifest.js" should be relative', async t => {
-    const server = new PodletServer({ assets: { js: 'a.js' } });
-    const service = await server.listen();
-
-    const manifest = new Manifest();
-    const outgoing = new HttpOutgoing({
-        uri: service.manifest,
-    });
-
-    await manifest.resolve(outgoing);
-
-    t.same(outgoing.manifest.assets.js, server.assets.js);
-
-    await server.close();
-    t.end();
-});
-
-test('resolver.manifest() - "js" in manifest is relative, "resolveJs" is "true" - "outgoing.manifest.js" should be absolute to podlet', async t => {
-    const server = new PodletServer({ assets: { js: 'a.js' } });
-    const service = await server.listen();
-
-    const manifest = new Manifest();
-    const outgoing = new HttpOutgoing({
-        uri: service.manifest,
-        resolveJs: true,
-    });
-
-    await manifest.resolve(outgoing);
-
-    t.same(outgoing.manifest.js, [
-        { value: `${service.address}/${server.assets.js}`, type: 'default' },
-    ]);
-
-    await server.close();
-    t.end();
-});
-
-test('resolver.manifest() - "js" in manifest is absolute, "resolveJs" is "true" - "outgoing.manifest.js" should be absolute to whats in manifest', async t => {
-    const server = new PodletServer({
-        assets: { js: 'http://does.not.mather.com/a.js' },
-    });
-    const service = await server.listen();
-
-    const manifest = new Manifest();
-    const outgoing = new HttpOutgoing({
-        uri: service.manifest,
-        resolveJs: true,
-    });
-
-    await manifest.resolve(outgoing);
-
-    t.same(outgoing.manifest.js, [
-        { value: 'http://does.not.mather.com/a.js', type: 'default' },
-    ]);
-
-    await server.close();
-    t.end();
-});
-
-test('resolver.manifest() - a "proxy" target in manifest is relative - should convert it to be absolute', async t => {
+tap.test('resolver.manifest() - a "proxy" target in manifest is relative - should convert it to be absolute', async t => {
     const server = new PodletServer({
         proxy: {
             foo: '/api/foo',
@@ -416,16 +302,18 @@ test('resolver.manifest() - a "proxy" target in manifest is relative - should co
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
-    t.equal(outgoing.manifest.proxy.foo, `${service.address}/api/foo`);
+
+    t.equal(outgoing.manifest.proxy[0].target, `${service.address}/api/foo`);
+    t.equal(outgoing.manifest.proxy[0].name, 'foo');
 
     await server.close();
     t.end();
 });
 
-test('resolver.manifest() - a "proxy" target in manifest is absolute - should keep it absolute', async t => {
+tap.test('resolver.manifest() - a "proxy" target in manifest is absolute - should keep it absolute', async t => {
     const server = new PodletServer({
         proxy: {
             bar: 'http://does.not.mather.com/api/bar',
@@ -436,16 +324,18 @@ test('resolver.manifest() - a "proxy" target in manifest is absolute - should ke
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
-    t.equal(outgoing.manifest.proxy.bar, 'http://does.not.mather.com/api/bar');
+
+    t.equal(outgoing.manifest.proxy[0].target, 'http://does.not.mather.com/api/bar');
+    t.equal(outgoing.manifest.proxy[0].name, 'bar');
 
     await server.close();
     t.end();
 });
 
-test('resolver.manifest() - "proxy" targets in manifest is both absolute and relative - should keep absolute URIs and alter relative URIs', async t => {
+tap.test('resolver.manifest() - "proxy" targets in manifest is both absolute and relative - should keep absolute URIs and alter relative URIs', async t => {
     const server = new PodletServer({
         proxy: {
             bar: 'http://does.not.mather.com/api/bar',
@@ -457,11 +347,14 @@ test('resolver.manifest() - "proxy" targets in manifest is both absolute and rel
     const manifest = new Manifest();
     const outgoing = new HttpOutgoing({
         uri: service.manifest,
-    });
+    }, {}, new HttpIncoming({ headers }));
 
     await manifest.resolve(outgoing);
-    t.equal(outgoing.manifest.proxy.bar, 'http://does.not.mather.com/api/bar');
-    t.equal(outgoing.manifest.proxy.foo, `${service.address}/api/foo`);
+
+    t.equal(outgoing.manifest.proxy[0].target, 'http://does.not.mather.com/api/bar');
+    t.equal(outgoing.manifest.proxy[0].name, 'bar');
+    t.equal(outgoing.manifest.proxy[1].target, `${service.address}/api/foo`);
+    t.equal(outgoing.manifest.proxy[1].name, 'foo');
 
     await server.close();
     t.end();

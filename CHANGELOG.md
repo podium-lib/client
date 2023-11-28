@@ -1,3 +1,108 @@
+## [4.6.1](https://github.com/podium-lib/client/compare/v4.6.0...v4.6.1) (2023-11-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.5.1 ([3632899](https://github.com/podium-lib/client/commit/3632899f76254f78baf6e76430659dc0d507d3eb))
+
+# [4.6.0](https://github.com/podium-lib/client/compare/v4.5.35...v4.6.0) (2023-11-16)
+
+
+### Features
+
+* use manifest asset scope field to filter assets ([fd83d64](https://github.com/podium-lib/client/commit/fd83d6486f9454f4fef2cdbcf3a05b86c81205c5))
+
+## [4.5.35](https://github.com/podium-lib/client/compare/v4.5.34...v4.5.35) (2023-10-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.41 ([e316c43](https://github.com/podium-lib/client/commit/e316c4328c2e66706a1b9c09ede50cdf75537b57))
+
+## [4.5.34](https://github.com/podium-lib/client/compare/v4.5.33...v4.5.34) (2023-10-09)
+
+
+### Bug Fixes
+
+* update type definitions ([d63a621](https://github.com/podium-lib/client/commit/d63a621762909e01acd6d29629c6061a757df146))
+
+## [4.5.33](https://github.com/podium-lib/client/compare/v4.5.32...v4.5.33) (2023-09-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @metrics/client to v2.5.2 ([764886f](https://github.com/podium-lib/client/commit/764886fe374bc364c9b3efd83a35d3fd041e6c43))
+
+## [4.5.32](https://github.com/podium-lib/client/compare/v4.5.31...v4.5.32) (2023-09-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @metrics/client to v2.5.1 ([c7f6b5b](https://github.com/podium-lib/client/commit/c7f6b5b1f22f700e17b86b031412955a77fdbc07))
+
+## [4.5.31](https://github.com/podium-lib/client/compare/v4.5.30...v4.5.31) (2023-05-11)
+
+
+### Bug Fixes
+
+* Replace .abort() with .destroy() ([a41f44a](https://github.com/podium-lib/client/commit/a41f44a6c4aff7aec8201d05ce220dbdbb648cfd))
+
+## [4.5.30](https://github.com/podium-lib/client/compare/v4.5.29...v4.5.30) (2023-02-15)
+
+
+### Bug Fixes
+
+* return correct type in typescript definition. ([#311](https://github.com/podium-lib/client/issues/311)) ([e06f610](https://github.com/podium-lib/client/commit/e06f6103413b1c87761ad5cfde5fbb0488dd1099))
+
+## [4.5.29](https://github.com/podium-lib/client/compare/v4.5.28...v4.5.29) (2023-01-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.39 ([39289a0](https://github.com/podium-lib/client/commit/39289a02098950c54b1049e17f0269b8f85aa900))
+
+## [4.5.28](https://github.com/podium-lib/client/compare/v4.5.27...v4.5.28) (2023-01-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.1.34 ([e95650f](https://github.com/podium-lib/client/commit/e95650f178192fdbd086cc82afa5fc22bdc5d838))
+
+## [4.5.27](https://github.com/podium-lib/client/compare/v4.5.26...v4.5.27) (2022-12-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.38 ([05b14df](https://github.com/podium-lib/client/commit/05b14dfdb20609c461b0a91aae4a6d7faf358dbc))
+
+## [4.5.26](https://github.com/podium-lib/client/compare/v4.5.25...v4.5.26) (2022-11-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.37 ([6d7fa24](https://github.com/podium-lib/client/commit/6d7fa2474ba5ea17d548783365a6cbe51c3e51af))
+
+## [4.5.25](https://github.com/podium-lib/client/compare/v4.5.24...v4.5.25) (2022-11-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.1.33 ([9ee1fba](https://github.com/podium-lib/client/commit/9ee1fba908ed68cba8db8b98b6bf06b4f9a90e73))
+
+## [4.5.24](https://github.com/podium-lib/client/compare/v4.5.23...v4.5.24) (2022-10-18)
+
+
+### Bug Fixes
+
+* Set log level for network errors to debug when throwable ([#298](https://github.com/podium-lib/client/issues/298)) ([3ba5d67](https://github.com/podium-lib/client/commit/3ba5d67192f417b4627d9f411a1fe4ffd2c98775))
+
+## [4.5.23](https://github.com/podium-lib/client/compare/v4.5.22...v4.5.23) (2022-09-01)
+
+
+### Bug Fixes
+
+* Lower log level when throwable is true ([#291](https://github.com/podium-lib/client/issues/291)) ([c0d779b](https://github.com/podium-lib/client/commit/c0d779b3e22b671e5f7c6496c504b38cd9da5125))
+
 # [5.0.0-next.13](https://github.com/podium-lib/client/compare/v5.0.0-next.12...v5.0.0-next.13) (2022-09-21)
 
 

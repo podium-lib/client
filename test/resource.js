@@ -1,7 +1,9 @@
 /* eslint no-unused-vars: "off" */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable import/order */
 
 import tap from 'tap';
+// eslint-disable-next-line import/no-unresolved
 import getStream from 'get-stream';
 import stream from 'stream';
 import Cache from 'ttl-mem-cache';
@@ -190,15 +192,73 @@ tap.test('resource.fetch() - redirectable flag - podlet responds with 302 redire
     t.end();
 });
 
-//
-// .stream()
-//
+tap.test('resource.fetch() - assets filtering by scope for a successful fetch', async t => {
+  t.plan(8);
+
+  const server = new PodletServer({ version: '1.0.0' });
+  const manifest = JSON.parse(server._bodyManifest);
+  manifest.js = [{ value: "/foo", scope: "content" }, { value: "/bar", scope: "fallback" }, { value: "/baz", scope: "all" }, { value: "/foobarbaz" }];
+  manifest.css = [{ value: "/foo", scope: "content" }, { value: "/bar", scope: "fallback" }, { value: "/baz", scope: "all" }, { value: "/foobarbaz" }];
+  server._bodyManifest = JSON.stringify(manifest);
+
+  const service = await server.listen();
+
+  const resource = new Resource(new Cache(), new State(), service.options);
+  const result = await resource.fetch(new HttpIncoming({ headers }));
+
+  t.equal(result.js.length, 3);
+  t.equal(result.js[0].scope, "content");
+  t.equal(result.js[1].scope, "all");
+  t.equal(result.js[2].scope, undefined);
+  t.equal(result.css.length, 3);
+  t.equal(result.css[0].scope, "content");
+  t.equal(result.css[1].scope, "all");
+  t.equal(result.css[2].scope, undefined);
+
+  await server.close();
+  t.end();
+});
+
+tap.test('resource.fetch() - assets filtering by scope for an unsuccessful fetch', async t => {
+  t.plan(8);
+
+  const server = new PodletServer({ version: '1.0.0' });
+  const manifest = JSON.parse(server._bodyManifest);
+  manifest.js = [{ value: "/foo", scope: "content" }, { value: "/bar", scope: "fallback" }, { value: "/baz", scope: "all" }, { value: "/foobarbaz" }];
+  manifest.css = [{ value: "/foo", scope: "content" }, { value: "/bar", scope: "fallback" }, { value: "/baz", scope: "all" }, { value: "/foobarbaz" }];
+  server._bodyManifest = JSON.stringify(manifest);
+
+  const service = await server.listen();
+
+  const resource = new Resource(new Cache(), new State(), service.options);
+  await resource.fetch(new HttpIncoming({ headers }));
+
+  // close server to trigger fallback
+  await server.close();
+
+  const result = await resource.fetch(new HttpIncoming({ headers }));
+
+  t.equal(result.js.length, 3);
+  t.equal(result.js[0].scope, "fallback");
+  t.equal(result.js[1].scope, "all");
+  t.equal(result.js[2].scope, undefined);
+  t.equal(result.css.length, 3);
+  t.equal(result.css[0].scope, "fallback");
+  t.equal(result.css[1].scope, "all");
+  t.equal(result.css[2].scope, undefined);
+
+  t.end();
+});
+
+/**
+ * .stream()
+ */
 
 tap.test('resource.stream() - No HttpIncoming argument provided' , (t) => {
     const resource = new Resource(new Cache(), new State(), {});   
     t.plan(1);
     t.throws(() => {
-        const strm = resource.stream(); // eslint-disable-line no-unused-vars
+        const strm = resource.stream(new HttpIncoming({ headers })); // eslint-disable-line no-unused-vars
     }, "you must pass a  \"HttpIncoming\" object as the first argument to the .stream() method", 'Should throw');
     t.end();
 });
@@ -235,7 +295,71 @@ tap.test('resource.stream() - should emit beforeStream event with no assets', as
     t.end();
 });
 
+tap.test('resource.stream() - should emit beforeStream event with filtered assets', async t => {
+    t.plan(9);
+
+    const server = new PodletServer({ version: '1.0.0' });
+    const manifest = JSON.parse(server._bodyManifest);
+    manifest.js = [{ value: "/foo", scope: "content" }, { value: "/bar", scope: "fallback" }, { value: "/baz", scope: "all" }, { value: "/foobarbaz" }];
+    manifest.css = [{ value: "/foo", scope: "content" }, { value: "/bar", scope: "fallback" }, { value: "/baz", scope: "all" }, { value: "/foobarbaz" }];
+    server._bodyManifest = JSON.stringify(manifest);
+    const service = await server.listen();
+
+    const resource = new Resource(new Cache(), new State(), service.options);
+    const strm = resource.stream(new HttpIncoming({ headers }));
+    strm.once('beforeStream', ({ headers: h, js, css }) => {
+        t.equal(h['podlet-version'], '1.0.0');
+        t.equal(js.length, 3);
+        t.equal(js[0].scope, "content");
+        t.equal(js[1].scope, "all");
+        t.equal(js[2].scope, undefined);
+        t.equal(css.length, 3);
+        t.equal(css[0].scope, "content");
+        t.equal(css[1].scope, "all");
+        t.equal(css[2].scope, undefined);
+    });
+
+    await getStream(strm);
+
+    await server.close();
+    t.end();
+});
+
+tap.test('resource.stream() - should emit beforeStream event with filtered assets', async t => {
+    t.plan(8);
+
+    const server = new PodletServer({ version: '1.0.0' });
+    const manifest = JSON.parse(server._bodyManifest);
+    manifest.js = [{ value: "/foo", scope: "content" }, { value: "/bar", scope: "fallback" }, { value: "/baz", scope: "all" }, { value: "/foobarbaz" }];
+    manifest.css = [{ value: "/foo", scope: "content" }, { value: "/bar", scope: "fallback" }, { value: "/baz", scope: "all" }, { value: "/foobarbaz" }];
+    server._bodyManifest = JSON.stringify(manifest);
+    const service = await server.listen();
+
+    const resource = new Resource(new Cache(), new State(), service.options);
+    await resource.fetch(new HttpIncoming({ headers }));
+
+    // close server to trigger fallback
+    await server.close();
+
+    const strm = resource.stream(new HttpIncoming({ headers }));
+    strm.once('beforeStream', ({ js, css }) => {
+        t.equal(js.length, 3);
+        t.equal(js[0].scope, "fallback");
+        t.equal(js[1].scope, "all");
+        t.equal(js[2].scope, undefined);
+        t.equal(css.length, 3);
+        t.equal(css[0].scope, "fallback");
+        t.equal(css[1].scope, "all");
+        t.equal(css[2].scope, undefined);
+    });
+
+    await getStream(strm);
+    t.end();
+});
+
 tap.test('resource.stream() - should emit js event when js assets defined', async t => {
+    t.plan(1);
+
     const server = new PodletServer({ assets: { js: 'http://fakejs.com' } });
     const service = await server.listen();
 

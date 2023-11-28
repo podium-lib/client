@@ -1,3 +1,11 @@
+# [5.0.0-next.15](https://github.com/podium-lib/client/compare/v5.0.0-next.14...v5.0.0-next.15) (2023-11-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency readable-stream to v4 ([d3aff96](https://github.com/podium-lib/client/commit/d3aff9608ebfefc294ab0b79563a96670019311f))
+* **deps:** update dependency readable-stream to v4 ([9c7303a](https://github.com/podium-lib/client/commit/9c7303aea267f951a8359f3d0640588d8d82b21a))
+
 # [5.0.0-next.14](https://github.com/podium-lib/client/compare/v5.0.0-next.13...v5.0.0-next.14) (2023-11-28)
 
 

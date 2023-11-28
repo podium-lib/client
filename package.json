@@ -1,6 +1,6 @@
 {
   "name": "@podium/client",
-  "version": "5.0.0-next.14",
+  "version": "5.0.0-next.15",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -43,8 +43,7 @@
     "http-cache-semantics": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",
     "ttl-mem-cache": "4.1.0",
-    "undici": "^5.10.0",
-    "ttl-mem-cache": "4.1.0"
+    "undici": "^5.10.0"
   },
   "devDependencies": {
     "@podium/test-utils": "2.5.2",

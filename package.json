@@ -42,7 +42,7 @@
     "abslog": "2.4.0",
     "http-cache-semantics": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",
-    "readable-stream": "^3.4.0",
+    "readable-stream": "^4.0.0",
     "request": "^2.88.0",
     "ttl-mem-cache": "4.1.0"
   },

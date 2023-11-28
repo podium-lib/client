@@ -1,3 +1,79 @@
+# [5.0.0](https://github.com/podium-lib/client/compare/v4.6.1...v5.0.0) (2023-11-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency readable-stream to v4 ([d3aff96](https://github.com/podium-lib/client/commit/d3aff9608ebfefc294ab0b79563a96670019311f))
+* **deps:** update dependency readable-stream to v4 ([9c7303a](https://github.com/podium-lib/client/commit/9c7303aea267f951a8359f3d0640588d8d82b21a))
+* Fix inspect method on response object ([#294](https://github.com/podium-lib/client/issues/294)) ([94d1485](https://github.com/podium-lib/client/commit/94d14856ca2280888aa50e9cb7e7f782cd49666a))
+
+
+### Features
+
+* Convert to ESM ([#206](https://github.com/podium-lib/client/issues/206)) ([d31298f](https://github.com/podium-lib/client/commit/d31298fac7e1b84dc401c5832bce132a68a84943))
+* Drop node 10.x support ([a71c3b0](https://github.com/podium-lib/client/commit/a71c3b08198f9a20de5e6af042d5a78f85c33c4f))
+* Make HttpIncoming required first argument to .fetch() and .stream() ([9b80ee7](https://github.com/podium-lib/client/commit/9b80ee715397e780d2df267483b6bc2db32b1c62))
+* Remove .js() and .css() methods ([#128](https://github.com/podium-lib/client/issues/128)) ([db6d306](https://github.com/podium-lib/client/commit/db6d30617160db76d85e8839c7f896ef3dc97b41))
+* Remove deprecated 'change' and 'dispose' events ([#129](https://github.com/podium-lib/client/issues/129)) ([449fff1](https://github.com/podium-lib/client/commit/449fff13323d4f7f76fd406dbee1f2532701916b))
+* replace request with undici for http requests ([31163db](https://github.com/podium-lib/client/commit/31163db538d87cb797135d7febcc6cc244eac17a))
+* Support new proxy structure in manifest ([#295](https://github.com/podium-lib/client/issues/295)) ([d8aa28a](https://github.com/podium-lib/client/commit/d8aa28a59c8ab3fe66b146eecaaf487717599972))
+* Use ES private properties instead of Symbols and defineProperty for privacy ([#131](https://github.com/podium-lib/client/issues/131)) ([2787a6c](https://github.com/podium-lib/client/commit/2787a6c406f9fb2bb2e85583082b818c2c247b63))
+* Use native streams ([#215](https://github.com/podium-lib/client/issues/215)) ([f949c9c](https://github.com/podium-lib/client/commit/f949c9cc0d66431685138ca2c0367aec622bce78))
+
+
+### BREAKING CHANGES
+
+* Convert from CommonJS to ESM
+
+* fix: Remove outcommented code
+
+Co-authored-by: Trygve Lie <trygve.lie@finn.no>
+* Due to dropping node 10.x support we use ES private properties instead of Symbols and `.defineProperty()`.
+
+We've been using Symbols and `.defineProperty()` to define private properties in classes up until now. This has the downside that they are not true private and in later versions of node.js one would see these Symbols when inspecting an object. What we want is proper private properties.
+
+This PR does also add a pretty printer which outputs an object literal or the object so when debugging one can see the getters and setters of the object.
+
+Example: printing a object with `console.log()` would previously print the following:
+
+```sh
+PodiumClientResponse {
+  [Symbol(podium:client:response:redirect)]: '',
+  [Symbol(podium:client:response:content)]: '',
+  [Symbol(podium:client:response:headers)]: {},
+  [Symbol(podium:client:response:css)]: [],
+  [Symbol(podium:client:response:js)]: []
+}
+```
+
+Now the following will be printed:
+
+```sh
+{
+  redirect: '',
+  content: '',
+  headers: {},
+  css: [],
+  js: []
+}
+```
+
+Co-authored-by: Trygve Lie <trygve.lie@finn.no>
+* This removes the deprecated `change` and `dispose` events.
+
+Resolves: https://github.com/podium-lib/issues/issues/24
+
+* chore: lint love
+
+Co-authored-by: Trygve Lie <trygve.lie@finn.no>
+* Remove .js() and .css() methods to retrieve fetched js and css for all podlets. Also removes the `resolveJs` and `resolveCss` arguments when registering a podlet.
+
+Resolves: https://github.com/podium-lib/issues/issues/25
+
+Co-authored-by: Trygve Lie <trygve.lie@finn.no>
+* Only support node 12 and 14.
+* `HttpIncoming` must now be passed as the first argument to .fetch() and .stream()
+
 # [5.0.0-next.15](https://github.com/podium-lib/client/compare/v5.0.0-next.14...v5.0.0-next.15) (2023-11-28)
 
 

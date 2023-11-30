@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/podium-lib/client/compare/v5.0.0...v5.0.1) (2023-11-30)
+
+
+### Bug Fixes
+
+* set correct types file ([6d08e50](https://github.com/podium-lib/client/commit/6d08e501728745e180c7a5d436f238c468dec136))
+
 # [5.0.0](https://github.com/podium-lib/client/compare/v4.6.1...v5.0.0) (2023-11-28)
 
 

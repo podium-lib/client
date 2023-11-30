@@ -28,7 +28,7 @@
     "lib"
   ],
   "main": "./lib/client.js",
-  "types": "index.d.ts",
+  "types": "client.d.ts",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

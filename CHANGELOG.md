@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/podium-lib/client/compare/v5.0.1...v5.0.2) (2023-12-01)
+
+
+### Bug Fixes
+
+* Consume body on non 200 requests ([ebfc8be](https://github.com/podium-lib/client/commit/ebfc8be4cbb2fcb57ac49febc93fd0381fa9c09f))
+
 ## [5.0.1](https://github.com/podium-lib/client/compare/v5.0.0...v5.0.1) (2023-11-30)
 
 

@@ -21,8 +21,8 @@ $ npm install @podium/client
 Connect to a Podium component server and stream the HTML content:
 
 ```js
-const { HttpIncoming } = require('@podium/utils');
-const Client = require('@podium/client');
+import { HttpIncoming } from '@podium/utils';
+import Client from '@podium/client';
 const client = new Client();
 
 const component = client.register({
@@ -47,8 +47,8 @@ stream.pipe(process.stdout);
 Connect to a podium component server and fetch the HTML content:
 
 ```js
-const { HttpIncoming } = require('@podium/utils');
-const Client = require('@podium/client');
+import { HttpIncoming } from '@podium/utils';
+import Client from '@podium/client';
 const client = new Client();
 
 const component = client.register({
@@ -74,7 +74,7 @@ component
 Create a new Client instance.
 
 ```js
-const Client = require('@podium/client');
+import Client from '@podium/client';
 const client = new Client(options);
 ```
 
@@ -82,7 +82,7 @@ The client instance is iterable and holds a reference to each registered
 resource.
 
 ```js
-const Client = require('@podium/client');
+import Client from '@podium/client';
 const client = new Client();
 
 client.register({ uri: 'http://foo.site.com/manifest.json', name: 'fooBar' });
@@ -117,7 +117,7 @@ Registers a component.
 Example:
 
 ```js
-const Client = require('@podium/client');
+import Client from '@podium/client';
 const client = new Client();
 
 const component = client.register({
@@ -134,7 +134,7 @@ It is stored with the `name` as its property name.
 Example:
 
 ```js
-const Client = require('@podium/client');
+import Client from '@podium/client';
 const client = new Client();
 
 client.register({ uri: 'http://foo.site.com/manifest.json', name: 'fooBar' });
@@ -159,7 +159,7 @@ Retrieve list of all JavaScript references from all registered and fetched
 components.
 
 ```js
-const Client = require('@podium/client');
+import Client from '@podium/client';
 const client = new Client();
 
 const foo = client.register({
@@ -182,7 +182,7 @@ Retrieve a list of all CSS references from all registered and fetched
 components.
 
 ```js
-const Client = require('@podium/client');
+import Client from '@podium/client';
 const client = new Client();
 
 const foo = client.register({
@@ -214,7 +214,7 @@ If a manifest is successfully fetched, this method will resolve with a `true`
 value. If a manifest is not successfully fetched, it will resolve with `false`.
 
 ```js
-const Client = require('@podium/client');
+import Client from '@podium/client';
 const client = new Client();
 
 client.register({ uri: 'http://foo.site.com/manifest.json', name: 'foo' });
@@ -233,7 +233,7 @@ Refreshes the manifests of all registered resources. Does so by calling the
 `.refresh()` method on all resources under the hood.
 
 ```js
-const Client = require('@podium/client');
+import Client from '@podium/client';
 const client = new Client();
 
 client.register({ uri: 'http://foo.site.com/manifest.json', name: 'foo' });
@@ -499,7 +499,7 @@ fallback or the content then it can then be acted upon.
 Example:
 
 ```js
-const Client = require('@podium/client');
+import Client from '@podium/client';
 const client = new Client();
 
 const foo = client.register({

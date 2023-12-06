@@ -137,4 +137,4 @@ declare namespace PodiumClient {
     }
 }
 
-export = PodiumClient;
+export default PodiumClient;

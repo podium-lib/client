@@ -1,3 +1,10 @@
+## [5.0.6](https://github.com/podium-lib/client/compare/v5.0.5...v5.0.6) (2024-01-05)
+
+
+### Bug Fixes
+
+* log the full URI, not only the base ([f42640e](https://github.com/podium-lib/client/commit/f42640e3ddd04e77a87688be0f145eab4f9f335a))
+
 ## [5.0.5](https://github.com/podium-lib/client/compare/v5.0.4...v5.0.5) (2023-12-13)
 
 

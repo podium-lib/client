@@ -152,6 +152,31 @@ The following values can be provided:
 -   `throwable` - {Boolean} - Defines whether an error should be thrown if a failure occurs during the process of fetching a podium component. Defaults to `false` - Optional.
 -   `resolveJs` - {Boolean} - Defines whether to resolve a relative JS uri for a component to be an absolute uri. Defaults to `false` - Optional.
 -   `resolveCss` - {Boolean} - Defines whether to resolve a relative CSS uri for a component to be an absolute uri. Defaults to `false` - Optional.
+-   `excludeBy` - {Object} - Lets you define a set of rules where a `fetch` call will not be resolved if it matches. - Optional.
+-   `includeBy` - {Object} - Inverse of `excludeBy`. - Optional.
+
+##### `excludeBy` and `includeBy`
+
+These options are used by `fetch` to conditionally skip fetching the podlet content based on values on the request. It's an alternative to conditionally fetching podlets in your request handler.
+
+Allowed options:
+
+- `deviceType` - {Array<String>} - List of values for the `x-podium-device-type` header. - Optional.
+
+Example: exclude a header and footer in a hybrid web view.
+
+```js
+import Client from '@podium/client';
+const client = new Client();
+
+const footer = client.register({
+    uri: 'http://footer.site.com/manifest.json',
+    name: 'footer',
+    excludeBy: {
+        deviceType: ["hybrid-ios", "hybrid-android"], // when footer.fetch(incoming) is called, if the incoming request has the header `x-podium-device-type: hybrid-ios`, `fetch` will return an empty response.
+    },
+});
+```
 
 ### .js()
 

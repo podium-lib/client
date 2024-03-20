@@ -129,7 +129,12 @@ declare namespace PodiumClient {
         redirectable?: boolean;
         resolveJs?: boolean;
         resolveCss?: boolean;
+        includeBy?: RequestFilterOptions;
+        excludeBy?: RequestFilterOptions;
     }
+    export type RequestFilterOptions = {
+        deviceType?: Array<string>;
+    };
 
     export interface PodiumRedirect {
         readonly statusCode: number;

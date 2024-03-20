@@ -1,3 +1,11 @@
+# [5.1.0-beta.1](https://github.com/podium-lib/client/compare/v5.0.7...v5.1.0-beta.1) (2024-03-20)
+
+
+### Features
+
+* add new options to register and use them in fetch ([5aed9d6](https://github.com/podium-lib/client/commit/5aed9d6303681910fc95413535345643bbfa8d62))
+* add support for includeBy and excludeBy options in Resource ([51eb442](https://github.com/podium-lib/client/commit/51eb442398a15b487970ebabe51a5c33f3aede29))
+
 ## [5.0.7](https://github.com/podium-lib/client/compare/v5.0.6...v5.0.7) (2024-02-01)
 
 

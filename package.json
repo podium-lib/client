@@ -51,7 +51,7 @@
     "@semantic-release/git": "10.0.1",
     "@babel/eslint-parser": "7.23.10",
     "@semantic-release/github": "9.2.6",
-    "@semantic-release/npm": "11.0.2",
+    "@semantic-release/npm": "11.0.3",
     "@semantic-release/release-notes-generator": "12.1.0",
     "@sinonjs/fake-timers": "11.2.2",
     "benchmark": "2.1.4",
@@ -65,7 +65,7 @@
     "http-proxy": "1.18.1",
     "is-stream": "3.0.0",
     "prettier": "3.2.5",
-    "semantic-release": "23.0.2",
+    "semantic-release": "23.0.6",
     "tap": "18.7.2"
   }
 }

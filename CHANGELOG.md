@@ -1,3 +1,10 @@
+## [5.0.8](https://github.com/podium-lib/client/compare/v5.0.7...v5.0.8) (2024-04-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependency abslog to v2.4.1 ([105a16c](https://github.com/podium-lib/client/commit/105a16c0ff0215cd68984d7aad7351b4b5b623b2))
+
 ## [5.0.7](https://github.com/podium-lib/client/compare/v5.0.6...v5.0.7) (2024-02-01)
 
 

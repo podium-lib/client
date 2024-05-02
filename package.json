@@ -35,15 +35,15 @@
     "test": "tap --disable-coverage --allow-empty-coverage"
   },
   "dependencies": {
-    "@hapi/boom": "^10.0.0",
+    "@hapi/boom": "10.0.1",
     "@metrics/client": "2.5.2",
     "@podium/schemas": "5.0.0",
     "@podium/utils": "5.0.3",
     "abslog": "2.4.2",
-    "http-cache-semantics": "^4.0.3",
-    "lodash.clonedeep": "^4.5.0",
+    "http-cache-semantics": "4.1.1",
+    "lodash.clonedeep": "4.5.0",
     "ttl-mem-cache": "4.1.0",
-    "undici": "^6.0.0"
+    "undici": "6.13.0"
   },
   "devDependencies": {
     "@podium/test-utils": "2.5.2",

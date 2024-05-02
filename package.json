@@ -1,6 +1,6 @@
 {
   "name": "@podium/client",
-  "version": "5.0.10",
+  "version": "5.0.14",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -37,11 +37,11 @@
   "dependencies": {
     "@hapi/boom": "10.0.1",
     "@metrics/client": "2.5.2",
-    "@podium/schemas": "5.0.0",
-    "@podium/utils": "5.0.3",
-    "abslog": "2.4.2",
-    "http-cache-semantics": "4.1.1",
-    "lodash.clonedeep": "4.5.0",
+    "@podium/schemas": "5.0.1",
+    "@podium/utils": "5.0.4",
+    "abslog": "2.4.4",
+    "http-cache-semantics": "^4.0.3",
+    "lodash.clonedeep": "^4.5.0",
     "ttl-mem-cache": "4.1.0",
     "undici": "6.13.0"
   },
@@ -49,7 +49,7 @@
     "@podium/test-utils": "2.5.2",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "@babel/eslint-parser": "7.24.1",
+    "@babel/eslint-parser": "7.24.5",
     "@semantic-release/github": "9.2.6",
     "@semantic-release/npm": "11.0.3",
     "@semantic-release/release-notes-generator": "12.1.0",
@@ -65,7 +65,7 @@
     "http-proxy": "1.18.1",
     "is-stream": "4.0.1",
     "prettier": "3.2.5",
-    "semantic-release": "23.0.6",
+    "semantic-release": "23.0.8",
     "tap": "18.7.2"
   }
 }

@@ -1,3 +1,31 @@
+## [5.0.14](https://github.com/podium-lib/client/compare/v5.0.13...v5.0.14) (2024-05-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency abslog to v2.4.4 ([0e21e41](https://github.com/podium-lib/client/commit/0e21e41d2503387dc1d796f857a41048f5222209))
+
+## [5.0.13](https://github.com/podium-lib/client/compare/v5.0.12...v5.0.13) (2024-04-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency abslog to v2.4.3 ([ea2a8ff](https://github.com/podium-lib/client/commit/ea2a8ff0cc43c97cdd853551959928d4fcc53992))
+
+## [5.0.12](https://github.com/podium-lib/client/compare/v5.0.11...v5.0.12) (2024-04-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v5.0.1 ([f6b3f56](https://github.com/podium-lib/client/commit/f6b3f56e1be12b2e5a3d5296a00488e61d354662))
+
+## [5.0.11](https://github.com/podium-lib/client/compare/v5.0.10...v5.0.11) (2024-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v5.0.4 ([b622774](https://github.com/podium-lib/client/commit/b62277448a0fe326fdd11504a0d7787132911908))
+
 ## [5.0.10](https://github.com/podium-lib/client/compare/v5.0.9...v5.0.10) (2024-04-12)
 
 

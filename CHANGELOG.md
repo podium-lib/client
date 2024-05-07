@@ -1,3 +1,10 @@
+## [5.0.15](https://github.com/podium-lib/client/compare/v5.0.14...v5.0.15) (2024-05-07)
+
+
+### Bug Fixes
+
+* Requests hang on http errors ([a9c82b6](https://github.com/podium-lib/client/commit/a9c82b6a931d92540c69c2cbf911184710dc54ee))
+
 ## [5.0.14](https://github.com/podium-lib/client/compare/v5.0.13...v5.0.14) (2024-05-02)
 
 

@@ -1,3 +1,11 @@
+## [5.0.21](https://github.com/podium-lib/client/compare/v5.0.20...v5.0.21) (2024-05-14)
+
+
+### Bug Fixes
+
+* export same types as before ([0e3c65a](https://github.com/podium-lib/client/commit/0e3c65afc0fef7e6c53ad544dc80cb7f8dc8596b))
+* generate types from JSDoc ([32cac7e](https://github.com/podium-lib/client/commit/32cac7e10a76494c0d2df602f41d42a67e8e7b6c))
+
 ## [5.0.20](https://github.com/podium-lib/client/compare/v5.0.19...v5.0.20) (2024-05-14)
 
 

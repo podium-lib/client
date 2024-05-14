@@ -13,5 +13,5 @@ tmp/**/*
 .idea
 .idea/**/*
 coverage
-dist/
+types/
 .tap

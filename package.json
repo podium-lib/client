@@ -21,23 +21,23 @@
   "files": [
     "package.json",
     "CHANGELOG.md",
-    "client.d.ts",
     "README.md",
     "LICENSE",
-    "dist",
-    "lib"
+    "lib",
+    "types"
   ],
   "main": "./lib/client.js",
-  "types": "client.d.ts",
+  "types": "./types/client.d.ts",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "tap --disable-coverage --allow-empty-coverage"
+    "test": "tap tests/*.js --disable-coverage --allow-empty-coverage && tsc --project tsconfig.test.json",
+    "types": "tsc --declaration --emitDeclarationOnly"
   },
   "dependencies": {
     "@hapi/boom": "10.0.1",
     "@metrics/client": "2.5.2",
-    "@podium/schemas": "5.0.1",
+    "@podium/schemas": "5.0.2",
     "@podium/utils": "5.0.6",
     "abslog": "2.4.4",
     "http-cache-semantics": "^4.0.3",
@@ -46,14 +46,15 @@
     "undici": "6.16.1"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "7.24.5",
     "@podium/test-utils": "2.5.2",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "@babel/eslint-parser": "7.24.5",
     "@semantic-release/github": "10.0.3",
     "@semantic-release/npm": "12.0.0",
     "@semantic-release/release-notes-generator": "13.0.0",
     "@sinonjs/fake-timers": "11.2.2",
+    "@types/readable-stream": "4.0.14",
     "benchmark": "2.1.4",
     "eslint": "8.57.0",
     "eslint-config-airbnb-base": "15.0.0",
@@ -66,6 +67,7 @@
     "is-stream": "4.0.1",
     "prettier": "3.2.5",
     "semantic-release": "23.0.8",
-    "tap": "18.7.2"
+    "tap": "18.7.2",
+    "typescript": "5.4.5"
   }
 }

@@ -1,3 +1,10 @@
+## [5.0.22](https://github.com/podium-lib/client/compare/v5.0.21...v5.0.22) (2024-05-15)
+
+
+### Bug Fixes
+
+* generate type definitions before publish ([8189b01](https://github.com/podium-lib/client/commit/8189b01c54c733c760b02f2138803f9b64a6fee5))
+
 ## [5.0.21](https://github.com/podium-lib/client/compare/v5.0.20...v5.0.21) (2024-05-14)
 
 

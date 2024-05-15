@@ -133,8 +133,8 @@ tap.test(
         t.same(response.toJSON(), {
             content: 'foo',
             headers: { foo: 'bar' },
-            css: [css], // TODO: should we also call .toJSON on the contents of the array?
-            js: [js], // TODO: should we also call .toJSON on the contents of the array?
+            css: [css.toJSON()],
+            js: [js.toJSON()],
             redirect: {
                 statusCode: 302,
                 location: 'http://redirects.are.us.com',

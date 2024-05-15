@@ -16,17 +16,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: npm install
-        run: |
-          npm install
-        env:
-          CI: true
+        run: npm install
+
       - name: npm lint
-        run: |
-          npm run lint
-        env:
-          CI: true
+        run: npm run lint
+
       - name: npm test
-        run: |
-          npm test
-        env:
-          CI: true
+        run: npm test
+
+      - name: Typecheck
+        run: npm run types

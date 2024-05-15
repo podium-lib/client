@@ -1,3 +1,10 @@
+## [5.0.23](https://github.com/podium-lib/client/compare/v5.0.22...v5.0.23) (2024-05-15)
+
+
+### Bug Fixes
+
+* make response toJSON return type serializable ([026a723](https://github.com/podium-lib/client/commit/026a723b545c6b3b0c622851b7d164be2674e8a2))
+
 ## [5.0.22](https://github.com/podium-lib/client/compare/v5.0.21...v5.0.22) (2024-05-15)
 
 

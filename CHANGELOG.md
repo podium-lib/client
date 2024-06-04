@@ -1,3 +1,10 @@
+## [5.0.30](https://github.com/podium-lib/client/compare/v5.0.29...v5.0.30) (2024-06-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v5.0.4 ([d3574df](https://github.com/podium-lib/client/commit/d3574dfa36e0aa0838ed1410e8b7c0cf15559c0b))
+
 ## [5.0.29](https://github.com/podium-lib/client/compare/v5.0.28...v5.0.29) (2024-05-29)
 
 

@@ -150,8 +150,6 @@ The following values can be provided:
 -   `retries` - {Number} - The number of times the client should retry to settle a version number conflict before terminating. See the section "[on retrying](#on-retrying)" for more information. Default: 4 - Optional.
 -   `timeout` - {Number} - Defines how long, in milliseconds, a request should wait before the connection is terminated. Overrides the global default. Default: 1000 - Optional.
 -   `throwable` - {Boolean} - Defines whether an error should be thrown if a failure occurs during the process of fetching a podium component. Defaults to `false` - Optional.
--   `resolveJs` - {Boolean} - Defines whether to resolve a relative JS uri for a component to be an absolute uri. Defaults to `false` - Optional.
--   `resolveCss` - {Boolean} - Defines whether to resolve a relative CSS uri for a component to be an absolute uri. Defaults to `false` - Optional.
 -   `excludeBy` - {Object} - Lets you define a set of rules where a `fetch` call will not be resolved if it matches. - Optional.
 -   `includeBy` - {Object} - Inverse of `excludeBy`. Setting both at the same time will throw. - Optional.
 

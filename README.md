@@ -152,6 +152,31 @@ The following values can be provided:
 -   `throwable` - {Boolean} - Defines whether an error should be thrown if a failure occurs during the process of fetching a podium component. Defaults to `false` - Optional.
 -   `resolveJs` - {Boolean} - Defines whether to resolve a relative JS uri for a component to be an absolute uri. Defaults to `false` - Optional.
 -   `resolveCss` - {Boolean} - Defines whether to resolve a relative CSS uri for a component to be an absolute uri. Defaults to `false` - Optional.
+-   `excludeBy` - {Object} - Lets you define a set of rules where a `fetch` call will not be resolved if it matches. - Optional.
+-   `includeBy` - {Object} - Inverse of `excludeBy`. Setting both at the same time will throw. - Optional.
+
+##### `excludeBy` and `includeBy`
+
+These options are used by `fetch` to conditionally skip fetching the podlet content based on values on the request. It's an alternative to conditionally fetching podlets in your request handler. Setting both at the same time will throw.
+
+Allowed options:
+
+-   `deviceType` - {Array<String>} - List of values for the `x-podium-device-type` header. - Optional.
+
+Example: exclude a header and footer in a hybrid web view.
+
+```js
+import Client from '@podium/client';
+const client = new Client();
+
+const footer = client.register({
+    uri: 'http://footer.site.com/manifest.json',
+    name: 'footer',
+    excludeBy: {
+        deviceType: ['hybrid-ios', 'hybrid-android'], // when footer.fetch(incoming) is called, if the incoming request has the header `x-podium-device-type: hybrid-ios`, `fetch` will return an empty response.
+    },
+});
+```
 
 ### .js()
 
@@ -437,15 +462,19 @@ stream.once('beforeStream', (data) => {
 Both the .fetch() method and the .stream() method give you access to podlet asset objects and these CSS and JS asset objects will be filtered if the asset objects contain a `scope` property and that `scope` property matches the current response type (either content or fallback).
 
 For example, if the podlet manifest contains a JavaScript asset definition of the form:
+
 ```
 {
 	js: [{ value: "https://assets.com/path/to/file.js", scope: "content" }],
 }
 ```
+
 And the client performs a fetch like so:
+
 ```js
 const result = await component.fetch();
 ```
+
 Then, if the podlet successfully responds from its content route, the `result.js` property will contain the asset defined above. If, however, the podlet's content route errors and the client is forced to use the podlet's fallback content, then `result.js` property will be an empty array.
 
 Possible `scope` values are `content`, `fallback` and `all`. For backwards compatibility reasons, when assets do not provide a `scope` property, they will always be included in both `content` and `fallback` responses.

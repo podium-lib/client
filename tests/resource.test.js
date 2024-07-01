@@ -692,3 +692,130 @@ tap.test(
         t.end();
     },
 );
+
+tap.test(
+    'Resource().fetch - configured excludeby but no podium-device-type on context, do request',
+    async (t) => {
+        const server = new PodletServer({ version: '1.0.0' });
+        const service = await server.listen();
+
+        const client = new Client({ name: 'podiumClient' });
+        const component = client.register({
+            ...service.options,
+            excludeBy: {
+                deviceType: ['hybrid-ios', 'hybrid-android'],
+            },
+        });
+
+        const result = await component.fetch(new HttpIncoming({ headers }));
+
+        t.match(result.content, /content component/);
+
+        await server.close();
+        t.end();
+    },
+);
+
+tap.test(
+    'Resource().fetch - if x-podium-device-type matches excludeBy device type, no request and return empty response',
+    async (t) => {
+        const server = new PodletServer({ version: '1.0.0' });
+        const service = await server.listen();
+
+        const client = new Client({ name: 'podiumClient' });
+        const component = client.register({
+            ...service.options,
+            excludeBy: {
+                deviceType: ['hybrid-ios', 'hybrid-android'],
+            },
+        });
+
+        const result = await component.fetch(
+            new HttpIncoming({
+                headers: { 'x-podium-device-type': 'hybrid-ios' },
+            }),
+        );
+
+        t.equal(result.content, '');
+
+        await server.close();
+        t.end();
+    },
+);
+
+tap.test(
+    'Resource().fetch - configured includeBy but no podium-device-type on context, do request and return response',
+    async (t) => {
+        const server = new PodletServer({ version: '1.0.0' });
+        const service = await server.listen();
+
+        const client = new Client({ name: 'podiumClient' });
+        const component = client.register({
+            ...service.options,
+            includeBy: {
+                deviceType: ['hybrid-ios', 'hybrid-android'],
+            },
+        });
+
+        const result = await component.fetch(new HttpIncoming({ headers }));
+
+        t.match(result.content, /content component/);
+
+        await server.close();
+        t.end();
+    },
+);
+
+tap.test(
+    'Resource().fetch - if x-podium-device-type matches includeBy device type, do request and return content',
+    async (t) => {
+        const server = new PodletServer({ version: '1.0.0' });
+        const service = await server.listen();
+
+        const client = new Client({ name: 'podiumClient' });
+        const component = client.register({
+            ...service.options,
+            includeBy: {
+                deviceType: ['hybrid-ios', 'hybrid-android'],
+            },
+        });
+
+        const result = await component.fetch(
+            new HttpIncoming({
+                headers: { 'x-podium-device-type': 'hybrid-ios' },
+            }),
+        );
+
+        t.match(result.content, /content component/);
+
+        await server.close();
+        t.end();
+    },
+);
+
+tap.test(
+    'Resource().fetch - if x-podium-device-type does not match includeBy device type, no request and return empty response',
+    async (t) => {
+        const server = new PodletServer({ version: '1.0.0' });
+        const service = await server.listen();
+
+        const client = new Client({ name: 'podiumClient' });
+        const component = client.register({
+            ...service.options,
+            includeBy: {
+                deviceType: ['hybrid-ios', 'hybrid-android'],
+            },
+        });
+
+        const result = await component.fetch(
+            new HttpIncoming({
+                headers: { 'x-podium-device-type': 'desktop' },
+            }),
+        );
+
+        t.equal(result.content, '');
+
+        await server.close();
+        t.end();
+    },
+);

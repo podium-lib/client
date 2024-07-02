@@ -148,3 +148,20 @@ tap.test(
         t.end();
     },
 );
+
+tap.test(
+    'client.register() - call with both includeBy and excludeBy deviceType - should throw',
+    (t) => {
+        const client = new Client({ name: 'podiumClient' });
+
+        t.throws(() => {
+            client.register({
+                uri: 'http://example-a.org',
+                name: 'exampleA',
+                includeBy: { deviceType: ['hybrid-ios'] },
+                excludeBy: { deviceType: ['hybrid-android'] },
+            });
+        }, 'A podlet can only be registered with either includeBy or excludeBy, not both.');
+        t.end();
+    },
+);

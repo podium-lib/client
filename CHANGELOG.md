@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/podium-lib/client/compare/v5.0.34...v5.1.0) (2024-07-02)
+
+
+### Features
+
+* conditional fetch by deviceType header ([de4e9c4](https://github.com/podium-lib/client/commit/de4e9c47eea6baf07f2dc72465699a080b6aace1))
+
 ## [5.0.34](https://github.com/podium-lib/client/compare/v5.0.33...v5.0.34) (2024-06-18)
 
 

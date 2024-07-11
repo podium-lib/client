@@ -14,7 +14,6 @@ if (cluster.isPrimary) {
     }
     console.log(`${CPUs} server instances listening on port 8100`);
 } else {
-
     const text = `
         Lorem ipsum dolor sit amet, ad mel elit albucius nominati. Eos nullam erroribus ad, vim tibique eligendi ne. Vis id natum inciderint accommodare, quo ei placerat vituperata complectitur. Doming audire alterum pri no, vix an audiam option. At omnium contentiones conclusionemque est, in quo evertitur reprimique, ut nibh convenire interesset usu.
         At vix novum aliquam saperet, sit idque constituto ullamcorper ex. Tation verear vel cu, ex est sonet persius. Te sea dolore recteque, scripta prompta mea no. At duo forensibus referrentur. Quo animal senserit cu.
@@ -59,5 +58,4 @@ if (cluster.isPrimary) {
         res.end('Not found');
         return;
     }).listen(8100);
-
 }

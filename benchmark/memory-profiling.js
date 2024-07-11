@@ -1,7 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/no-unresolved */
-
 'use strict';
 
 // https://www.nearform.com/blog/self-detect-memory-leak-node/
@@ -11,13 +7,13 @@
 const memwatch = require('memwatch-next');
 const http = require('http');
 const url = require('url');
-const Client = require("..");
+const Client = require('..');
 
-memwatch.on('leak', info => {
+memwatch.on('leak', (info) => {
     console.error('Memory leak detected:', info);
 });
 
-memwatch.on('stats', info => {
+memwatch.on('stats', (info) => {
     console.info('Memory stats:', info);
 });
 
@@ -36,7 +32,7 @@ http.createServer((req, res) => {
     if (u.pathname === '/') {
         component
             .fetch({})
-            .then(content => {
+            .then((content) => {
                 res.writeHead(200, {
                     'Content-Type': 'text/html; charset=utf-8',
                 });

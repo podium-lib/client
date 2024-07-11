@@ -1,6 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable prefer-destructuring */
-
 import tap from 'tap';
 import { PodletServer } from '@podium/test-utils';
 import { HttpIncoming } from '@podium/utils';

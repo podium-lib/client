@@ -1,5 +1,3 @@
-/* eslint-disable import/order */
-
 import tap from 'tap';
 import { PodletServer } from '@podium/test-utils';
 import { HttpIncoming } from '@podium/utils';

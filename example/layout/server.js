@@ -1,19 +1,17 @@
-/* eslint-disable no-console */
-
 'use strict';
 
 const express = require('express');
-const Client = require("../..");
+const Client = require('../..');
 
 const PORT = parseInt(process.argv[2], 10);
 
 const client = new Client({
     logger: console,
 });
-client.on('dispose', key => {
+client.on('dispose', (key) => {
     console.log('event - manifest disposed -', key);
 });
-client.on('change', key => {
+client.on('change', (key) => {
     console.log('event - manifest changed -', key);
 });
 
@@ -27,10 +25,10 @@ const app = express();
 app.get('/', (req, res) => {
     client.podlet
         .fetch({})
-        .then(html => {
+        .then((html) => {
             res.status(200).send(html);
         })
-        .catch(error => {
+        .catch((error) => {
             console.error(error);
             res.status(500).send('Internal server error');
         });
@@ -38,7 +36,7 @@ app.get('/', (req, res) => {
 
 app.get('/stream', (req, res) => {
     const stream = client.podlet.stream({});
-    stream.on('error', error => {
+    stream.on('error', (error) => {
         console.log(error);
     });
     stream.pipe(res);

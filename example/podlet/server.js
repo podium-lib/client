@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable import/order */
-
 'use strict';
 
 const manifest = require('./public/manifest.json');

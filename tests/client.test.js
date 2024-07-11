@@ -1,5 +1,3 @@
-/* eslint-disable import/order */
-
 import tap from 'tap';
 import { PodletServer } from '@podium/test-utils';
 import { HttpIncoming } from '@podium/utils';
@@ -12,13 +10,16 @@ const headers = {};
  * Constructor
  */
 
-tap.test('Client() - instantiate new client object - should have register method', t => {
-    const client = new Client({ name: 'podiumClient' });
-    t.ok(client.register instanceof Function);
-    t.end();
-});
+tap.test(
+    'Client() - instantiate new client object - should have register method',
+    (t) => {
+        const client = new Client({ name: 'podiumClient' });
+        t.ok(client.register instanceof Function);
+        t.end();
+    },
+);
 
-tap.test('Client() - object tag - should be PodiumClient', t => {
+tap.test('Client() - object tag - should be PodiumClient', (t) => {
     const client = new Client({ name: 'podiumClient' });
     t.equal(Object.prototype.toString.call(client), '[object PodiumClient]');
     t.end();
@@ -28,37 +29,40 @@ tap.test('Client() - object tag - should be PodiumClient', t => {
  * .refreshManifests()
  */
 
-tap.test("client.refreshManifests() - should populate all resources' manifests", async t => {
-    const serverA = new PodletServer({
-        name: 'aa',
-    });
-    const serverB = new PodletServer({
-        name: 'bb',
-    });
-    const [serviceA, serviceB] = await Promise.all([
-        serverA.listen(),
-        serverB.listen(),
-    ]);
+tap.test(
+    "client.refreshManifests() - should populate all resources' manifests",
+    async (t) => {
+        const serverA = new PodletServer({
+            name: 'aa',
+        });
+        const serverB = new PodletServer({
+            name: 'bb',
+        });
+        const [serviceA, serviceB] = await Promise.all([
+            serverA.listen(),
+            serverB.listen(),
+        ]);
 
-    const client = new Client({ name: 'podiumClient' });
-    client.register(serviceA.options);
-    client.register(serviceB.options);
+        const client = new Client({ name: 'podiumClient' });
+        client.register(serviceA.options);
+        client.register(serviceB.options);
 
-    const fetchResult = await client.refreshManifests();
+        const fetchResult = await client.refreshManifests();
 
-    t.equal(fetchResult, undefined);
+        t.equal(fetchResult, undefined);
 
-    const dump = client.dump();
-    t.equal(dump.length, 2);
+        const dump = client.dump();
+        t.equal(dump.length, 2);
 
-    await Promise.all([serverA.close(), serverB.close()]);
-});
+        await Promise.all([serverA.close(), serverB.close()]);
+    },
+);
 
 /**
  * .dump()
  */
 
-tap.test("client.dump() - should dump resources' manifests", async t => {
+tap.test("client.dump() - should dump resources' manifests", async (t) => {
     const serverA = new PodletServer({
         name: 'aa',
     });
@@ -76,10 +80,7 @@ tap.test("client.dump() - should dump resources' manifests", async t => {
 
     const incoming = new HttpIncoming({ headers });
 
-    await Promise.all([
-        a.fetch(incoming), 
-        b.fetch(incoming)
-    ]);
+    await Promise.all([a.fetch(incoming), b.fetch(incoming)]);
 
     const dump = client.dump();
 
@@ -92,39 +93,39 @@ tap.test("client.dump() - should dump resources' manifests", async t => {
  * .load()
  */
 
-tap.test("client.load() - should load dumped resources' manifests", async t => {
-    const serverA = new PodletServer({
-        name: 'aa',
-    });
-    const serverB = new PodletServer({
-        name: 'bb',
-    });
-    const [serviceA, serviceB] = await Promise.all([
-        serverA.listen(),
-        serverB.listen(),
-    ]);
+tap.test(
+    "client.load() - should load dumped resources' manifests",
+    async (t) => {
+        const serverA = new PodletServer({
+            name: 'aa',
+        });
+        const serverB = new PodletServer({
+            name: 'bb',
+        });
+        const [serviceA, serviceB] = await Promise.all([
+            serverA.listen(),
+            serverB.listen(),
+        ]);
 
-    const clientA = new Client({ name: 'podiumClient' });
-    const aa = clientA.register(serviceA.options);
-    const ab = clientA.register(serviceB.options);
+        const clientA = new Client({ name: 'podiumClient' });
+        const aa = clientA.register(serviceA.options);
+        const ab = clientA.register(serviceB.options);
 
-    const incoming = new HttpIncoming({ headers });
+        const incoming = new HttpIncoming({ headers });
 
-    await Promise.all([
-        aa.fetch(incoming), 
-        ab.fetch(incoming)
-    ]);
+        await Promise.all([aa.fetch(incoming), ab.fetch(incoming)]);
 
-    const clientB = new Client({ name: 'podiumClient' });
-    clientB.register(serviceA.options);
-    clientB.register(serviceB.options);
+        const clientB = new Client({ name: 'podiumClient' });
+        clientB.register(serviceA.options);
+        clientB.register(serviceB.options);
 
-    const dumpA = clientA.dump();
-    clientB.load(dumpA);
+        const dumpA = clientA.dump();
+        clientB.load(dumpA);
 
-    const dumpB = clientB.dump();
+        const dumpB = clientB.dump();
 
-    t.same(dumpA, dumpB);
+        t.same(dumpA, dumpB);
 
-    await Promise.all([serverA.close(), serverB.close()]);
-});
+        await Promise.all([serverA.close(), serverB.close()]);
+    },
+);

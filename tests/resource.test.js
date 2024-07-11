@@ -1,9 +1,4 @@
-/* eslint no-unused-vars: "off" */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable import/order */
-
 import tap from 'tap';
-// eslint-disable-next-line import/no-unresolved
 import getStream from 'get-stream';
 import stream from 'stream';
 import Cache from 'ttl-mem-cache';
@@ -41,6 +36,7 @@ tap.test('Resource() - object tag - should be PodletClientResource', (t) => {
 tap.test('Resource() - no "registry" - should throw', (t) => {
     t.throws(() => {
         // @ts-expect-error Testing bad input
+        // eslint-disable-next-line no-unused-vars
         const resource = new Resource();
     }, 'you must pass a "registry" object to the PodiumClientResource constructor');
     t.end();
@@ -354,7 +350,7 @@ tap.test('resource.stream() - No HttpIncoming argument provided', (t) => {
     t.plan(1);
     t.throws(() => {
         // @ts-expect-error Testing bad input
-        const strm = resource.stream();
+        resource.stream();
     }, 'you must pass an instance of "HttpIncoming" as the first argument to the .stream() method');
     t.end();
 });

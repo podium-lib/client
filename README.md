@@ -380,7 +380,7 @@ Response object containing the keys `content`, `headers`, `css` and `js`.
 
 #### incoming (required)
 
-A HttpIncoming object. See https://github.com/podium-lib/utils/blob/master/lib/http-incoming.js
+A HttpIncoming object. See https://github.com/podium-lib/utils/blob/main/lib/http-incoming.js
 
 #### options (optional)
 
@@ -411,7 +411,7 @@ emitted.
 
 #### incoming (required)
 
-A HttpIncoming object. See https://github.com/podium-lib/utils/blob/master/lib/http-incoming.js
+A HttpIncoming object. See https://github.com/podium-lib/utils/blob/main/lib/http-incoming.js
 
 #### options (optional)
 

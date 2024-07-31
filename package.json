@@ -45,7 +45,7 @@
     "http-cache-semantics": "^4.0.3",
     "lodash.clonedeep": "^4.5.0",
     "ttl-mem-cache": "4.1.0",
-    "undici": "6.19.4"
+    "undici": "6.19.5"
   },
   "devDependencies": {
     "@podium/test-utils": "2.5.2",

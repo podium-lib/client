@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import { rejects } from 'node:assert';
 import HTTP from '../lib/http.js';
 
-test('should abort the request if it takes longer than the timeout', async (t) => {
+test('should abort the request if it takes longer than the timeout', async () => {
     // Mock the undici.Client's request method
     const mockRequestFn = async (url, { signal }) => {
         return new Promise((resolve, reject) => {

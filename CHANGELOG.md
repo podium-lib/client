@@ -1,3 +1,10 @@
+## [5.1.10-next.1](https://github.com/podium-lib/client/compare/v5.1.9...v5.1.10-next.1) (2024-08-22)
+
+
+### Bug Fixes
+
+* use AbortSignal to ensure timeouts are respected ([08899d9](https://github.com/podium-lib/client/commit/08899d974246037cb1893a5b6d06bd6df58815e2))
+
 ## [5.1.9](https://github.com/podium-lib/client/compare/v5.1.8...v5.1.9) (2024-08-19)
 
 

@@ -2,6 +2,9 @@ import tap from 'tap';
 import { PodletServer, HttpServer, HttpsServer } from '@podium/test-utils';
 import { HttpIncoming } from '@podium/utils';
 import Client from '../lib/client.js';
+import Podlet from '@podium/podlet';
+import express from 'express';
+import http from 'http';
 
 // Fake headers
 const headers = {};
@@ -539,5 +542,59 @@ tap.test(
 
         const responseB = await podlet.fetch(new HttpIncoming({ headers }));
         t.same(responseB.content, '<p>fallback</p>');
+    },
+);
+
+tap.test(
+    'resolver.content() - receives 103 early hints from podlet',
+    async (t) => {
+        const podlet = new Podlet({
+            name: 'my-podlet',
+            version: '1.0.0',
+            pathname: '/',
+            manifest: '/manifest.json',
+            content: '/',
+        });
+        podlet.js({
+            value: 'https://myserver.com/script.js',
+        });
+        podlet.css({
+            value: 'https://myserver.com/styles.css',
+        });
+        const app = express();
+        app.use(podlet.middleware());
+        app.get(podlet.manifest(), (req, res) => {
+            res.send(podlet);
+        });
+        app.get(podlet.content(), (req, res) => {
+            res.podiumSend(`<div>Ich bin ein Podlet</div>`);
+        });
+        const server = http.createServer(app);
+        server.listen(3123);
+
+        const client = new Client({
+            name: 'my-podlet',
+        });
+        const podletClient = client.register({
+            name: 'my-podlet',
+            uri: 'http://localhost:3123/manifest.json',
+        });
+
+        podletClient.on('assets', (assets) => {
+            t.ok(assets, 'assets should be available');
+        });
+
+        const response = await podletClient.fetch(
+            new HttpIncoming({ headers }),
+        );
+        t.same(
+            response.content,
+            '<div>Ich bin ein Podlet</div>',
+            'content should be available',
+        );
+
+        server.close();
+
+        t.end();
     },
 );

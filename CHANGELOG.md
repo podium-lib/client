@@ -1,3 +1,10 @@
+## [5.1.10-next.2](https://github.com/podium-lib/client/compare/v5.1.10-next.1...v5.1.10-next.2) (2024-08-26)
+
+
+### Bug Fixes
+
+* use AbortController instead of AbortSignal to avoid unhandled exception ([#412](https://github.com/podium-lib/client/issues/412)) ([87f5ffe](https://github.com/podium-lib/client/commit/87f5ffe553aa49189658a9be0e19d1323878a55a))
+
 ## [5.1.10-next.1](https://github.com/podium-lib/client/compare/v5.1.9...v5.1.10-next.1) (2024-08-22)
 
 

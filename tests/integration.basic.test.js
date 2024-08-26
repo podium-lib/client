@@ -580,20 +580,27 @@ tap.test(
             uri: 'http://localhost:3123/manifest.json',
         });
 
-        podletClient.on('assets', (assets) => {
-            t.ok(assets, 'assets should be available');
+        const layout = express();
+        layout.get('/', async (req, res) => {
+            const response = await podletClient.fetch(
+                new HttpIncoming(req, res),
+            );
+            res.send(`${response.content}`);
         });
+        const layoutServer = http.createServer(layout);
+        layoutServer.listen(3124);
 
-        const response = await podletClient.fetch(
-            new HttpIncoming({ headers }),
-        );
+        const result = await fetch('http://localhost:3124/');
+        const text = await result.text();
+
         t.same(
-            response.content,
+            text,
             '<div>Ich bin ein Podlet</div>',
             'content should be available',
         );
 
         server.close();
+        layoutServer.close();
 
         t.end();
     },

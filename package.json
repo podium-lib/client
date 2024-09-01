@@ -51,7 +51,7 @@
     "@podium/test-utils": "2.5.2",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "10.0.6",
+    "@semantic-release/github": "10.1.7",
     "@semantic-release/npm": "12.0.1",
     "@semantic-release/release-notes-generator": "13.0.0",
     "@sinonjs/fake-timers": "11.2.2",

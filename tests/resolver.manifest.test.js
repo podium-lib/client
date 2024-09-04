@@ -241,7 +241,7 @@ tap.test(
         );
 
         await manifest.resolve(outgoing);
-        t.same(outgoing.manifest, { _fallback: '' });
+        t.same(outgoing.manifest, { _fallback: '', _js: [], _css: [] });
         t.end();
     },
 );
@@ -266,7 +266,7 @@ tap.test(
         );
 
         await manifest.resolve(outgoing);
-        t.same(outgoing.manifest, { _fallback: '' });
+        t.same(outgoing.manifest, { _fallback: '', _js: [], _css: [] });
 
         await server.close();
         t.end();
@@ -293,7 +293,7 @@ tap.test(
         );
 
         await manifest.resolve(outgoing);
-        t.same(outgoing.manifest, { _fallback: '' });
+        t.same(outgoing.manifest, { _fallback: '', _js: [], _css: [] });
 
         await server.close();
         t.end();

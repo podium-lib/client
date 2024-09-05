@@ -1,6 +1,7 @@
 import tap from 'tap';
 import getStream from 'get-stream';
 import stream from 'stream';
+// @ts-ignore
 import Cache from 'ttl-mem-cache';
 
 import { HttpIncoming } from '@podium/utils';
@@ -112,6 +113,7 @@ tap.test('resource.fetch() - should return a promise', async (t) => {
 tap.test('resource.fetch() - set context - should pass it on', async (t) => {
     const server = new PodletServer({ version: '1.0.0' });
     const service = await server.listen();
+    // @ts-ignore
     server.on('req:content', (count, req) => {
         t.equal(req.headers['podium-locale'], 'nb-NO');
         t.equal(req.headers['podium-mount-origin'], 'http://www.example.org');
@@ -208,9 +210,11 @@ tap.test(
     'resource.fetch() - redirectable flag - podlet responds with 302 redirect - redirect property is populated',
     async (t) => {
         const server = new PodletServer();
+        // @ts-ignore
         server.headersContent = {
             location: 'http://redirects.are.us.com',
         };
+        // @ts-ignore
         server.statusCode = 302;
         const service = await server.listen();
 
@@ -642,8 +646,11 @@ tap.test(
 
         await component.refresh();
 
+        // @ts-ignore
         t.equal(server.metrics.manifest, 1);
+        // @ts-ignore
         t.equal(server.metrics.fallback, 1);
+        // @ts-ignore
         t.equal(server.metrics.content, 0);
 
         await server.close();

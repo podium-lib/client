@@ -20,6 +20,7 @@ tap.test(
     'resolver.cache() - "registry" not provided to constructor - should throw',
     (t) => {
         t.throws(() => {
+            // @ts-ignore
             const cache = new Cache();
         }, 'you must pass a "registry" object to the PodletClientCacheResolver constructor');
         t.end();

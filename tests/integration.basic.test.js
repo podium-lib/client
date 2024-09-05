@@ -25,6 +25,7 @@ tap.test('integration basic', async (t) => {
     actual1.headers.date = '<replaced>';
     actual1.headers['keep-alive'] = '<workaround>'; // node.js pre 14 does not have keep-alive as a default
 
+    // @ts-ignore
     t.same(actual1.content, serverA.contentBody);
     t.same(actual1.js, []);
     t.same(actual1.css, []);
@@ -44,6 +45,7 @@ tap.test('integration basic', async (t) => {
     actual2.headers.date = '<replaced>';
     actual2.headers['keep-alive'] = '<workaround>'; // node.js pre 14 does not have keep-alive as a default
 
+    // @ts-ignore
     t.same(actual2.content, serverB.contentBody);
     t.same(actual2.js, []);
     t.same(actual2.css, []);
@@ -180,6 +182,7 @@ tap.test(
         const component = client.register(service.options);
 
         const result = await component.fetch(new HttpIncoming({ headers }));
+        // @ts-ignore
         t.same(result.content, server.fallbackBody);
         t.same(result.headers, {});
         t.same(result.css, []);
@@ -232,6 +235,7 @@ tap.test(
         const component = client.register(service.options);
 
         const result = await component.fetch(new HttpIncoming({ headers }));
+        // @ts-ignore
         t.same(result.content, server.fallbackBody);
         t.same(result.headers, {});
         t.same(result.css, []);
@@ -255,11 +259,13 @@ tap.test(
         await component.refresh();
 
         // make http version number never match manifest version number
+        // @ts-ignore
         server.headersContent = {
             'podlet-version': Date.now(),
         };
 
         const result = await component.fetch(new HttpIncoming({ headers }));
+        // @ts-ignore
         t.same(result.content, server.fallbackBody);
         t.same(result.headers, {});
         t.same(result.css, []);
@@ -267,8 +273,11 @@ tap.test(
 
         // manifest and fallback is one more than default
         // due to initial refresh() call
+        // @ts-ignore
         t.equal(server.metrics.manifest, 5);
+        // @ts-ignore
         t.equal(server.metrics.fallback, 5);
+        // @ts-ignore
         t.equal(server.metrics.content, 4);
 
         await server.close();
@@ -293,6 +302,7 @@ tap.test(
         await component.refresh();
 
         // make http version number never match manifest version number
+        // @ts-ignore
         server.headersContent = {
             'podlet-version': Date.now(),
         };
@@ -308,8 +318,11 @@ tap.test(
 
         // manifest and fallback is one more than default
         // due to initial refresh() call
+        // @ts-ignore
         t.equal(server.metrics.manifest, 5);
+        // @ts-ignore
         t.equal(server.metrics.fallback, 5);
+        // @ts-ignore
         t.equal(server.metrics.content, 4);
 
         await server.close();
@@ -323,6 +336,7 @@ tap.test(
     async (t) => {
         const server = new PodletServer({ name: 'podlet' });
         const service = await server.listen();
+        // @ts-ignore
         server.on('req:content', (content, req) => {
             t.equal(req.headers.foo, 'bar');
             t.equal(req.headers['podium-ctx'], 'foo');
@@ -350,6 +364,7 @@ tap.test(
     async (t) => {
         const server = new PodletServer({ name: 'podlet' });
         const service = await server.listen();
+        // @ts-ignore
         server.on('req:content', (content, req) => {
             t.ok(req.headers['user-agent'].startsWith('@podium/client'));
             t.end();
@@ -421,9 +436,11 @@ tap.test(
         const service = await server.listen();
         const results = [];
 
+        // @ts-ignore
         server.on('req:content', (content, req) => {
             results.push(req.url);
 
+            // @ts-ignore
             if (server.metrics.content === 2) {
                 t.equal(results[0], '/index/foo');
                 t.equal(results[1], '/index/bar');
@@ -445,6 +462,7 @@ tap.test(
     'integration basic - multiple hosts - mainfest is on one host but content on fallbacks on different hosts',
     async (t) => {
         const contentServer = new HttpServer();
+        // @ts-ignore
         contentServer.request = (req, res) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/plain');
@@ -452,6 +470,7 @@ tap.test(
         };
 
         const fallbackServer = new HttpServer();
+        // @ts-ignore
         fallbackServer.request = (req, res) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/plain');
@@ -496,6 +515,7 @@ tap.test(
     async (t) => {
         // Undici rejects self signed SSL certs so we need to disable that for tests
         const contentServer = new HttpServer();
+        // @ts-ignore
         contentServer.request = (req, res) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/plain');
@@ -503,6 +523,7 @@ tap.test(
         };
 
         const fallbackServer = new HttpsServer();
+        // @ts-ignore
         fallbackServer.request = (req, res) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/plain');

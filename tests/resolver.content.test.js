@@ -46,8 +46,10 @@ tap.test(
         );
 
         // See TODO II
+        // @ts-ignore
         const { manifest } = server;
         manifest.content = utils.uriRelativeToAbsolute(
+            // @ts-ignore
             server.manifest.content,
             outgoing.manifestUri,
         );
@@ -69,6 +71,7 @@ tap.test(
     async (t) => {
         const server = new PodletServer();
         const service = await server.listen();
+        // @ts-ignore
         server.headersContent = {
             'podlet-version': '',
         };
@@ -85,8 +88,10 @@ tap.test(
         );
 
         // See TODO II
+        // @ts-ignore
         const { manifest } = server;
         manifest.content = utils.uriRelativeToAbsolute(
+            // @ts-ignore
             server.manifest.content,
             outgoing.manifestUri,
         );
@@ -108,6 +113,7 @@ tap.test(
     async (t) => {
         const server = new PodletServer();
         const service = await server.listen();
+        // @ts-ignore
         server.headersContent = {
             'podlet-version': '2.0.0',
         };
@@ -124,8 +130,10 @@ tap.test(
         );
 
         // See TODO II
+        // @ts-ignore
         const { manifest } = server;
         manifest.content = utils.uriRelativeToAbsolute(
+            // @ts-ignore
             server.manifest.content,
             outgoing.manifestUri,
         );
@@ -136,6 +144,7 @@ tap.test(
         const content = new Content();
         await content.resolve(outgoing);
 
+        // @ts-ignore
         t.equal(outgoing.manifest.version, server.manifest.version);
         t.equal(outgoing.status, 'stale');
         await server.close();
@@ -475,9 +484,11 @@ tap.test(
     'resolver.content() - "redirects" 302 response should include redirect object',
     async (t) => {
         const server = new PodletServer();
+        // @ts-ignore
         server.headersContent = {
             location: 'http://redirects.are.us.com',
         };
+        // @ts-ignore
         server.statusCode = 302;
         const service = await server.listen();
         const outgoing = new HttpOutgoing(
@@ -493,8 +504,10 @@ tap.test(
         );
 
         // See TODO II
+        // @ts-ignore
         const { manifest } = server;
         manifest.content = utils.uriRelativeToAbsolute(
+            // @ts-ignore
             server.manifest.content,
             outgoing.manifestUri,
         );
@@ -533,8 +546,10 @@ tap.test(
         );
 
         // See TODO II
+        // @ts-ignore
         const { manifest } = server;
         manifest.content = utils.uriRelativeToAbsolute(
+            // @ts-ignore
             server.manifest.content,
             outgoing.manifestUri,
         );
@@ -556,9 +571,11 @@ tap.test(
     'resolver.content() - "redirects" 302 response should not throw',
     async (t) => {
         const server = new PodletServer();
+        // @ts-ignore
         server.headersContent = {
             location: 'http://redirects.are.us.com',
         };
+        // @ts-ignore
         server.statusCode = 302;
         const service = await server.listen();
         const outgoing = new HttpOutgoing(
@@ -575,8 +592,10 @@ tap.test(
         );
 
         // See TODO II
+        // @ts-ignore
         const { manifest } = server;
         manifest.content = utils.uriRelativeToAbsolute(
+            // @ts-ignore
             server.manifest.content,
             outgoing.manifestUri,
         );
@@ -601,6 +620,7 @@ tap.test(
     'resolver.content() - "redirects" 302 response - client should follow redirect by default',
     async (t) => {
         const externalService = new HttpServer();
+        // @ts-ignore
         externalService.request = (req, res) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -609,9 +629,11 @@ tap.test(
         const address = await externalService.listen();
 
         const server = new PodletServer();
+        // @ts-ignore
         server.headersContent = {
             location: address,
         };
+        // @ts-ignore
         server.statusCode = 302;
         const service = await server.listen();
         const outgoing = new HttpOutgoing(
@@ -626,8 +648,10 @@ tap.test(
         );
 
         // See TODO II
+        // @ts-ignore
         const { manifest } = server;
         manifest.content = utils.uriRelativeToAbsolute(
+            // @ts-ignore
             server.manifest.content,
             outgoing.manifestUri,
         );

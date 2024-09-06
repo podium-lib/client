@@ -1,3 +1,10 @@
+## [5.1.10](https://github.com/podium-lib/client/compare/v5.1.9...v5.1.10) (2024-09-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v5.2.0 ([f7d4675](https://github.com/podium-lib/client/commit/f7d4675e6e2b9f2fba26cbd164d3e7a73b9c132e))
+
 ## [5.1.9](https://github.com/podium-lib/client/compare/v5.1.8...v5.1.9) (2024-08-19)
 
 

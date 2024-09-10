@@ -16,6 +16,7 @@ tap.test(
     'resolver() - "registry" not provided to constructor - should throw',
     (t) => {
         t.throws(() => {
+            // @ts-ignore
             const resolver = new Resolver();
         }, 'you must pass a "registry" object to the PodletClientResolver constructor');
         t.end();

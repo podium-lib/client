@@ -23,6 +23,7 @@ tap.test(
     'resolver.fallback() - fallback field is empty - should set value on "outgoing.fallback" to empty String',
     async (t) => {
         const server = new PodletServer();
+        // @ts-ignore
         const manifest = server.manifest;
         manifest.fallback = '';
 
@@ -49,6 +50,7 @@ tap.test(
     'resolver.fallback() - fallback field contains invalid value - should set value on "outgoing.fallback" to empty String',
     async (t) => {
         const server = new PodletServer();
+        // @ts-ignore
         const manifest = server.manifest;
         manifest.fallback = 'ht++ps://blæ.finn.no/fallback.html';
 
@@ -77,6 +79,7 @@ tap.test(
         const server = new PodletServer();
         const service = await server.listen();
 
+        // @ts-ignore
         const manifest = server.manifest;
         manifest.fallback = `${service.address}/fallback.html`;
 
@@ -94,6 +97,7 @@ tap.test(
 
         const fallback = new Fallback();
         const result = await fallback.resolve(outgoing);
+        // @ts-ignore
         t.same(result.fallback, server.fallbackBody);
 
         await server.close();
@@ -107,6 +111,7 @@ tap.test(
         const server = new PodletServer();
         const service = await server.listen();
 
+        // @ts-ignore
         const manifest = server.manifest;
         manifest.fallback = `${service.address}/fallback.html`;
 

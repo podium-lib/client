@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["es2020"],
-    "module": "nodenext",
+    "module": "NodeNext",
     "target": "es2020",
     "resolveJsonModule": true,
     "checkJs": true,
@@ -10,7 +10,8 @@
     "declaration": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "outDir": "types"
+    "outDir": "types",
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["./lib/**/*.js"]
 }

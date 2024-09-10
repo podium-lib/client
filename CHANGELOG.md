@@ -1,3 +1,10 @@
+# [5.2.0-next.1](https://github.com/podium-lib/client/compare/v5.1.10-next.2...v5.2.0-next.1) (2024-09-10)
+
+
+### Features
+
+* read assets from podlets using 103 early hints ([64e4b27](https://github.com/podium-lib/client/commit/64e4b27773b87c220bcab1028ecdda82be2aa9fc))
+
 ## [5.1.10-next.2](https://github.com/podium-lib/client/compare/v5.1.10-next.1...v5.1.10-next.2) (2024-08-26)
 
 

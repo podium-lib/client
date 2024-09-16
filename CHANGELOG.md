@@ -1,3 +1,10 @@
+# [5.2.0-next.2](https://github.com/podium-lib/client/compare/v5.2.0-next.1...v5.2.0-next.2) (2024-09-16)
+
+
+### Bug Fixes
+
+* improve error messages when fetching from manifest, content and fallback routes when a timeout occurs ([e188bbc](https://github.com/podium-lib/client/commit/e188bbc40d30ed2e21947dd29de76bd218907428))
+
 # [5.2.0-next.1](https://github.com/podium-lib/client/compare/v5.1.10-next.2...v5.2.0-next.1) (2024-09-10)
 
 

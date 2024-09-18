@@ -152,6 +152,7 @@ The following values can be provided:
 -   `throwable` - {Boolean} - Defines whether an error should be thrown if a failure occurs during the process of fetching a podium component. Defaults to `false` - Optional.
 -   `excludeBy` - {Object} - Lets you define a set of rules where a `fetch` call will not be resolved if it matches. - Optional.
 -   `includeBy` - {Object} - Inverse of `excludeBy`. Setting both at the same time will throw. - Optional.
+-   `earlyHints` - {boolean} - Can be used to disable early hints from being sent to the browser for this resource.
 
 ##### `excludeBy` and `includeBy`
 

@@ -682,3 +682,55 @@ tap.test(
         t.end();
     },
 );
+
+tap.test(
+    'resolver.content() - 103 early hints - should be sent to the browser',
+    async (t) => {
+        const server = new PodletServer({
+            assets: {
+                js: '/foo/bar.js',
+                css: '/foo/bar.css',
+            },
+        });
+        const service = await server.listen();
+        let results;
+        const outgoing = new HttpOutgoing(
+            {
+                uri: service.options.uri,
+                name: 'test',
+                maxAge: Infinity,
+                timeout: 1000,
+            },
+            {},
+            new HttpIncoming(
+                { headers },
+                {
+                    writeEarlyHints(options) {
+                        results = options.link;
+                    },
+                },
+            ),
+        );
+
+        // @ts-ignore
+        const { manifest } = server;
+        manifest.content = utils.uriRelativeToAbsolute(
+            // @ts-ignore
+            server.manifest.content,
+            outgoing.manifestUri,
+        );
+
+        outgoing.manifest = manifest;
+        outgoing.status = 'cached';
+
+        const content = new Content();
+        await content.resolve(outgoing);
+
+        t.same(results, [
+            '</foo/bar.js>; type=application/javascript; rel=preload; as=script; asset-type=style',
+            '</foo/bar.css>; type=text/css; rel=preload; as=style; asset-type=style',
+        ]);
+        await server.close();
+        t.end();
+    },
+);

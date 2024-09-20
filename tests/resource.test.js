@@ -853,9 +853,41 @@ tap.test(
 );
 
 tap.test(
+    'Resource().fetch - hints complete event emitted once all early hints received - resource is failing',
+    async (t) => {
+        t.plan(3);
+        const server = new PodletServer({
+            version: '1.0.0',
+            assets: {
+                js: '/foo/bar.js',
+                css: '/foo/bar.css',
+            },
+            content: '/does/not/exist',
+        });
+        const service = await server.listen();
+
+        const client = new Client({ name: 'podiumClient' });
+        const component = client.register(service.options);
+
+        const incoming = new HttpIncoming({ headers: {} });
+
+        incoming.hints.on('complete', (assets) => {
+            t.ok(true);
+            t.equal(assets.js.length, 1);
+            t.equal(assets.css.length, 1);
+            t.end();
+        });
+
+        await component.fetch(incoming);
+
+        await server.close();
+    },
+);
+
+tap.test(
     'Resource().fetch - hints complete event emitted once all early hints received - multiple resource components',
     async (t) => {
-        t.plan(1);
+        t.plan(3);
         const server1 = new PodletServer({
             name: 'one',
             version: '1.0.0',
@@ -891,7 +923,9 @@ tap.test(
 
         const incoming = new HttpIncoming({ headers: {} });
 
-        incoming.hints.on('complete', () => {
+        incoming.hints.on('complete', (assets) => {
+            t.equal(assets.js.length, 3);
+            t.equal(assets.css.length, 3);
             t.ok(true);
             t.end();
         });

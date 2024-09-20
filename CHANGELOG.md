@@ -1,3 +1,10 @@
+# [5.2.0-next.3](https://github.com/podium-lib/client/compare/v5.2.0-next.2...v5.2.0-next.3) (2024-09-20)
+
+
+### Features
+
+* write early hints to browser ([42513a3](https://github.com/podium-lib/client/commit/42513a38f5304648f7b2fb915995c66dc1dd3594))
+
 # [5.2.0-next.2](https://github.com/podium-lib/client/compare/v5.2.0-next.1...v5.2.0-next.2) (2024-09-16)
 
 

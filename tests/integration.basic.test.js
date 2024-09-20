@@ -562,3 +562,65 @@ tap.test(
         t.same(responseB.content, '<p>fallback</p>');
     },
 );
+
+tap.test('integration - 103 early hints enabled by default', async (t) => {
+    const server = new PodletServer({
+        name: 'aa',
+        assets: {
+            js: '/foo/bar.js',
+            css: '/foo/bar.css',
+        },
+    });
+
+    const service = await server.listen();
+
+    const client = new Client({ name: 'podiumClient' });
+    const a = client.register(service.options);
+
+    let count = 0;
+    const incoming = new HttpIncoming(
+        { headers },
+        {
+            writeEarlyHints() {
+                count++;
+            },
+        },
+    );
+
+    await a.fetch(incoming);
+
+    t.equal(count, 1);
+
+    await server.close();
+});
+
+tap.test('integration - 103 early hints disabled', async (t) => {
+    const server = new PodletServer({
+        name: 'aa',
+        assets: {
+            js: '/foo/bar.js',
+            css: '/foo/bar.css',
+        },
+    });
+
+    const service = await server.listen();
+
+    const client = new Client({ name: 'podiumClient' });
+    const a = client.register({ ...service.options, earlyHints: false });
+
+    let count = 0;
+    const incoming = new HttpIncoming(
+        { headers },
+        {
+            writeEarlyHints() {
+                count++;
+            },
+        },
+    );
+
+    await a.fetch(incoming);
+
+    t.equal(count, 0);
+
+    await server.close();
+});

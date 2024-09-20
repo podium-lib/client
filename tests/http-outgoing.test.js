@@ -180,11 +180,11 @@ tap.test(
             t.equal(result.link.length, 2);
             t.equal(
                 result.link[0],
-                '<https://assets.foo.com/scripts.js>; type=application/javascript; rel=preload; as=script; asset-type=style',
+                '<https://assets.foo.com/scripts.js>; type=application/javascript; rel=preload; as=script',
             );
             t.equal(
                 result.link[1],
-                '<https://assets.foo.com/styles.js>; type=text/css; rel=preload; as=style; asset-type=style',
+                '<https://assets.foo.com/styles.js>; type=text/css; rel=preload; as=style',
             );
             t.end();
         });

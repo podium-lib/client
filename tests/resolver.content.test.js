@@ -727,8 +727,8 @@ tap.test(
         await content.resolve(outgoing);
 
         t.same(results, [
-            '</foo/bar.js>; type=application/javascript; rel=preload; as=script; asset-type=style',
-            '</foo/bar.css>; type=text/css; rel=preload; as=style; asset-type=style',
+            '</foo/bar.js>; type=application/javascript; rel=preload; as=script',
+            '</foo/bar.css>; type=text/css; rel=preload; as=style',
         ]);
         await server.close();
         t.end();

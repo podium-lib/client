@@ -127,7 +127,7 @@ tap.test(
 );
 
 tap.test(
-    'HttpOutgoing() - call .writeEarlyHints() - should not all repsonse.writeEarlyHints() if no assets have been set',
+    'HttpOutgoing() - call .writeEarlyHints() - should not call repsonse.writeEarlyHints() if no assets have been set',
     (t) => {
         t.plan(1);
         let count = 0;

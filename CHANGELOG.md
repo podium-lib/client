@@ -1,3 +1,15 @@
+# [5.2.0-next.4](https://github.com/podium-lib/client/compare/v5.2.0-next.3...v5.2.0-next.4) (2024-09-24)
+
+
+### Bug Fixes
+
+* update @podium/utils to support hints asset collection ([fe97c44](https://github.com/podium-lib/client/commit/fe97c44bc6d29d1e45d335235cd3b1ef6eeafeaa))
+
+
+### Features
+
+* keep track of which resources have emitted early hints and emit complete event once all resources have emitted ([7cf916a](https://github.com/podium-lib/client/commit/7cf916ab286a3c6cb8fbfdae46634b58f2be256f))
+
 # [5.2.0-next.3](https://github.com/podium-lib/client/compare/v5.2.0-next.2...v5.2.0-next.3) (2024-09-20)
 
 

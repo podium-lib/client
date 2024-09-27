@@ -49,10 +49,9 @@
   },
   "devDependencies": {
     "@podium/eslint-config": "1.0.0",
+    "@podium/semantic-release-config": "2.0.0",
     "@podium/test-utils": "2.5.2",
     "@podium/typescript-config": "1.0.0",
-    "@semantic-release/changelog": "6.0.3",
-    "@semantic-release/git": "10.0.1",
     "@sinonjs/fake-timers": "11.3.1",
     "@types/readable-stream": "4.0.15",
     "benchmark": "2.1.4",
@@ -63,7 +62,7 @@
     "is-stream": "4.0.1",
     "npm-run-all2": "6.2.3",
     "prettier": "3.3.2",
-    "semantic-release": "23.1.1",
+    "semantic-release": "24.1.1",
     "tap": "18.7.2",
     "typescript": "5.4.5"
   }

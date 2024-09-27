@@ -31,10 +31,10 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "run-s test:unit test:types",
-    "test:unit": "tap --disable-coverage --allow-empty-coverage",
-    "test:types": "tsc --project tsconfig.test.json",
-    "types": "tsc --declaration --emitDeclarationOnly"
+    "test": "tap --disable-coverage --allow-empty-coverage",
+    "types": "run-s types:tsc types:test",
+    "types:tsc": "tsc",
+    "types:test": "tsc --project tsconfig.test.json"
   },
   "dependencies": {
     "@hapi/boom": "10.0.1",
@@ -50,11 +50,9 @@
   "devDependencies": {
     "@podium/eslint-config": "1.0.0",
     "@podium/test-utils": "2.5.2",
+    "@podium/typescript-config": "1.0.0",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "10.1.7",
-    "@semantic-release/npm": "12.0.1",
-    "@semantic-release/release-notes-generator": "13.0.0",
     "@sinonjs/fake-timers": "11.3.1",
     "@types/readable-stream": "4.0.15",
     "benchmark": "2.1.4",
@@ -63,7 +61,7 @@
     "get-stream": "9.0.1",
     "http-proxy": "1.18.1",
     "is-stream": "4.0.1",
-    "npm-run-all2": "5.0.2",
+    "npm-run-all2": "6.2.3",
     "prettier": "3.3.2",
     "semantic-release": "23.1.1",
     "tap": "18.7.2",

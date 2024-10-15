@@ -156,7 +156,6 @@ tap.test(
             'content-type': 'text/html; charset=utf-8',
             date: '<replaced>',
             'podlet-version': '1.0.0',
-            link: '<http://fakejs.com>; type=default; asset-type=script, <http://fakecss.com>; type=text/css; rel=stylesheet; asset-type=style',
         });
         t.same(result.css, [
             {

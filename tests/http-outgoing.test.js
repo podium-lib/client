@@ -1,8 +1,6 @@
 import tap from 'tap';
 import { destinationBufferStream } from '@podium/test-utils';
 import { PassThrough } from 'stream';
-import { HttpIncoming } from '@podium/utils';
-import { AssetCss, AssetJs } from '@podium/utils';
 import HttpOutgoing from '../lib/http-outgoing.js';
 
 const REQ_OPTIONS = {
@@ -123,70 +121,5 @@ tap.test(
         const outgoing = new HttpOutgoing(options, REQ_OPTIONS);
         t.ok(outgoing.throwable);
         t.end();
-    },
-);
-
-tap.test(
-    'HttpOutgoing() - call .writeEarlyHints() - should not call repsonse.writeEarlyHints() if no assets have been set',
-    (t) => {
-        t.plan(1);
-        let count = 0;
-        const incoming = new HttpIncoming(
-            {},
-            {
-                writeEarlyHints() {
-                    count++;
-                },
-            },
-        );
-        const outgoing = new HttpOutgoing(
-            RESOURCE_OPTIONS,
-            REQ_OPTIONS,
-            incoming,
-        );
-        outgoing.writeEarlyHints();
-
-        t.equal(count, 0);
-    },
-);
-
-tap.test(
-    'HttpOutgoing() - call .writeEarlyHints() - should call repsonse.writeEarlyHints()',
-    (t) => {
-        t.plan(3);
-        let result;
-        const incoming = new HttpIncoming(
-            {},
-            {
-                writeEarlyHints(options, cb) {
-                    result = options;
-                    cb();
-                },
-            },
-        );
-        const outgoing = new HttpOutgoing(
-            RESOURCE_OPTIONS,
-            REQ_OPTIONS,
-            incoming,
-        );
-        outgoing.js = [
-            new AssetJs({ value: 'https://assets.foo.com/scripts.js' }),
-        ];
-        outgoing.css = [
-            new AssetCss({ value: 'https://assets.foo.com/styles.js' }),
-        ];
-
-        outgoing.writeEarlyHints(() => {
-            t.equal(result.link.length, 2);
-            t.equal(
-                result.link[0],
-                '<https://assets.foo.com/scripts.js>; type=application/javascript; rel=preload; as=script',
-            );
-            t.equal(
-                result.link[1],
-                '<https://assets.foo.com/styles.js>; type=text/css; rel=preload; as=style',
-            );
-            t.end();
-        });
     },
 );

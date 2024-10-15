@@ -1,6 +1,8 @@
 import tap from 'tap';
 import { PodletServer, HttpServer, HttpsServer } from '@podium/test-utils';
 import { HttpIncoming } from '@podium/utils';
+import Podlet from '@podium/podlet';
+import express from 'express';
 import Client from '../lib/client.js';
 
 // Fake headers
@@ -563,127 +565,148 @@ tap.test(
     },
 );
 
-tap.test('integration - 103 early hints enabled by default', async (t) => {
-    const server = new PodletServer({
-        name: 'aa',
-        assets: {
-            js: '/foo/bar.js',
-            css: '/foo/bar.css',
-        },
+function createPodletServer() {
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+        pathname: '/',
+        development: true,
     });
 
-    const service = await server.listen();
-
-    const client = new Client({ name: 'podiumClient' });
-    const a = client.register(service.options);
-
-    let count = 0;
-    const incoming = new HttpIncoming(
-        { headers },
-        {
-            writeEarlyHints() {
-                count++;
-            },
-        },
-    );
-
-    await a.fetch(incoming);
-
-    t.equal(count, 1);
-
-    await server.close();
-});
-
-tap.test('integration - 103 early hints disabled', async (t) => {
-    const server = new PodletServer({
-        name: 'aa',
-        assets: {
-            js: '/foo/bar.js',
-            css: '/foo/bar.css',
-        },
+    podlet.js({
+        value: '/scripts.js',
+        type: 'module',
+        async: true,
+        data: [{ key: 'foo', value: 'bar' }],
+        scope: 'content',
     });
+    podlet.css({ value: '/styles.css', scope: 'content' });
 
-    const service = await server.listen();
-
-    const client = new Client({ name: 'podiumClient' });
-    const a = client.register({ ...service.options, earlyHints: false });
-
-    let count = 0;
-    const incoming = new HttpIncoming(
-        { headers },
-        {
-            writeEarlyHints() {
-                count++;
-            },
-        },
-    );
-
-    await a.fetch(incoming);
-
-    t.equal(count, 0);
-
-    await server.close();
-});
+    const app = express();
+    app.use(podlet.middleware());
+    app.get(podlet.manifest(), (req, res) => {
+        res.send(podlet);
+    });
+    app.get(podlet.content(), (req, res) => {
+        res.sendHeaders();
+        setTimeout(() => {
+            res.podiumSend('<h1>OK!</h1>');
+        }, 1000);
+    });
+    return app;
+}
 
 tap.test(
-    'integration - 103 early hints used to build a document head',
+    'assets - .js() and .css() - Link headers - should be used to send assets',
     async (t) => {
-        t.plan(1);
-        const header = new PodletServer({
-            name: 'header',
-            assets: {
-                js: '/header/bar.js',
-                css: '/header/bar.css',
-            },
+        const app = createPodletServer();
+        const server = app.listen(0);
+
+        const result = await fetch(
+            `http://localhost:${server.address().port}/`,
+        );
+        const linkHeaders = result.headers.get('link');
+
+        t.equal(
+            linkHeaders,
+            '</scripts.js>; async=true; type=module; data-foo=bar; scope=content; asset-type=script, </styles.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
+        );
+
+        const body = await result.text();
+        t.match(body, /<h1>OK!<\/h1>/);
+
+        const podiumClient = new Client({ name: 'podiumClient' });
+        const podletClient = podiumClient.register({
+            name: 'foo',
+            uri: `http://localhost:${server.address().port}/manifest.json`,
         });
-        const footer = new PodletServer({
-            name: 'footer',
-            assets: {
-                js: '/footer/bar.js',
-                css: '/footer/bar.css',
-            },
-        });
-
-        const service = await Promise.all([header.listen(), footer.listen()]);
-
-        const client = new Client({ name: 'podiumClient' });
-
-        const headerClient = client.register(service[0].options);
-        const footerClient = client.register(service[1].options);
 
         const incoming = new HttpIncoming({ headers });
+        const response = await podletClient.fetch(incoming);
 
-        incoming.hints.once('complete', ({ js, css }) => {
-            const documentHead = `
-            <html>
-              <head>
-                ${css.map((style) => style.toHTML()).join('')}
-                ${js.map((script) => script.toHTML()).join('')}
-              </head>
-              <body>
-          `;
+        t.equal(response.content, '<h1>OK!</h1>');
 
-            t.equal(
-                documentHead.trim().replace(/>\s*</g, '><'),
-                `<html>
-                  <head>
-                    <link href="/header/bar.css" type="text/css" rel="stylesheet">
-                    <link href="/footer/bar.css" type="text/css" rel="stylesheet">
-                    <script src="/header/bar.js"></script>
-                    <script src="/footer/bar.js"></script>
-                  </head>
-                  <body>`
-                    .trim()
-                    .replace(/>\s*</g, '><'),
-            );
-            t.end();
+        const css = response.css[0].toJSON();
+        t.equal(css.crossorigin, undefined);
+        t.equal(css.disabled, undefined);
+        t.equal(css.hreflang, undefined);
+        t.equal(css.title, undefined);
+        t.equal(css.value, '/styles.css');
+        t.equal(css.media, undefined);
+        t.equal(css.type, 'text/css');
+        t.equal(css.rel, 'stylesheet');
+        t.equal(css.as, undefined);
+
+        const js = response.js[0].toJSON();
+        t.equal(js.referrerpolicy, undefined);
+        t.equal(js.crossorigin, undefined);
+        t.equal(js.integrity, undefined);
+        t.equal(js.nomodule, undefined);
+        t.equal(js.value, '/scripts.js');
+        t.equal(js.async, 'true');
+        t.equal(js.defer, undefined);
+        t.equal(js.type, 'module');
+        t.same(js.data, undefined);
+
+        server.close();
+    },
+);
+
+tap.test(
+    'assets - .js() and .css() - Link headers - sent and received earlier than body',
+    async (t) => {
+        const app = createPodletServer();
+        const server = app.listen(0);
+
+        const podiumClient = new Client({ name: 'podiumClient' });
+        const podletClient = podiumClient.register({
+            name: 'foo',
+            uri: `http://localhost:${server.address().port}/manifest.json`,
         });
 
-        await Promise.all([
-            headerClient.fetch(incoming),
-            footerClient.fetch(incoming),
-        ]);
+        let assetEnd;
 
-        await Promise.all([header.close(), footer.close()]);
+        const incoming = new HttpIncoming({ headers });
+        const outgoing = podletClient.stream(incoming);
+        outgoing.on('beforeStream', (response) => {
+            assetEnd = new Date().getTime();
+
+            const css = response.css[0].toJSON();
+            t.equal(css.crossorigin, undefined);
+            t.equal(css.disabled, undefined);
+            t.equal(css.hreflang, undefined);
+            t.equal(css.title, undefined);
+            t.equal(css.value, '/styles.css');
+            t.equal(css.media, undefined);
+            t.equal(css.type, 'text/css');
+            t.equal(css.rel, 'stylesheet');
+            t.equal(css.as, undefined);
+
+            const js = response.js[0].toJSON();
+            t.equal(js.referrerpolicy, undefined);
+            t.equal(js.crossorigin, undefined);
+            t.equal(js.integrity, undefined);
+            t.equal(js.nomodule, undefined);
+            t.equal(js.value, '/scripts.js');
+            t.equal(js.async, 'true');
+            t.equal(js.defer, undefined);
+            t.equal(js.type, 'module');
+            t.same(js.data, undefined);
+        });
+
+        const content = [];
+        for await (const chunk of outgoing) {
+            content.push(chunk.toString());
+        }
+
+        const bodyEnd = new Date().getTime();
+        // @ts-ignore
+        const timeDiff = bodyEnd - assetEnd;
+
+        t.ok(timeDiff > 800);
+
+        t.equal(content[0], '<h1>OK!</h1>');
+
+        server.close();
     },
 );

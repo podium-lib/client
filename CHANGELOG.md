@@ -1,3 +1,10 @@
+# [5.2.0-next.5](https://github.com/podium-lib/client/compare/v5.2.0-next.4...v5.2.0-next.5) (2024-10-15)
+
+
+### Features
+
+* replace early hints with header link reading ([4429681](https://github.com/podium-lib/client/commit/44296811441a857fabeaebb583c42da28ec47705))
+
 # [5.2.0-next.4](https://github.com/podium-lib/client/compare/v5.2.0-next.3...v5.2.0-next.4) (2024-09-24)
 
 

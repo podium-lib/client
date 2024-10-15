@@ -1,6 +1,8 @@
 import tap from 'tap';
 import { PodletServer, HttpServer, HttpsServer } from '@podium/test-utils';
 import { HttpIncoming } from '@podium/utils';
+import Podlet from '@podium/podlet';
+import express from 'express';
 import Client from '../lib/client.js';
 
 // Fake headers
@@ -560,5 +562,151 @@ tap.test(
 
         const responseB = await podlet.fetch(new HttpIncoming({ headers }));
         t.same(responseB.content, '<p>fallback</p>');
+    },
+);
+
+function createPodletServer() {
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+        pathname: '/',
+        development: true,
+    });
+
+    podlet.js({
+        value: '/scripts.js',
+        type: 'module',
+        async: true,
+        data: [{ key: 'foo', value: 'bar' }],
+        scope: 'content',
+    });
+    podlet.css({ value: '/styles.css', scope: 'content' });
+
+    const app = express();
+    app.use(podlet.middleware());
+    app.get(podlet.manifest(), (req, res) => {
+        res.send(podlet);
+    });
+    app.get(podlet.content(), (req, res) => {
+        res.sendHeaders();
+        setTimeout(() => {
+            res.podiumSend('<h1>OK!</h1>');
+        }, 1000);
+    });
+    return app;
+}
+
+tap.test(
+    'assets - .js() and .css() - Link headers - should be used to send assets',
+    async (t) => {
+        const app = createPodletServer();
+        const server = app.listen(0);
+
+        const result = await fetch(
+            `http://localhost:${server.address().port}/`,
+        );
+        const linkHeaders = result.headers.get('link');
+
+        t.equal(
+            linkHeaders,
+            '</scripts.js>; async=true; type=module; data-foo=bar; scope=content; asset-type=script, </styles.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
+        );
+
+        const body = await result.text();
+        t.match(body, /<h1>OK!<\/h1>/);
+
+        const podiumClient = new Client({ name: 'podiumClient' });
+        const podletClient = podiumClient.register({
+            name: 'foo',
+            uri: `http://localhost:${server.address().port}/manifest.json`,
+        });
+
+        const incoming = new HttpIncoming({ headers });
+        const response = await podletClient.fetch(incoming);
+
+        t.equal(response.content, '<h1>OK!</h1>');
+
+        const css = response.css[0].toJSON();
+        t.equal(css.crossorigin, undefined);
+        t.equal(css.disabled, undefined);
+        t.equal(css.hreflang, undefined);
+        t.equal(css.title, undefined);
+        t.equal(css.value, '/styles.css');
+        t.equal(css.media, undefined);
+        t.equal(css.type, 'text/css');
+        t.equal(css.rel, 'stylesheet');
+        t.equal(css.as, undefined);
+
+        const js = response.js[0].toJSON();
+        t.equal(js.referrerpolicy, undefined);
+        t.equal(js.crossorigin, undefined);
+        t.equal(js.integrity, undefined);
+        t.equal(js.nomodule, undefined);
+        t.equal(js.value, '/scripts.js');
+        t.equal(js.async, 'true');
+        t.equal(js.defer, undefined);
+        t.equal(js.type, 'module');
+        t.same(js.data, undefined);
+
+        server.close();
+    },
+);
+
+tap.test(
+    'assets - .js() and .css() - Link headers - sent and received earlier than body',
+    async (t) => {
+        const app = createPodletServer();
+        const server = app.listen(0);
+
+        const podiumClient = new Client({ name: 'podiumClient' });
+        const podletClient = podiumClient.register({
+            name: 'foo',
+            uri: `http://localhost:${server.address().port}/manifest.json`,
+        });
+
+        let assetEnd;
+
+        const incoming = new HttpIncoming({ headers });
+        const outgoing = podletClient.stream(incoming);
+        outgoing.on('beforeStream', (response) => {
+            assetEnd = new Date().getTime();
+
+            const css = response.css[0].toJSON();
+            t.equal(css.crossorigin, undefined);
+            t.equal(css.disabled, undefined);
+            t.equal(css.hreflang, undefined);
+            t.equal(css.title, undefined);
+            t.equal(css.value, '/styles.css');
+            t.equal(css.media, undefined);
+            t.equal(css.type, 'text/css');
+            t.equal(css.rel, 'stylesheet');
+            t.equal(css.as, undefined);
+
+            const js = response.js[0].toJSON();
+            t.equal(js.referrerpolicy, undefined);
+            t.equal(js.crossorigin, undefined);
+            t.equal(js.integrity, undefined);
+            t.equal(js.nomodule, undefined);
+            t.equal(js.value, '/scripts.js');
+            t.equal(js.async, 'true');
+            t.equal(js.defer, undefined);
+            t.equal(js.type, 'module');
+            t.same(js.data, undefined);
+        });
+
+        const content = [];
+        for await (const chunk of outgoing) {
+            content.push(chunk.toString());
+        }
+
+        const bodyEnd = new Date().getTime();
+        // @ts-ignore
+        const timeDiff = bodyEnd - assetEnd;
+
+        t.ok(timeDiff > 800);
+
+        t.equal(content[0], '<h1>OK!</h1>');
+
+        server.close();
     },
 );

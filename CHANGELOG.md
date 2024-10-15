@@ -1,3 +1,15 @@
+# [5.2.0-next.6](https://github.com/podium-lib/client/compare/v5.2.0-next.5...v5.2.0-next.6) (2024-10-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v5.2.0 ([f7d4675](https://github.com/podium-lib/client/commit/f7d4675e6e2b9f2fba26cbd164d3e7a73b9c132e))
+* **deps:** update dependency @podium/utils to v5.2.1 ([c9e9cfa](https://github.com/podium-lib/client/commit/c9e9cfa650767a29cf06da7cd49056093cb9f738))
+* **deps:** update dependency @podium/utils to v5.3.0 ([3caf71b](https://github.com/podium-lib/client/commit/3caf71b7aaff72598934df7ee65e33050d985d01))
+* **deps:** update dependency @podium/utils to v5.3.1 ([2cdc889](https://github.com/podium-lib/client/commit/2cdc88953b90dabd1cf35df2cd310a60ab9eee95))
+* **deps:** update dependency undici to v6.20.0 ([cbbfcf4](https://github.com/podium-lib/client/commit/cbbfcf44e9143c72b54d85148106a7f61445419e))
+* **deps:** update dependency undici to v6.20.1 ([607944d](https://github.com/podium-lib/client/commit/607944d60ca67bccb6863e88073ce9c6f8f4d871))
+
 # [5.2.0-next.5](https://github.com/podium-lib/client/compare/v5.2.0-next.4...v5.2.0-next.5) (2024-10-15)
 
 

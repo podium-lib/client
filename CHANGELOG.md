@@ -5,52 +5,47 @@
 
 * replace early hints with header link reading ([4429681](https://github.com/podium-lib/client/commit/44296811441a857fabeaebb583c42da28ec47705))
 
-# [5.2.0-next.4](https://github.com/podium-lib/client/compare/v5.2.0-next.3...v5.2.0-next.4) (2024-09-24)
+## [5.1.15](https://github.com/podium-lib/client/compare/v5.1.14...v5.1.15) (2024-10-14)
 
 
 ### Bug Fixes
 
-* update @podium/utils to support hints asset collection ([fe97c44](https://github.com/podium-lib/client/commit/fe97c44bc6d29d1e45d335235cd3b1ef6eeafeaa))
+* **deps:** update dependency undici to v6.20.1 ([607944d](https://github.com/podium-lib/client/commit/607944d60ca67bccb6863e88073ce9c6f8f4d871))
 
-
-### Features
-
-* keep track of which resources have emitted early hints and emit complete event once all resources have emitted ([7cf916a](https://github.com/podium-lib/client/commit/7cf916ab286a3c6cb8fbfdae46634b58f2be256f))
-
-# [5.2.0-next.3](https://github.com/podium-lib/client/compare/v5.2.0-next.2...v5.2.0-next.3) (2024-09-20)
-
-
-### Features
-
-* write early hints to browser ([42513a3](https://github.com/podium-lib/client/commit/42513a38f5304648f7b2fb915995c66dc1dd3594))
-
-# [5.2.0-next.2](https://github.com/podium-lib/client/compare/v5.2.0-next.1...v5.2.0-next.2) (2024-09-16)
+## [5.1.14](https://github.com/podium-lib/client/compare/v5.1.13...v5.1.14) (2024-10-09)
 
 
 ### Bug Fixes
 
-* improve error messages when fetching from manifest, content and fallback routes when a timeout occurs ([e188bbc](https://github.com/podium-lib/client/commit/e188bbc40d30ed2e21947dd29de76bd218907428))
+* **deps:** update dependency undici to v6.20.0 ([cbbfcf4](https://github.com/podium-lib/client/commit/cbbfcf44e9143c72b54d85148106a7f61445419e))
 
-# [5.2.0-next.1](https://github.com/podium-lib/client/compare/v5.1.10-next.2...v5.2.0-next.1) (2024-09-10)
-
-
-### Features
-
-* read assets from podlets using 103 early hints ([64e4b27](https://github.com/podium-lib/client/commit/64e4b27773b87c220bcab1028ecdda82be2aa9fc))
-
-## [5.1.10-next.2](https://github.com/podium-lib/client/compare/v5.1.10-next.1...v5.1.10-next.2) (2024-08-26)
+## [5.1.13](https://github.com/podium-lib/client/compare/v5.1.12...v5.1.13) (2024-09-22)
 
 
 ### Bug Fixes
 
-* use AbortController instead of AbortSignal to avoid unhandled exception ([#412](https://github.com/podium-lib/client/issues/412)) ([87f5ffe](https://github.com/podium-lib/client/commit/87f5ffe553aa49189658a9be0e19d1323878a55a))
+* **deps:** update dependency @podium/utils to v5.3.1 ([2cdc889](https://github.com/podium-lib/client/commit/2cdc88953b90dabd1cf35df2cd310a60ab9eee95))
 
-## [5.1.10-next.1](https://github.com/podium-lib/client/compare/v5.1.9...v5.1.10-next.1) (2024-08-22)
+## [5.1.12](https://github.com/podium-lib/client/compare/v5.1.11...v5.1.12) (2024-09-20)
 
 
 ### Bug Fixes
 
-* use AbortSignal to ensure timeouts are respected ([08899d9](https://github.com/podium-lib/client/commit/08899d974246037cb1893a5b6d06bd6df58815e2))
+* **deps:** update dependency @podium/utils to v5.3.0 ([3caf71b](https://github.com/podium-lib/client/commit/3caf71b7aaff72598934df7ee65e33050d985d01))
+
+## [5.1.11](https://github.com/podium-lib/client/compare/v5.1.10...v5.1.11) (2024-09-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v5.2.1 ([c9e9cfa](https://github.com/podium-lib/client/commit/c9e9cfa650767a29cf06da7cd49056093cb9f738))
+
+## [5.1.10](https://github.com/podium-lib/client/compare/v5.1.9...v5.1.10) (2024-09-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v5.2.0 ([f7d4675](https://github.com/podium-lib/client/commit/f7d4675e6e2b9f2fba26cbd164d3e7a73b9c132e))
 
 ## [5.1.9](https://github.com/podium-lib/client/compare/v5.1.8...v5.1.9) (2024-08-19)
 

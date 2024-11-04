@@ -1,3 +1,10 @@
+# [5.2.0-next.8](https://github.com/podium-lib/client/compare/v5.2.0-next.7...v5.2.0-next.8) (2024-11-04)
+
+
+### Bug Fixes
+
+* update @podium/schemas to 5.1.0 ([95dafaa](https://github.com/podium-lib/client/commit/95dafaa0a5e9a6687f545f3a9983a647a4f6c1cb))
+
 # [5.2.0-next.7](https://github.com/podium-lib/client/compare/v5.2.0-next.6...v5.2.0-next.7) (2024-10-22)
 
 

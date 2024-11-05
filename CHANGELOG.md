@@ -1,3 +1,10 @@
+## [5.1.18](https://github.com/podium-lib/client/compare/v5.1.17...v5.1.18) (2024-11-05)
+
+
+### Bug Fixes
+
+* throw boom compatible error on badGateway for throwable podlet fetch ([#437](https://github.com/podium-lib/client/issues/437)) ([67c5268](https://github.com/podium-lib/client/commit/67c526838210e48f93fc471fe5161f16fcc5edcc))
+
 ## [5.1.17](https://github.com/podium-lib/client/compare/v5.1.16...v5.1.17) (2024-11-05)
 
 

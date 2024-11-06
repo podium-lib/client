@@ -1,3 +1,11 @@
+# [5.2.0-next.9](https://github.com/podium-lib/client/compare/v5.2.0-next.8...v5.2.0-next.9) (2024-11-06)
+
+
+### Bug Fixes
+
+* **deps:** update podium packages ([b39cb3e](https://github.com/podium-lib/client/commit/b39cb3eb173c27998e278dbfdc06768761012f88))
+* throw boom compatible error on badGateway for throwable podlet fetch ([#437](https://github.com/podium-lib/client/issues/437)) ([67c5268](https://github.com/podium-lib/client/commit/67c526838210e48f93fc471fe5161f16fcc5edcc))
+
 # [5.2.0-next.8](https://github.com/podium-lib/client/compare/v5.2.0-next.7...v5.2.0-next.8) (2024-11-04)
 
 

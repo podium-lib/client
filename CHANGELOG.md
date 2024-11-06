@@ -1,3 +1,22 @@
+# [5.2.0](https://github.com/podium-lib/client/compare/v5.1.18...v5.2.0) (2024-11-06)
+
+
+### Bug Fixes
+
+* improve error messages when fetching from manifest, content and fallback routes when a timeout occurs ([e188bbc](https://github.com/podium-lib/client/commit/e188bbc40d30ed2e21947dd29de76bd218907428))
+* update @podium/schemas to 5.1.0 ([95dafaa](https://github.com/podium-lib/client/commit/95dafaa0a5e9a6687f545f3a9983a647a4f6c1cb))
+* update @podium/utils to support hints asset collection ([fe97c44](https://github.com/podium-lib/client/commit/fe97c44bc6d29d1e45d335235cd3b1ef6eeafeaa))
+* use AbortController instead of AbortSignal to avoid unhandled exception ([#412](https://github.com/podium-lib/client/issues/412)) ([87f5ffe](https://github.com/podium-lib/client/commit/87f5ffe553aa49189658a9be0e19d1323878a55a))
+* use AbortSignal to ensure timeouts are respected ([08899d9](https://github.com/podium-lib/client/commit/08899d974246037cb1893a5b6d06bd6df58815e2))
+
+
+### Features
+
+* keep track of which resources have emitted early hints and emit complete event once all resources have emitted ([7cf916a](https://github.com/podium-lib/client/commit/7cf916ab286a3c6cb8fbfdae46634b58f2be256f))
+* read assets from podlets using 103 early hints ([64e4b27](https://github.com/podium-lib/client/commit/64e4b27773b87c220bcab1028ecdda82be2aa9fc))
+* replace early hints with header link reading ([4429681](https://github.com/podium-lib/client/commit/44296811441a857fabeaebb583c42da28ec47705))
+* write early hints to browser ([42513a3](https://github.com/podium-lib/client/commit/42513a38f5304648f7b2fb915995c66dc1dd3594))
+
 # [5.2.0-next.9](https://github.com/podium-lib/client/compare/v5.2.0-next.8...v5.2.0-next.9) (2024-11-06)
 
 

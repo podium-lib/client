@@ -80,6 +80,41 @@ tap.test(
 );
 
 tap.test(
+    'resolver.manifest() - unknown scope passed through as-is',
+    async (t) => {
+        const server = new PodletServer();
+        const serverManifest = JSON.parse(server._bodyManifest);
+        serverManifest.css = [{ value: '/foo', strategy: 'awesome-dom' }];
+        server._bodyManifest = JSON.stringify(serverManifest);
+
+        const service = await server.listen();
+
+        const manifest = new Manifest();
+        const outgoing = new HttpOutgoing(
+            {
+                uri: service.options.uri,
+                maxAge: 40000,
+                name: 'test',
+                timeout: 1000,
+            },
+            {},
+            new HttpIncoming({ headers }),
+        );
+
+        const res = await manifest.resolve(outgoing);
+        t.equal(
+            res.manifest.css?.length,
+            1,
+            'Expected to find /foo with strategy awesome-dom',
+        );
+        t.equal(outgoing.maxAge, 40000);
+
+        await server.close();
+        t.end();
+    },
+);
+
+tap.test(
     'resolver.manifest() - remote has "cache-control: public, max-age=10" header - should set outgoing.maxAge to header value',
     async (t) => {
         const server = new PodletServer();

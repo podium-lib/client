@@ -68,7 +68,7 @@ tap.test(
 
 tap.test('HttpOutgoing() - "this.manifest" should be {_fallback: ""}', (t) => {
     const outgoing = new HttpOutgoing(RESOURCE_OPTIONS, REQ_OPTIONS);
-    t.same(outgoing.manifest, { _fallback: '' });
+    t.same(outgoing.manifest, { _fallback: '', _js: [], _css: [] });
     t.end();
 });
 

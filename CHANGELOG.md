@@ -1,16 +1,25 @@
-## [5.1.18](https://github.com/podium-lib/client/compare/v5.1.17...v5.1.18) (2024-11-05)
-
-
-### Bug Fixes
-
-* throw boom compatible error on badGateway for throwable podlet fetch ([#437](https://github.com/podium-lib/client/issues/437)) ([67c5268](https://github.com/podium-lib/client/commit/67c526838210e48f93fc471fe5161f16fcc5edcc))
-
-## [5.1.17](https://github.com/podium-lib/client/compare/v5.1.16...v5.1.17) (2024-11-05)
+# [5.2.0-next.9](https://github.com/podium-lib/client/compare/v5.2.0-next.8...v5.2.0-next.9) (2024-11-06)
 
 
 ### Bug Fixes
 
 * **deps:** update podium packages ([b39cb3e](https://github.com/podium-lib/client/commit/b39cb3eb173c27998e278dbfdc06768761012f88))
+* throw boom compatible error on badGateway for throwable podlet fetch ([#437](https://github.com/podium-lib/client/issues/437)) ([67c5268](https://github.com/podium-lib/client/commit/67c526838210e48f93fc471fe5161f16fcc5edcc))
+
+# [5.2.0-next.8](https://github.com/podium-lib/client/compare/v5.2.0-next.7...v5.2.0-next.8) (2024-11-04)
+
+
+### Bug Fixes
+
+* update @podium/schemas to 5.1.0 ([95dafaa](https://github.com/podium-lib/client/commit/95dafaa0a5e9a6687f545f3a9983a647a4f6c1cb))
+
+# [5.2.0-next.7](https://github.com/podium-lib/client/compare/v5.2.0-next.6...v5.2.0-next.7) (2024-10-22)
+
+
+### Bug Fixes
+
+* use AbortController instead of AbortSignal to avoid unhandled exception ([#412](https://github.com/podium-lib/client/issues/412)) ([ebdfc74](https://github.com/podium-lib/client/commit/ebdfc742a44acb3891ee7e2f38adde5317e8e8d0))
+* use AbortSignal to ensure timeouts are respected ([3f970ed](https://github.com/podium-lib/client/commit/3f970ed5c3a5607615880cfe9ebee58409cd5ae0))
 
 ## [5.1.16](https://github.com/podium-lib/client/compare/v5.1.15...v5.1.16) (2024-10-17)
 

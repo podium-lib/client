@@ -84,6 +84,7 @@ tap.test(
     async (t) => {
         const server = new PodletServer();
         const service = await server.listen();
+        // @ts-ignore
         server.headersManifest = {
             'cache-control': 'public, max-age=10',
         };
@@ -115,6 +116,7 @@ tap.test(
     async (t) => {
         const server = new PodletServer();
         const service = await server.listen();
+        // @ts-ignore
         server.headersManifest = {
             'cache-control': 'no-cache',
         };
@@ -147,6 +149,7 @@ tap.test(
         const service = await server.listen();
 
         // Set expire header time to two hours into future
+        // @ts-ignore
         server.headersManifest = {
             expires: new Date(Date.now() + 7200000).toUTCString(),
         };
@@ -189,6 +192,7 @@ tap.test(
         const serviceB = await serverB.listen();
 
         // Set expires by http headers two hours into future
+        // @ts-ignore
         serverA.headersManifest = {
             expires: new Date(now + 1000 * 60 * 60 * 2).toUTCString(),
         };
@@ -204,7 +208,9 @@ tap.test(
         await a.fetch(new HttpIncoming({ headers }));
         await b.fetch(new HttpIncoming({ headers }));
 
+        // @ts-ignore
         t.equal(serverA.metrics.manifest, 1);
+        // @ts-ignore
         t.equal(serverB.metrics.manifest, 1);
 
         // Tick clock three hours into future
@@ -214,7 +220,9 @@ tap.test(
         await b.fetch(new HttpIncoming({ headers }));
 
         // Cache for server A should now have timed out
+        // @ts-ignore
         t.equal(serverA.metrics.manifest, 2);
+        // @ts-ignore
         t.equal(serverB.metrics.manifest, 1);
 
         await serverA.close();
@@ -241,7 +249,7 @@ tap.test(
         );
 
         await manifest.resolve(outgoing);
-        t.same(outgoing.manifest, { _fallback: '' });
+        t.same(outgoing.manifest, { _fallback: '', _js: [], _css: [] });
         t.end();
     },
 );
@@ -266,7 +274,7 @@ tap.test(
         );
 
         await manifest.resolve(outgoing);
-        t.same(outgoing.manifest, { _fallback: '' });
+        t.same(outgoing.manifest, { _fallback: '', _js: [], _css: [] });
 
         await server.close();
         t.end();
@@ -293,7 +301,7 @@ tap.test(
         );
 
         await manifest.resolve(outgoing);
-        t.same(outgoing.manifest, { _fallback: '' });
+        t.same(outgoing.manifest, { _fallback: '', _js: [], _css: [] });
 
         await server.close();
         t.end();

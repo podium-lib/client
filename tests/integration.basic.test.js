@@ -710,3 +710,66 @@ tap.test(
         server.close();
     },
 );
+
+tap.test(
+    'integration - asset hints used to build a document head',
+    async (t) => {
+        t.plan(1);
+        const header = new PodletServer({
+            name: 'header',
+            assets: {
+                js: 'http://example.com/header/bar.js',
+                css: 'http://example.com/header/bar.css',
+            },
+        });
+        const footer = new PodletServer({
+            name: 'footer',
+            assets: {
+                js: 'http://example.com/footer/bar.js',
+                css: 'http://example.com/footer/bar.css',
+            },
+        });
+
+        const service = await Promise.all([header.listen(), footer.listen()]);
+
+        const client = new Client({ name: 'podiumClient' });
+
+        const headerClient = client.register(service[0].options);
+        const footerClient = client.register(service[1].options);
+
+        const incoming = new HttpIncoming({ headers });
+
+        const headerFetch = headerClient.fetch(incoming);
+        const footerFetch = footerClient.fetch(incoming);
+
+        incoming.hints.once('complete', ({ js, css }) => {
+            const documentHead = `
+            <html>
+              <head>
+                ${css.map((style) => style.toHTML()).join('')}
+                ${js.map((script) => script.toHTML()).join('')}
+              </head>
+              <body>
+          `;
+
+            t.equal(
+                documentHead.trim().replace(/>\s*</g, '><'),
+                `<html>
+                  <head>
+                    <link href="http://example.com/header/bar.css" type="text/css" rel="stylesheet">
+                    <link href="http://example.com/footer/bar.css" type="text/css" rel="stylesheet">
+                    <script src="http://example.com/header/bar.js"></script>
+                    <script src="http://example.com/footer/bar.js"></script>
+                  </head>
+                  <body>`
+                    .trim()
+                    .replace(/>\s*</g, '><'),
+            );
+            t.end();
+        });
+
+        await Promise.all([headerFetch, footerFetch]);
+
+        await Promise.all([header.close(), footer.close()]);
+    },
+);

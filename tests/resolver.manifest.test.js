@@ -542,6 +542,8 @@ tap.test(
             {
                 uri: podlet.manifest,
                 name: 'up',
+                timeout: 1000,
+                maxAge: Infinity,
             },
             {},
             new HttpIncoming({ headers }),
@@ -550,6 +552,8 @@ tap.test(
             {
                 uri: 'https://localhost:8128/manifest.json',
                 name: 'down',
+                timeout: 1000,
+                maxAge: Infinity,
             },
             {},
             new HttpIncoming({ headers }),

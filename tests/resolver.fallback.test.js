@@ -195,3 +195,42 @@ tap.test(
         t.end();
     },
 );
+
+tap.test(
+    'resolver.fallback() - should handle unreachable podlet',
+    async (t) => {
+        const server = new PodletServer({
+            name: 'aa',
+        });
+        const podlet = await server.listen();
+
+        const up = new HttpOutgoing(
+            {
+                uri: podlet.manifest,
+                name: 'up',
+            },
+            {},
+            new HttpIncoming({ headers }),
+        );
+        const down = new HttpOutgoing(
+            {
+                uri: 'https://localhost:8128/manifest.json',
+                name: 'down',
+            },
+            {},
+            new HttpIncoming({ headers }),
+        );
+
+        try {
+            await Promise.all([
+                new Fallback().resolve(up),
+                new Fallback().resolve(down),
+            ]);
+        } catch (e) {
+            t.fail(e);
+        }
+
+        await server.close();
+        t.pass();
+    },
+);

@@ -129,3 +129,35 @@ tap.test(
         await Promise.all([serverA.close(), serverB.close()]);
     },
 );
+
+/**
+ * timeouts
+ */
+
+tap.test('client.fetch() - should handle unreachable podlet', async (t) => {
+    const server = new PodletServer({
+        name: 'aa',
+    });
+    const podlet = await server.listen();
+
+    const client = new Client({ name: 'podiumClient' });
+
+    const up = client.register(podlet.options);
+    const down = client.register({
+        name: 'consents',
+        uri: 'https://localhost:8128/manifest.json',
+    });
+
+    await client.refreshManifests();
+
+    const incoming = new HttpIncoming({ headers });
+
+    try {
+        await Promise.all([up.fetch(incoming), down.fetch(incoming)]);
+    } catch (e) {
+        t.fail(e);
+    }
+
+    await server.close();
+    t.pass();
+});

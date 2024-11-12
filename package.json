@@ -48,22 +48,22 @@
     "undici": "6.20.1"
   },
   "devDependencies": {
+    "@podium/eslint-config": "1.0.0",
+    "@podium/semantic-release-config": "2.0.0",
     "@podium/test-utils": "3.1.0-next.5",
+    "@podium/typescript-config": "1.0.0",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/github": "10.0.6",
     "@semantic-release/npm": "12.0.1",
     "@semantic-release/release-notes-generator": "13.0.0",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-prettier": "5.1.3",
-    "express": "4.21.1",
-    "@podium/eslint-config": "1.0.0",
-    "@podium/semantic-release-config": "2.0.0",
-    "@podium/typescript-config": "1.0.0",
     "@sinonjs/fake-timers": "11.3.1",
     "@types/readable-stream": "4.0.18",
     "benchmark": "2.1.4",
     "eslint": "9.6.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-prettier": "5.1.3",
+    "express": "4.21.1",
     "get-stream": "9.0.1",
     "http-proxy": "1.18.1",
     "is-stream": "4.0.1",
@@ -71,6 +71,7 @@
     "prettier": "3.3.2",
     "semantic-release": "24.1.2",
     "tap": "18.7.2",
-    "typescript": "5.6.3"
+    "typescript": "5.6.3",
+    "why-is-node-running": "3.2.1"
   }
 }

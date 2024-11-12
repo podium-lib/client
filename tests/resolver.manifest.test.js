@@ -557,8 +557,8 @@ tap.test(
 
         try {
             await Promise.all([
-                new Manifest({ logger: console }).resolve(up),
-                new Manifest({ logger: console }).resolve(down),
+                new Manifest().resolve(up),
+                new Manifest().resolve(down),
             ]);
         } catch (e) {
             t.fail(e);

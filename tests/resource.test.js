@@ -824,7 +824,7 @@ tap.test(
 );
 
 tap.test(
-    'Resource().fetch - hints complete event emitted once all early hints received - single resource component',
+    'Resource().fetch - assets received event emitted once all link header assets received - single resource component',
     async (t) => {
         t.plan(1);
         const server = new PodletServer({
@@ -841,7 +841,7 @@ tap.test(
 
         const incoming = new HttpIncoming({ headers: {} });
 
-        incoming.hints.on('complete', () => {
+        incoming.assets.on('received', () => {
             t.ok(true);
             t.end();
         });
@@ -853,7 +853,7 @@ tap.test(
 );
 
 tap.test(
-    'Resource().fetch - hints complete event emitted once all early hints received - resource is failing',
+    'Resource().fetch - assets received event emitted once all assets received - resource is failing',
     async (t) => {
         t.plan(3);
         const server = new PodletServer({
@@ -871,7 +871,7 @@ tap.test(
 
         const incoming = new HttpIncoming({ headers: {} });
 
-        incoming.hints.on('complete', (assets) => {
+        incoming.assets.on('received', (assets) => {
             t.ok(true);
             t.equal(assets.js.length, 1);
             t.equal(assets.css.length, 1);
@@ -885,7 +885,7 @@ tap.test(
 );
 
 tap.test(
-    'Resource().fetch - hints complete event emitted once all early hints received - multiple resource components',
+    'Resource().fetch - assets received event emitted once all assets received - multiple resource components',
     async (t) => {
         t.plan(3);
         const server1 = new PodletServer({
@@ -923,7 +923,7 @@ tap.test(
 
         const incoming = new HttpIncoming({ headers: {} });
 
-        incoming.hints.on('complete', (assets) => {
+        incoming.assets.on('received', (assets) => {
             t.equal(assets.js.length, 3);
             t.equal(assets.css.length, 3);
             t.ok(true);

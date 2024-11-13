@@ -712,7 +712,7 @@ tap.test(
 );
 
 tap.test(
-    'integration - asset hints used to build a document head',
+    'integration - asset link header used to build a document head',
     async (t) => {
         t.plan(1);
         const header = new PodletServer({
@@ -742,7 +742,7 @@ tap.test(
         const headerFetch = headerClient.fetch(incoming);
         const footerFetch = footerClient.fetch(incoming);
 
-        incoming.hints.once('complete', ({ js, css }) => {
+        incoming.assets.once('received', ({ js, css }) => {
             const documentHead = `
             <html>
               <head>

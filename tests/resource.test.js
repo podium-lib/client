@@ -822,3 +822,178 @@ tap.test(
         t.end();
     },
 );
+
+tap.test(
+    'Resource().fetch - assets received event emitted once all link header assets received - single resource component',
+    async (t) => {
+        t.plan(1);
+        const server = new PodletServer({
+            version: '1.0.0',
+            assets: {
+                js: '/foo/bar.js',
+                css: '/foo/bar.css',
+            },
+        });
+        const service = await server.listen();
+
+        const client = new Client({ name: 'podiumClient' });
+        const component = client.register(service.options);
+
+        const incoming = new HttpIncoming({ headers: {} });
+
+        incoming.assets.on('received', () => {
+            t.ok(true);
+            t.end();
+        });
+
+        await component.fetch(incoming);
+
+        await server.close();
+    },
+);
+
+tap.test(
+    'Resource().fetch - assets received event emitted once all assets received - resource is failing',
+    async (t) => {
+        t.plan(3);
+        const server = new PodletServer({
+            version: '1.0.0',
+            assets: {
+                js: '/foo/bar.js',
+                css: '/foo/bar.css',
+            },
+            content: '/does/not/exist',
+        });
+        const service = await server.listen();
+
+        const client = new Client({ name: 'podiumClient' });
+        const component = client.register(service.options);
+
+        const incoming = new HttpIncoming({ headers: {} });
+
+        incoming.assets.on('received', (assets) => {
+            t.ok(true);
+            t.equal(assets.js.length, 1);
+            t.equal(assets.css.length, 1);
+            t.end();
+        });
+
+        await component.fetch(incoming);
+
+        await server.close();
+    },
+);
+
+tap.test(
+    'Resource().fetch - assets received event emitted once all assets received - multiple resource components',
+    async (t) => {
+        t.plan(3);
+        const server1 = new PodletServer({
+            name: 'one',
+            version: '1.0.0',
+            assets: {
+                js: '/foo/bar.js',
+                css: '/foo/bar.css',
+            },
+        });
+        const service1 = await server1.listen();
+        const server2 = new PodletServer({
+            name: 'two',
+            version: '1.0.0',
+            assets: {
+                js: '/foo/bar.js',
+                css: '/foo/bar.css',
+            },
+        });
+        const service2 = await server2.listen();
+        const server3 = new PodletServer({
+            name: 'three',
+            version: '1.0.0',
+            assets: {
+                js: '/foo/bar.js',
+                css: '/foo/bar.css',
+            },
+        });
+        const service3 = await server3.listen();
+
+        const client = new Client({ name: 'podiumClient' });
+        const component1 = client.register(service1.options);
+        const component2 = client.register(service2.options);
+        const component3 = client.register(service3.options);
+
+        const incoming = new HttpIncoming({ headers: {} });
+
+        incoming.assets.on('received', (assets) => {
+            t.equal(assets.js.length, 3);
+            t.equal(assets.css.length, 3);
+            t.ok(true);
+            t.end();
+        });
+
+        await Promise.all([
+            component1.fetch(incoming),
+            component2.fetch(incoming),
+            component3.fetch(incoming),
+        ]);
+
+        await server1.close();
+        await server2.close();
+        await server3.close();
+    },
+);
+
+tap.test(
+    'Resource().fetch - waitForAssets method - multiple resource components',
+    async (t) => {
+        t.plan(3);
+        const server1 = new PodletServer({
+            name: 'one',
+            version: '1.0.0',
+            assets: {
+                js: '/foo/bar.js',
+                css: '/foo/bar.css',
+            },
+        });
+        const service1 = await server1.listen();
+        const server2 = new PodletServer({
+            name: 'two',
+            version: '1.0.0',
+            assets: {
+                js: '/foo/bar.js',
+                css: '/foo/bar.css',
+            },
+        });
+        const service2 = await server2.listen();
+        const server3 = new PodletServer({
+            name: 'three',
+            version: '1.0.0',
+            assets: {
+                js: '/foo/bar.js',
+                css: '/foo/bar.css',
+            },
+        });
+        const service3 = await server3.listen();
+
+        const client = new Client({ name: 'podiumClient' });
+        const component1 = client.register(service1.options);
+        const component2 = client.register(service2.options);
+        const component3 = client.register(service3.options);
+
+        const incoming = new HttpIncoming({ headers: {} });
+
+        const c1 = component1.fetch(incoming);
+        const c2 = component2.fetch(incoming);
+        const c3 = component3.fetch(incoming);
+
+        const assets = await incoming.waitForAssets();
+        t.equal(assets.js.length, 3);
+        t.equal(assets.css.length, 3);
+        t.ok(true);
+
+        await Promise.all([c1, c2, c3]);
+
+        await server1.close();
+        await server2.close();
+        await server3.close();
+    },
+);

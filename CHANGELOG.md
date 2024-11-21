@@ -1,3 +1,10 @@
+## [5.2.4](https://github.com/podium-lib/client/compare/v5.2.3...v5.2.4) (2024-11-21)
+
+
+### Bug Fixes
+
+* reducing logl evel to info on 404 errors ([e6d6d04](https://github.com/podium-lib/client/commit/e6d6d04a4b30729691cafa68521bcfc743c3db64))
+
 ## [5.2.3](https://github.com/podium-lib/client/compare/v5.2.2...v5.2.3) (2024-11-13)
 
 

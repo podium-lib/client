@@ -607,6 +607,7 @@ tap.test(
     async (t) => {
         const app = createPodletServer();
         const server = app.listen(0);
+        const podletServerAddress = `http://localhost:${server.address()?.port}`;
 
         const result = await fetch(
             `http://localhost:${server.address().port}/`,
@@ -624,7 +625,7 @@ tap.test(
         const podiumClient = new Client({ name: 'podiumClient' });
         const podletClient = podiumClient.register({
             name: 'foo',
-            uri: `http://localhost:${server.address().port}/manifest.json`,
+            uri: `${podletServerAddress}/manifest.json`,
         });
 
         const incoming = new HttpIncoming({ headers });
@@ -637,7 +638,7 @@ tap.test(
         t.equal(css.disabled, undefined);
         t.equal(css.hreflang, undefined);
         t.equal(css.title, undefined);
-        t.equal(css.value, '/styles.css');
+        t.equal(css.value, `${podletServerAddress}/styles.css`);
         t.equal(css.media, undefined);
         t.equal(css.type, 'text/css');
         t.equal(css.rel, 'stylesheet');
@@ -648,7 +649,7 @@ tap.test(
         t.equal(js.crossorigin, undefined);
         t.equal(js.integrity, undefined);
         t.equal(js.nomodule, undefined);
-        t.equal(js.value, '/scripts.js');
+        t.equal(js.value, `${podletServerAddress}/scripts.js`);
         t.equal(js.async, 'true');
         t.equal(js.defer, undefined);
         t.equal(js.type, 'module');
@@ -663,11 +664,11 @@ tap.test(
     async (t) => {
         const app = createPodletServer();
         const server = app.listen(0);
-
+        const podletServerAddress = `http://localhost:${server.address()?.port}`;
         const podiumClient = new Client({ name: 'podiumClient' });
         const podletClient = podiumClient.register({
             name: 'foo',
-            uri: `http://localhost:${server.address().port}/manifest.json`,
+            uri: `${podletServerAddress}/manifest.json`,
         });
 
         let assetEnd;
@@ -682,7 +683,7 @@ tap.test(
             t.equal(css.disabled, undefined);
             t.equal(css.hreflang, undefined);
             t.equal(css.title, undefined);
-            t.equal(css.value, '/styles.css');
+            t.equal(css.value, `${podletServerAddress}/styles.css`);
             t.equal(css.media, undefined);
             t.equal(css.type, 'text/css');
             t.equal(css.rel, 'stylesheet');
@@ -693,7 +694,7 @@ tap.test(
             t.equal(js.crossorigin, undefined);
             t.equal(js.integrity, undefined);
             t.equal(js.nomodule, undefined);
-            t.equal(js.value, '/scripts.js');
+            t.equal(js.value, `${podletServerAddress}/scripts.js`);
             t.equal(js.async, 'true');
             t.equal(js.defer, undefined);
             t.equal(js.type, 'module');

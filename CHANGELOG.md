@@ -1,16 +1,9 @@
-## [5.2.5-beta.2](https://github.com/podium-lib/client/compare/v5.2.5-beta.1...v5.2.5-beta.2) (2025-01-13)
+## [5.2.5](https://github.com/podium-lib/client/compare/v5.2.4...v5.2.5) (2024-11-27)
 
 
 ### Bug Fixes
 
-* update @podium/http-client to version 1.0.0-beta.9 ([e64596a](https://github.com/podium-lib/client/commit/e64596a8bf194ecee5702f2dda61674c9a5f8772))
-
-## [5.2.5-beta.1](https://github.com/podium-lib/client/compare/v5.2.4...v5.2.5-beta.1) (2024-12-02)
-
-
-### Bug Fixes
-
-* adding @podium/http-client beta ([e300bde](https://github.com/podium-lib/client/commit/e300bde2fd8e6356227e03a8d9ae847e509cd1f4))
+* correctly build asset urls from link headers ([#446](https://github.com/podium-lib/client/issues/446)) ([5a30079](https://github.com/podium-lib/client/commit/5a30079fb47ee15a49ae6ff77348c400df3fe99a))
 
 ## [5.2.4](https://github.com/podium-lib/client/compare/v5.2.3...v5.2.4) (2024-11-21)
 

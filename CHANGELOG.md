@@ -1,3 +1,10 @@
+## [5.2.5](https://github.com/podium-lib/client/compare/v5.2.4...v5.2.5) (2024-11-27)
+
+
+### Bug Fixes
+
+* correctly build asset urls from link headers ([#446](https://github.com/podium-lib/client/issues/446)) ([5a30079](https://github.com/podium-lib/client/commit/5a30079fb47ee15a49ae6ff77348c400df3fe99a))
+
 ## [5.2.4](https://github.com/podium-lib/client/compare/v5.2.3...v5.2.4) (2024-11-21)
 
 

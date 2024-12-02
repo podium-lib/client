@@ -511,9 +511,7 @@ tap.test(
             {},
             new HttpIncoming({ headers }),
         );
-
         await manifest.resolve(outgoing);
-
         t.equal(
             outgoing.manifest.proxy[0].target,
             'http://does.not.mather.com/api/bar',

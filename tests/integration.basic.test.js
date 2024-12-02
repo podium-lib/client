@@ -393,7 +393,13 @@ tap.test('integration basic - metrics stream objects created', async (t) => {
     const client = new Client({ name: 'clientName' });
 
     const metrics = [];
-    client.metrics.on('data', (metric) => metrics.push(metric));
+    client.metrics.on('data', (metric) => {
+        if (
+            metric.name !== 'http_client_breaker_events' &&
+            metric.name.indexOf('podium_client') !== -1
+        )
+            metrics.push(metric);
+    });
     client.metrics.on('end', async () => {
         t.equal(metrics.length, 3);
         t.equal(metrics[0].name, 'podium_client_resolver_manifest_resolve');

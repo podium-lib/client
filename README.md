@@ -2,7 +2,6 @@
 
 Client for fetching podium component fragments over HTTP.
 
-[![Dependencies](https://img.shields.io/david/podium-lib/client.svg)](https://david-dm.org/podium-lib/client)
 [![GitHub Actions status](https://github.com/podium-lib/client/workflows/Run%20Lint%20and%20Tests/badge.svg)](https://github.com/podium-lib/client/actions?query=workflow%3A%22Run+Lint+and+Tests%22)
 
 This module is intended for internal use in Podium and is not a module an end

@@ -63,7 +63,7 @@
     "eslint": "9.16.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.1",
-    "express": "4.21.1",
+    "express": "4.21.2",
     "get-stream": "9.0.1",
     "http-proxy": "1.18.1",
     "is-stream": "4.0.1",

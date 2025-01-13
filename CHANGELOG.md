@@ -1,3 +1,10 @@
+## [5.2.5-beta.4](https://github.com/podium-lib/client/compare/v5.2.5-beta.3...v5.2.5-beta.4) (2025-01-13)
+
+
+### Bug Fixes
+
+* setting name of the client as the clientName for @podium/http-client ([65c3cb3](https://github.com/podium-lib/client/commit/65c3cb3f91867c74a5315de52ff67bb6dc2fbc19))
+
 ## [5.2.5-beta.3](https://github.com/podium-lib/client/compare/v5.2.5-beta.2...v5.2.5-beta.3) (2025-01-13)
 
 

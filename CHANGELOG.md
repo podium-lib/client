@@ -1,3 +1,10 @@
+## [5.2.7](https://github.com/podium-lib/client/compare/v5.2.6...v5.2.7) (2025-02-06)
+
+
+### Bug Fixes
+
+* list exports so types work for imports other than root ([#454](https://github.com/podium-lib/client/issues/454)) ([b186bec](https://github.com/podium-lib/client/commit/b186bece4fd0feb82f4e64c4acf5f27dd6b06659))
+
 ## [5.2.6](https://github.com/podium-lib/client/compare/v5.2.5...v5.2.6) (2025-01-16)
 
 

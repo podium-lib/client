@@ -390,29 +390,43 @@ tap.test(
 
 tap.test('integration basic - metrics stream objects created', async (t) => {
     const server = new PodletServer({ name: 'podlet' });
-    const client = new Client({ name: 'clientName' });
+    const client = new Client({ name: 'someClientName' });
 
     const metrics = [];
     client.metrics.on('data', (metric) => metrics.push(metric));
     client.metrics.on('end', async () => {
-        t.equal(metrics.length, 3);
-        t.equal(metrics[0].name, 'podium_client_resolver_manifest_resolve');
-        t.equal(metrics[0].type, 5);
+        t.equal(metrics.length, 4);
+        t.equal(metrics[0].name, 'podium_client_registered_podlet_count');
+        t.equal(metrics[0].type, 2);
         t.same(metrics[0].labels[0], {
-            name: 'name',
-            value: 'clientName',
+            name: 'clientName',
+            value: 'someClientName',
         });
-        t.equal(metrics[1].name, 'podium_client_resolver_fallback_resolve');
+        t.same(metrics[0].labels[1], {
+            name: 'resourceName',
+            value: service.options.name,
+        });
+        t.same(metrics[0].labels[2], {
+            name: 'resourceUri',
+            value: service.options.uri,
+        });
+        t.equal(metrics[1].name, 'podium_client_resolver_manifest_resolve');
         t.equal(metrics[1].type, 5);
         t.same(metrics[1].labels[0], {
             name: 'name',
-            value: 'clientName',
+            value: 'someClientName',
         });
-        t.equal(metrics[2].name, 'podium_client_resolver_content_resolve');
+        t.equal(metrics[2].name, 'podium_client_resolver_fallback_resolve');
         t.equal(metrics[2].type, 5);
         t.same(metrics[2].labels[0], {
             name: 'name',
-            value: 'clientName',
+            value: 'someClientName',
+        });
+        t.equal(metrics[3].name, 'podium_client_resolver_content_resolve');
+        t.equal(metrics[3].type, 5);
+        t.same(metrics[3].labels[0], {
+            name: 'name',
+            value: 'someClientName',
         });
 
         t.end();

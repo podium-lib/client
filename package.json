@@ -28,6 +28,108 @@
   ],
   "main": "./lib/client.js",
   "types": "./types/client.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/client.js",
+      "default": "./lib/client.js"
+    },
+    "./lib/client.js": {
+      "types": "./types/client.js",
+      "default": "./lib/client.js"
+    },
+    "./lib/http-outgoing.js": {
+      "types": "./types/http-outgoing.js",
+      "default": "./lib/http-outgoing.js"
+    },
+    "./lib/http.js": {
+      "types": "./types/http.js",
+      "default": "./lib/http.js"
+    },
+    "./lib/resolver.cache.js": {
+      "types": "./types/resolver.cache.js",
+      "default": "./lib/resolver.cache.js"
+    },
+    "./lib/resolver.content.js": {
+      "types": "./types/resolver.content.js",
+      "default": "./lib/resolver.content.js"
+    },
+    "./lib/resolver.fallback.js": {
+      "types": "./types/resolver.fallback.js",
+      "default": "./lib/resolver.fallback.js"
+    },
+    "./lib/resolver.js": {
+      "types": "./types/resolver.js",
+      "default": "./lib/resolver.js"
+    },
+    "./lib/resolver.manifest.js": {
+      "types": "./types/resolver.manifest.js",
+      "default": "./lib/resolver.manifest.js"
+    },
+    "./lib/resource.js": {
+      "types": "./types/resource.js",
+      "default": "./lib/resource.js"
+    },
+    "./lib/response.js": {
+      "types": "./types/response.js",
+      "default": "./lib/response.js"
+    },
+    "./lib/state.js": {
+      "types": "./types/state.js",
+      "default": "./lib/state.js"
+    },
+    "./lib/utils.js": {
+      "types": "./types/utils.js",
+      "default": "./lib/utils.js"
+    },
+    "./client.js": {
+      "types": "./types/client.js",
+      "default": "./lib/client.js"
+    },
+    "./http-outgoing.js": {
+      "types": "./types/http-outgoing.js",
+      "default": "./lib/http-outgoing.js"
+    },
+    "./http.js": {
+      "types": "./types/http.js",
+      "default": "./lib/http.js"
+    },
+    "./resolver.cache.js": {
+      "types": "./types/resolver.cache.js",
+      "default": "./lib/resolver.cache.js"
+    },
+    "./resolver.content.js": {
+      "types": "./types/resolver.content.js",
+      "default": "./lib/resolver.content.js"
+    },
+    "./resolver.fallback.js": {
+      "types": "./types/resolver.fallback.js",
+      "default": "./lib/resolver.fallback.js"
+    },
+    "./resolver.js": {
+      "types": "./types/resolver.js",
+      "default": "./lib/resolver.js"
+    },
+    "./resolver.manifest.js": {
+      "types": "./types/resolver.manifest.js",
+      "default": "./lib/resolver.manifest.js"
+    },
+    "./resource.js": {
+      "types": "./types/resource.js",
+      "default": "./lib/resource.js"
+    },
+    "./response.js": {
+      "types": "./types/response.js",
+      "default": "./lib/response.js"
+    },
+    "./state.js": {
+      "types": "./types/state.js",
+      "default": "./lib/state.js"
+    },
+    "./utils.js": {
+      "types": "./types/utils.js",
+      "default": "./lib/utils.js"
+    }
+  },
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

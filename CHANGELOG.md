@@ -1,3 +1,10 @@
+# [5.3.0](https://github.com/podium-lib/client/compare/v5.2.7...v5.3.0) (2025-02-07)
+
+
+### Features
+
+* add metric to track register podlets ([673a4e7](https://github.com/podium-lib/client/commit/673a4e7554282570d1a074ae7206873af7183dbe))
+
 ## [5.2.7](https://github.com/podium-lib/client/compare/v5.2.6...v5.2.7) (2025-02-06)
 
 

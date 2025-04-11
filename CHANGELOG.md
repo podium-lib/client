@@ -1,3 +1,11 @@
+## [5.3.1](https://github.com/podium-lib/client/compare/v5.3.0...v5.3.1) (2025-04-11)
+
+
+### Bug Fixes
+
+* add statusCode label to podium_client_resolver_content_resolve metric ([#456](https://github.com/podium-lib/client/issues/456)) ([e8d45b0](https://github.com/podium-lib/client/commit/e8d45b0564f59573a80b5cdfccc7382713251e27))
+* error with statusCode label ([9b0682e](https://github.com/podium-lib/client/commit/9b0682e27b1b685c23df59e55f8651b0632bf998))
+
 # [5.3.0](https://github.com/podium-lib/client/compare/v5.2.7...v5.3.0) (2025-02-07)
 
 

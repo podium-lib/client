@@ -1,6 +1,0 @@
-{
-  "name": "example-a",
-  "version": "1.0.0-beta.1",
-  "content": "/index.html",
-  "fallback": "/fallback.html"
-}

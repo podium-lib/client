@@ -127,6 +127,6 @@
     "semantic-release": "24.1.2",
     "tap": "18.7.2",
     "typescript": "5.6.3",
-    "why-is-node-running": "3.2.1"
+    "why-is-node-running": "3.2.2"
   }
 }

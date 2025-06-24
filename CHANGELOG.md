@@ -1,3 +1,10 @@
+## [5.3.4](https://github.com/podium-lib/client/compare/v5.3.3...v5.3.4) (2025-06-24)
+
+
+### Bug Fixes
+
+* **deps:** update podium/utils ([3f21acc](https://github.com/podium-lib/client/commit/3f21acc99783bae470e32045d43540422b30111f))
+
 ## [5.3.3](https://github.com/podium-lib/client/compare/v5.3.2...v5.3.3) (2025-05-13)
 
 

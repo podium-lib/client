@@ -97,7 +97,6 @@
     "@podium/utils": "5.5.0",
     "abslog": "2.4.4",
     "http-cache-semantics": "^4.0.3",
-    "lodash.clonedeep": "^4.5.0",
     "ttl-mem-cache": "4.1.0",
     "undici": "6.21.3"
   },

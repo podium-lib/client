@@ -1,3 +1,10 @@
+## [5.3.6](https://github.com/podium-lib/client/compare/v5.3.5...v5.3.6) (2025-07-02)
+
+
+### Bug Fixes
+
+* **deps:** remove clonedeep dependency ([#471](https://github.com/podium-lib/client/issues/471)) ([d77e266](https://github.com/podium-lib/client/commit/d77e26656010d417c0b3e00ca1649ae094122246))
+
 ## [5.3.5](https://github.com/podium-lib/client/compare/v5.3.4...v5.3.5) (2025-06-27)
 
 

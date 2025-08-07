@@ -1,3 +1,10 @@
+# [5.4.0](https://github.com/podium-lib/client/compare/v5.3.6...v5.4.0) (2025-08-07)
+
+
+### Features
+
+* forward traceparent and tracestate headers ([#474](https://github.com/podium-lib/client/issues/474)) ([717e880](https://github.com/podium-lib/client/commit/717e8809afcf7a56e17dff602e213578c36937d4))
+
 ## [5.3.6](https://github.com/podium-lib/client/compare/v5.3.5...v5.3.6) (2025-07-02)
 
 

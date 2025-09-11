@@ -1,3 +1,10 @@
+## [5.4.1](https://github.com/podium-lib/client/compare/v5.4.0...v5.4.1) (2025-09-11)
+
+
+### Bug Fixes
+
+* always end timer on error ([#477](https://github.com/podium-lib/client/issues/477)) ([e41a9bc](https://github.com/podium-lib/client/commit/e41a9bce72a16fa0288e8f2df3a3fc67223ba0ad))
+
 # [5.4.0](https://github.com/podium-lib/client/compare/v5.3.6...v5.4.0) (2025-08-07)
 
 

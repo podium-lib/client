@@ -103,7 +103,7 @@
   "devDependencies": {
     "@podium/eslint-config": "1.0.18",
     "@podium/podlet": "5.2.4",
-    "@podium/semantic-release-config": "2.0.2",
+    "@podium/semantic-release-config": "2.0.7",
     "@podium/test-utils": "3.0.18",
     "@podium/typescript-config": "1.0.0",
     "@semantic-release/changelog": "6.0.3",
@@ -123,7 +123,7 @@
     "is-stream": "4.0.1",
     "npm-run-all2": "6.2.6",
     "prettier": "3.6.2",
-    "semantic-release": "24.2.7",
+    "semantic-release": "24.2.9",
     "tap": "18.8.0",
     "typescript": "5.8.3",
     "why-is-node-running": "3.2.2"

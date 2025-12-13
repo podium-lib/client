@@ -1,3 +1,10 @@
+## [5.4.3](https://github.com/podium-lib/client/compare/v5.4.2...v5.4.3) (2025-12-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency undici to v6.22.0 ([#480](https://github.com/podium-lib/client/issues/480)) ([61f27c6](https://github.com/podium-lib/client/commit/61f27c62f412cb185f9ca082794863cee65a394f))
+
 ## [5.4.2](https://github.com/podium-lib/client/compare/v5.4.1...v5.4.2) (2025-12-12)
 
 

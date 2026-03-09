@@ -30,55 +30,55 @@
   "types": "./types/client.d.ts",
   "exports": {
     ".": {
-      "types": "./types/client.js",
+      "types": "./types/client.d.ts",
       "default": "./lib/client.js"
     },
     "./lib/client.js": {
-      "types": "./types/client.js",
+      "types": "./types/client.d.ts",
       "default": "./lib/client.js"
     },
     "./lib/http-outgoing.js": {
-      "types": "./types/http-outgoing.js",
+      "types": "./types/http-outgoing.d.ts",
       "default": "./lib/http-outgoing.js"
     },
     "./lib/http.js": {
-      "types": "./types/http.js",
+      "types": "./types/http.d.ts",
       "default": "./lib/http.js"
     },
     "./lib/resolver.cache.js": {
-      "types": "./types/resolver.cache.js",
+      "types": "./types/resolver.cache.d.ts",
       "default": "./lib/resolver.cache.js"
     },
     "./lib/resolver.content.js": {
-      "types": "./types/resolver.content.js",
+      "types": "./types/resolver.content.d.ts",
       "default": "./lib/resolver.content.js"
     },
     "./lib/resolver.fallback.js": {
-      "types": "./types/resolver.fallback.js",
+      "types": "./types/resolver.fallback.d.ts",
       "default": "./lib/resolver.fallback.js"
     },
     "./lib/resolver.js": {
-      "types": "./types/resolver.js",
+      "types": "./types/resolver.d.ts",
       "default": "./lib/resolver.js"
     },
     "./lib/resolver.manifest.js": {
-      "types": "./types/resolver.manifest.js",
+      "types": "./types/resolver.manifest.d.ts",
       "default": "./lib/resolver.manifest.js"
     },
     "./lib/resource.js": {
-      "types": "./types/resource.js",
+      "types": "./types/resource.d.ts",
       "default": "./lib/resource.js"
     },
     "./lib/response.js": {
-      "types": "./types/response.js",
+      "types": "./types/response.d.ts",
       "default": "./lib/response.js"
     },
     "./lib/state.js": {
-      "types": "./types/state.js",
+      "types": "./types/state.d.ts",
       "default": "./lib/state.js"
     },
     "./lib/utils.js": {
-      "types": "./types/utils.js",
+      "types": "./types/utils.d.ts",
       "default": "./lib/utils.js"
     }
   },

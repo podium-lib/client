@@ -1,3 +1,10 @@
+## [5.4.6](https://github.com/podium-lib/client/compare/v5.4.5...v5.4.6) (2026-03-09)
+
+
+### Bug Fixes
+
+* types were incorrectly specified in package.json ([#493](https://github.com/podium-lib/client/issues/493)) ([6f35ec9](https://github.com/podium-lib/client/commit/6f35ec98d8118c1fb925d3613ce0bc36b6ec0503))
+
 ## [5.4.5](https://github.com/podium-lib/client/compare/v5.4.4...v5.4.5) (2026-02-15)
 
 

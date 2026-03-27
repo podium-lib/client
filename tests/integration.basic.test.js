@@ -684,7 +684,7 @@ tap.test(
         const incoming = new HttpIncoming({ headers });
         const outgoing = podletClient.stream(incoming);
         outgoing.on('beforeStream', (response) => {
-            assetEnd = new Date().getTime();
+            assetEnd = Date.now();
 
             const css = response.css[0].toJSON();
             t.equal(css.crossorigin, undefined);
@@ -714,7 +714,7 @@ tap.test(
             content.push(chunk.toString());
         }
 
-        const bodyEnd = new Date().getTime();
+        const bodyEnd = Date.now();
         // @ts-ignore
         const timeDiff = bodyEnd - assetEnd;
 

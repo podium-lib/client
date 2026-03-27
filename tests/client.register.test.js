@@ -127,7 +127,7 @@ tap.test(
         });
 
         // @ts-expect-error The client implements the iterator symbol
-        t.same([a, b], Array.from(client));
+        t.same([a, b], [...client]);
         t.end();
     },
 );

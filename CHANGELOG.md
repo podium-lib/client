@@ -1,3 +1,10 @@
+## [5.4.9](https://github.com/podium-lib/client/compare/v5.4.8...v5.4.9) (2026-04-07)
+
+
+### Bug Fixes
+
+* update podium dependencies ([ee60d71](https://github.com/podium-lib/client/commit/ee60d7100fe3981af2d3a7218a459ea02df4ee30))
+
 ## [5.4.8](https://github.com/podium-lib/client/compare/v5.4.7...v5.4.8) (2026-03-15)
 
 

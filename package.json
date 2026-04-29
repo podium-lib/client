@@ -98,7 +98,7 @@
     "abslog": "2.4.4",
     "http-cache-semantics": "^4.0.3",
     "ttl-mem-cache": "4.1.0",
-    "undici": "6.25.0"
+    "undici": "8.1.0"
   },
   "devDependencies": {
     "@podium/eslint-config": "2.0.2",

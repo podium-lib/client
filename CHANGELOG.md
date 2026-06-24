@@ -1,3 +1,10 @@
+# [5.5.0-next.1](https://github.com/podium-lib/client/compare/v5.4.12...v5.5.0-next.1) (2026-06-24)
+
+
+### Features
+
+* track podlet assets ([39022a3](https://github.com/podium-lib/client/commit/39022a3c87184e5f524828591c8185d8a3fc2995))
+
 ## [5.4.12](https://github.com/podium-lib/client/compare/v5.4.11...v5.4.12) (2026-06-16)
 
 

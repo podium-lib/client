@@ -390,29 +390,43 @@ tap.test(
 
 tap.test('integration basic - metrics stream objects created', async (t) => {
     const server = new PodletServer({ name: 'podlet' });
-    const client = new Client({ name: 'clientName' });
+    const client = new Client({ name: 'someClientName' });
 
     const metrics = [];
     client.metrics.on('data', (metric) => metrics.push(metric));
     client.metrics.on('end', async () => {
-        t.equal(metrics.length, 3);
-        t.equal(metrics[0].name, 'podium_client_resolver_manifest_resolve');
-        t.equal(metrics[0].type, 5);
+        t.equal(metrics.length, 4);
+        t.equal(metrics[0].name, 'podium_client_registered_podlet_count');
+        t.equal(metrics[0].type, 2);
         t.same(metrics[0].labels[0], {
-            name: 'name',
-            value: 'clientName',
+            name: 'clientName',
+            value: 'someClientName',
         });
-        t.equal(metrics[1].name, 'podium_client_resolver_fallback_resolve');
+        t.same(metrics[0].labels[1], {
+            name: 'resourceName',
+            value: service.options.name,
+        });
+        t.same(metrics[0].labels[2], {
+            name: 'resourceUri',
+            value: service.options.uri,
+        });
+        t.equal(metrics[1].name, 'podium_client_resolver_manifest_resolve');
         t.equal(metrics[1].type, 5);
         t.same(metrics[1].labels[0], {
             name: 'name',
-            value: 'clientName',
+            value: 'someClientName',
         });
-        t.equal(metrics[2].name, 'podium_client_resolver_content_resolve');
+        t.equal(metrics[2].name, 'podium_client_resolver_fallback_resolve');
         t.equal(metrics[2].type, 5);
         t.same(metrics[2].labels[0], {
             name: 'name',
-            value: 'clientName',
+            value: 'someClientName',
+        });
+        t.equal(metrics[3].name, 'podium_client_resolver_content_resolve');
+        t.equal(metrics[3].type, 5);
+        t.same(metrics[3].labels[0], {
+            name: 'name',
+            value: 'someClientName',
         });
 
         t.end();
@@ -601,6 +615,7 @@ tap.test(
     async (t) => {
         const app = createPodletServer();
         const server = app.listen(0);
+        const podletServerAddress = `http://localhost:${server.address()?.port}`;
 
         const result = await fetch(
             `http://localhost:${server.address().port}/`,
@@ -618,7 +633,7 @@ tap.test(
         const podiumClient = new Client({ name: 'podiumClient' });
         const podletClient = podiumClient.register({
             name: 'foo',
-            uri: `http://localhost:${server.address().port}/manifest.json`,
+            uri: `${podletServerAddress}/manifest.json`,
         });
 
         const incoming = new HttpIncoming({ headers });
@@ -631,7 +646,7 @@ tap.test(
         t.equal(css.disabled, undefined);
         t.equal(css.hreflang, undefined);
         t.equal(css.title, undefined);
-        t.equal(css.value, '/styles.css');
+        t.equal(css.value, `${podletServerAddress}/styles.css`);
         t.equal(css.media, undefined);
         t.equal(css.type, 'text/css');
         t.equal(css.rel, 'stylesheet');
@@ -642,7 +657,7 @@ tap.test(
         t.equal(js.crossorigin, undefined);
         t.equal(js.integrity, undefined);
         t.equal(js.nomodule, undefined);
-        t.equal(js.value, '/scripts.js');
+        t.equal(js.value, `${podletServerAddress}/scripts.js`);
         t.equal(js.async, 'true');
         t.equal(js.defer, undefined);
         t.equal(js.type, 'module');
@@ -657,11 +672,11 @@ tap.test(
     async (t) => {
         const app = createPodletServer();
         const server = app.listen(0);
-
+        const podletServerAddress = `http://localhost:${server.address()?.port}`;
         const podiumClient = new Client({ name: 'podiumClient' });
         const podletClient = podiumClient.register({
             name: 'foo',
-            uri: `http://localhost:${server.address().port}/manifest.json`,
+            uri: `${podletServerAddress}/manifest.json`,
         });
 
         let assetEnd;
@@ -669,14 +684,14 @@ tap.test(
         const incoming = new HttpIncoming({ headers });
         const outgoing = podletClient.stream(incoming);
         outgoing.on('beforeStream', (response) => {
-            assetEnd = new Date().getTime();
+            assetEnd = Date.now();
 
             const css = response.css[0].toJSON();
             t.equal(css.crossorigin, undefined);
             t.equal(css.disabled, undefined);
             t.equal(css.hreflang, undefined);
             t.equal(css.title, undefined);
-            t.equal(css.value, '/styles.css');
+            t.equal(css.value, `${podletServerAddress}/styles.css`);
             t.equal(css.media, undefined);
             t.equal(css.type, 'text/css');
             t.equal(css.rel, 'stylesheet');
@@ -687,7 +702,7 @@ tap.test(
             t.equal(js.crossorigin, undefined);
             t.equal(js.integrity, undefined);
             t.equal(js.nomodule, undefined);
-            t.equal(js.value, '/scripts.js');
+            t.equal(js.value, `${podletServerAddress}/scripts.js`);
             t.equal(js.async, 'true');
             t.equal(js.defer, undefined);
             t.equal(js.type, 'module');
@@ -699,7 +714,7 @@ tap.test(
             content.push(chunk.toString());
         }
 
-        const bodyEnd = new Date().getTime();
+        const bodyEnd = Date.now();
         // @ts-ignore
         const timeDiff = bodyEnd - assetEnd;
 

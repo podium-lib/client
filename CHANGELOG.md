@@ -1,9 +1,197 @@
-# [5.3.0-next.1](https://github.com/podium-lib/client/compare/v5.2.0...v5.3.0-next.1) (2024-11-13)
+## [5.4.12](https://github.com/podium-lib/client/compare/v5.4.11...v5.4.12) (2026-06-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency undici to v6.27.0 ([#504](https://github.com/podium-lib/client/issues/504)) ([5d21ccb](https://github.com/podium-lib/client/commit/5d21ccb58d3631b0880b31d5b88b9dc6de70b681))
+
+## [5.4.11](https://github.com/podium-lib/client/compare/v5.4.10...v5.4.11) (2026-05-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency undici to v6.26.0 ([#503](https://github.com/podium-lib/client/issues/503)) ([665cede](https://github.com/podium-lib/client/commit/665cedeee25c72e87f95a4e7e58ff7474c257940))
+
+## [5.4.10](https://github.com/podium-lib/client/compare/v5.4.9...v5.4.10) (2026-04-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency undici to v6.25.0 ([#500](https://github.com/podium-lib/client/issues/500)) ([41909a6](https://github.com/podium-lib/client/commit/41909a6a4d71ee2297a3532e186d5c4dd07f48a3))
+
+## [5.4.9](https://github.com/podium-lib/client/compare/v5.4.8...v5.4.9) (2026-04-07)
+
+
+### Bug Fixes
+
+* update podium dependencies ([ee60d71](https://github.com/podium-lib/client/commit/ee60d7100fe3981af2d3a7218a459ea02df4ee30))
+
+## [5.4.8](https://github.com/podium-lib/client/compare/v5.4.7...v5.4.8) (2026-03-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency undici to v6.24.1 ([#495](https://github.com/podium-lib/client/issues/495)) ([1db671e](https://github.com/podium-lib/client/commit/1db671ed67b8a1f0166dc22e73e69fb4063faf1b))
+
+## [5.4.7](https://github.com/podium-lib/client/compare/v5.4.6...v5.4.7) (2026-03-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency undici to v6.24.0 ([#494](https://github.com/podium-lib/client/issues/494)) ([ad12b59](https://github.com/podium-lib/client/commit/ad12b59509534c650cafcb804c70df6a2f26559f))
+
+## [5.4.6](https://github.com/podium-lib/client/compare/v5.4.5...v5.4.6) (2026-03-09)
+
+
+### Bug Fixes
+
+* types were incorrectly specified in package.json ([#493](https://github.com/podium-lib/client/issues/493)) ([6f35ec9](https://github.com/podium-lib/client/commit/6f35ec98d8118c1fb925d3613ce0bc36b6ec0503))
+
+## [5.4.5](https://github.com/podium-lib/client/compare/v5.4.4...v5.4.5) (2026-02-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v5.1.2 ([#490](https://github.com/podium-lib/client/issues/490)) ([1b2cfac](https://github.com/podium-lib/client/commit/1b2cfac7c4b5d6b60d42795b6e4a1a4ae2cc4091))
+
+## [5.4.4](https://github.com/podium-lib/client/compare/v5.4.3...v5.4.4) (2026-01-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency undici to v6.23.0 ([#487](https://github.com/podium-lib/client/issues/487)) ([51145bb](https://github.com/podium-lib/client/commit/51145bbdf76747c335d5885036f12ae1066c35ab))
+
+## [5.4.3](https://github.com/podium-lib/client/compare/v5.4.2...v5.4.3) (2025-12-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency undici to v6.22.0 ([#480](https://github.com/podium-lib/client/issues/480)) ([61f27c6](https://github.com/podium-lib/client/commit/61f27c62f412cb185f9ca082794863cee65a394f))
+
+## [5.4.2](https://github.com/podium-lib/client/compare/v5.4.1...v5.4.2) (2025-12-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v5.1.1 ([#486](https://github.com/podium-lib/client/issues/486)) ([295b14a](https://github.com/podium-lib/client/commit/295b14a1b54c1cf119711846029e1f104a4b908a))
+
+## [5.4.1](https://github.com/podium-lib/client/compare/v5.4.0...v5.4.1) (2025-09-11)
+
+
+### Bug Fixes
+
+* always end timer on error ([#477](https://github.com/podium-lib/client/issues/477)) ([e41a9bc](https://github.com/podium-lib/client/commit/e41a9bce72a16fa0288e8f2df3a3fc67223ba0ad))
+
+# [5.4.0](https://github.com/podium-lib/client/compare/v5.3.6...v5.4.0) (2025-08-07)
 
 
 ### Features
 
+* forward traceparent and tracestate headers ([#474](https://github.com/podium-lib/client/issues/474)) ([717e880](https://github.com/podium-lib/client/commit/717e8809afcf7a56e17dff602e213578c36937d4))
+
+## [5.3.6](https://github.com/podium-lib/client/compare/v5.3.5...v5.3.6) (2025-07-02)
+
+
+### Bug Fixes
+
+* **deps:** remove clonedeep dependency ([#471](https://github.com/podium-lib/client/issues/471)) ([d77e266](https://github.com/podium-lib/client/commit/d77e26656010d417c0b3e00ca1649ae094122246))
+
+## [5.3.5](https://github.com/podium-lib/client/compare/v5.3.4...v5.3.5) (2025-06-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @metrics/client to v2.5.5 ([#469](https://github.com/podium-lib/client/issues/469)) ([638033b](https://github.com/podium-lib/client/commit/638033b30f74acd06b104212b00b174d57a64f62))
+
+## [5.3.4](https://github.com/podium-lib/client/compare/v5.3.3...v5.3.4) (2025-06-24)
+
+
+### Bug Fixes
+
+* **deps:** update podium/utils ([3f21acc](https://github.com/podium-lib/client/commit/3f21acc99783bae470e32045d43540422b30111f))
+
+## [5.3.3](https://github.com/podium-lib/client/compare/v5.3.2...v5.3.3) (2025-05-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency undici to v6.21.3 ([#466](https://github.com/podium-lib/client/issues/466)) ([9c6b119](https://github.com/podium-lib/client/commit/9c6b119b21f786a91885cb4a269db50eda51eee2))
+
+## [5.3.2](https://github.com/podium-lib/client/compare/v5.3.1...v5.3.2) (2025-04-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency undici to v6.21.2 ([#460](https://github.com/podium-lib/client/issues/460)) ([39762e0](https://github.com/podium-lib/client/commit/39762e09c7c4b5ebcfcbb73611b4c82441082993))
+
+## [5.3.1](https://github.com/podium-lib/client/compare/v5.3.0...v5.3.1) (2025-04-11)
+
+
+### Bug Fixes
+
+* add statusCode label to podium_client_resolver_content_resolve metric ([#456](https://github.com/podium-lib/client/issues/456)) ([e8d45b0](https://github.com/podium-lib/client/commit/e8d45b0564f59573a80b5cdfccc7382713251e27))
+* error with statusCode label ([9b0682e](https://github.com/podium-lib/client/commit/9b0682e27b1b685c23df59e55f8651b0632bf998))
+
+## [5.3.0](https://github.com/podium-lib/client/compare/v5.2.7...v5.3.0) (2025-02-07)
+
+### Features
+
+* add metric to track register podlets ([673a4e7](https://github.com/podium-lib/client/commit/673a4e7554282570d1a074ae7206873af7183dbe))
+
+## [5.3.0-next.1](https://github.com/podium-lib/client/compare/v5.2.0...v5.3.0-next.1) (2024-11-13)
+
+### Features
+
 * track podlet assets ([39022a3](https://github.com/podium-lib/client/commit/39022a3c87184e5f524828591c8185d8a3fc2995))
+
+## [5.2.7](https://github.com/podium-lib/client/compare/v5.2.6...v5.2.7) (2025-02-06)
+
+
+### Bug Fixes
+
+* list exports so types work for imports other than root ([#454](https://github.com/podium-lib/client/issues/454)) ([b186bec](https://github.com/podium-lib/client/commit/b186bece4fd0feb82f4e64c4acf5f27dd6b06659))
+
+## [5.2.6](https://github.com/podium-lib/client/compare/v5.2.5...v5.2.6) (2025-01-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency undici to v6.21.1 ([#453](https://github.com/podium-lib/client/issues/453)) ([2cf54ca](https://github.com/podium-lib/client/commit/2cf54cac312cf6cbb91da0e0f636433f2de7d892))
+
+## [5.2.5](https://github.com/podium-lib/client/compare/v5.2.4...v5.2.5) (2024-11-27)
+
+
+### Bug Fixes
+
+* correctly build asset urls from link headers ([#446](https://github.com/podium-lib/client/issues/446)) ([5a30079](https://github.com/podium-lib/client/commit/5a30079fb47ee15a49ae6ff77348c400df3fe99a))
+
+## [5.2.4](https://github.com/podium-lib/client/compare/v5.2.3...v5.2.4) (2024-11-21)
+
+
+### Bug Fixes
+
+* reducing logl evel to info on 404 errors ([e6d6d04](https://github.com/podium-lib/client/commit/e6d6d04a4b30729691cafa68521bcfc743c3db64))
+
+## [5.2.3](https://github.com/podium-lib/client/compare/v5.2.2...v5.2.3) (2024-11-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency undici to v6.21.0 ([#445](https://github.com/podium-lib/client/issues/445)) ([6d26507](https://github.com/podium-lib/client/commit/6d26507709beffe5301f89ff7a5d03c358bbb423))
+
+## [5.2.2](https://github.com/podium-lib/client/compare/v5.2.1...v5.2.2) (2024-11-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @metrics/client to v2.5.4 ([#444](https://github.com/podium-lib/client/issues/444)) ([4f6bc04](https://github.com/podium-lib/client/commit/4f6bc0470a7ad01f32c6ea757cf853f7d2125db5))
+
+## [5.2.1](https://github.com/podium-lib/client/compare/v5.2.0...v5.2.1) (2024-11-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v5.4.0 ([#443](https://github.com/podium-lib/client/issues/443)) ([efbe56b](https://github.com/podium-lib/client/commit/efbe56bbed26871566705856adbfa622702bdfa0))
 
 # [5.2.0](https://github.com/podium-lib/client/compare/v5.1.18...v5.2.0) (2024-11-06)
 

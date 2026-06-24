@@ -1,6 +1,6 @@
 {
   "name": "@podium/client",
-  "version": "5.3.0-next.1",
+  "version": "5.4.12",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -28,6 +28,60 @@
   ],
   "main": "./lib/client.js",
   "types": "./types/client.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/client.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./lib/client.js": {
+      "types": "./types/client.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./lib/http-outgoing.js": {
+      "types": "./types/http-outgoing.d.ts",
+      "default": "./lib/http-outgoing.js"
+    },
+    "./lib/http.js": {
+      "types": "./types/http.d.ts",
+      "default": "./lib/http.js"
+    },
+    "./lib/resolver.cache.js": {
+      "types": "./types/resolver.cache.d.ts",
+      "default": "./lib/resolver.cache.js"
+    },
+    "./lib/resolver.content.js": {
+      "types": "./types/resolver.content.d.ts",
+      "default": "./lib/resolver.content.js"
+    },
+    "./lib/resolver.fallback.js": {
+      "types": "./types/resolver.fallback.d.ts",
+      "default": "./lib/resolver.fallback.js"
+    },
+    "./lib/resolver.js": {
+      "types": "./types/resolver.d.ts",
+      "default": "./lib/resolver.js"
+    },
+    "./lib/resolver.manifest.js": {
+      "types": "./types/resolver.manifest.d.ts",
+      "default": "./lib/resolver.manifest.js"
+    },
+    "./lib/resource.js": {
+      "types": "./types/resource.d.ts",
+      "default": "./lib/resource.js"
+    },
+    "./lib/response.js": {
+      "types": "./types/response.d.ts",
+      "default": "./lib/response.js"
+    },
+    "./lib/state.js": {
+      "types": "./types/state.d.ts",
+      "default": "./lib/state.js"
+    },
+    "./lib/utils.js": {
+      "types": "./types/utils.d.ts",
+      "default": "./lib/utils.js"
+    }
+  },
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -38,40 +92,31 @@
   },
   "dependencies": {
     "@hapi/boom": "10.0.1",
-    "@metrics/client": "2.5.3",
-    "@podium/schemas": "5.1.0",
-    "@podium/utils": "5.4.0",
+    "@metrics/client": "2.5.5",
+    "@podium/schemas": "5.2.0",
+    "@podium/utils": "5.6.0",
     "abslog": "2.4.4",
     "http-cache-semantics": "^4.0.3",
-    "lodash.clonedeep": "^4.5.0",
     "ttl-mem-cache": "4.1.0",
-    "undici": "6.20.1"
+    "undici": "6.27.0"
   },
   "devDependencies": {
-    "@podium/eslint-config": "1.0.0",
-    "@podium/semantic-release-config": "2.0.0",
-    "@podium/test-utils": "3.1.0-next.5",
-    "@podium/typescript-config": "1.0.0",
-    "@semantic-release/changelog": "6.0.3",
-    "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "10.0.6",
-    "@semantic-release/npm": "12.0.1",
-    "@semantic-release/release-notes-generator": "13.0.0",
+    "@podium/eslint-config": "2.0.2",
+    "@podium/podlet": "5.4.0",
+    "@podium/semantic-release-config": "3.0.5",
+    "@podium/test-utils": "3.0.26",
+    "@podium/typescript-config": "1.0.1",
     "@sinonjs/fake-timers": "11.3.1",
-    "@types/readable-stream": "4.0.18",
-    "benchmark": "2.1.4",
-    "eslint": "9.6.0",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-prettier": "5.1.3",
-    "express": "4.21.1",
+    "@types/readable-stream": "4.0.23",
+    "eslint": "9.39.4",
+    "express": "5.2.1",
     "get-stream": "9.0.1",
     "http-proxy": "1.18.1",
     "is-stream": "4.0.1",
-    "npm-run-all2": "6.2.3",
-    "prettier": "3.3.2",
-    "semantic-release": "24.1.2",
-    "tap": "18.7.2",
-    "typescript": "5.6.3",
-    "why-is-node-running": "3.2.1"
+    "npm-run-all2": "8.0.4",
+    "prettier": "3.8.1",
+    "semantic-release": "25.0.3",
+    "tap": "21.5.0",
+    "typescript": "5.9.3"
   }
 }

@@ -1,3 +1,10 @@
+# [5.5.0-next.2](https://github.com/podium-lib/client/compare/v5.5.0-next.1...v5.5.0-next.2) (2026-06-25)
+
+
+### Bug Fixes
+
+* add dns lookup cache to undici ([#507](https://github.com/podium-lib/client/issues/507)) ([6334ea7](https://github.com/podium-lib/client/commit/6334ea7b46eb79043282a7d79a472c932dd34ba4)), closes [#506](https://github.com/podium-lib/client/issues/506)
+
 # [5.5.0-next.1](https://github.com/podium-lib/client/compare/v5.4.12...v5.5.0-next.1) (2026-06-24)
 
 

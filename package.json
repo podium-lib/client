@@ -93,7 +93,7 @@
   "dependencies": {
     "@hapi/boom": "10.0.1",
     "@metrics/client": "2.5.5",
-    "@podium/schemas": "5.2.0",
+    "@podium/schemas": "5.2.1",
     "@podium/utils": "5.6.0",
     "abslog": "2.4.4",
     "http-cache-semantics": "^4.0.3",
@@ -102,9 +102,9 @@
   },
   "devDependencies": {
     "@podium/eslint-config": "2.0.2",
-    "@podium/podlet": "5.4.0",
+    "@podium/podlet": "5.4.2",
     "@podium/semantic-release-config": "3.0.6",
-    "@podium/test-utils": "3.0.26",
+    "@podium/test-utils": "3.0.28",
     "@podium/typescript-config": "1.0.1",
     "@sinonjs/fake-timers": "11.3.1",
     "@types/readable-stream": "4.0.23",

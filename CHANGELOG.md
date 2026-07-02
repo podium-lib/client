@@ -1,3 +1,10 @@
+## [5.4.14](https://github.com/podium-lib/client/compare/v5.4.13...v5.4.14) (2026-07-02)
+
+
+### Bug Fixes
+
+* **deps:** update podium packages ([#510](https://github.com/podium-lib/client/issues/510)) ([bddff44](https://github.com/podium-lib/client/commit/bddff441707c261dd892ce99c0d0710ecfdccddb))
+
 ## [5.4.13](https://github.com/podium-lib/client/compare/v5.4.12...v5.4.13) (2026-06-25)
 
 

@@ -107,7 +107,7 @@
     "@podium/test-utils": "3.0.28",
     "@podium/typescript-config": "1.0.1",
     "@sinonjs/fake-timers": "11.3.1",
-    "@types/readable-stream": "4.0.23",
+    "@types/readable-stream": "4.0.24",
     "eslint": "9.39.4",
     "express": "5.2.1",
     "get-stream": "9.0.1",
